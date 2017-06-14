@@ -1,0 +1,25 @@
+﻿<package>
+  <metadata>
+    <id>Carfup.XTBPlugins.DeltaStepsBetweenEnvironments</id>
+    <version>1.0</version>
+    <title>Delta Plugin Steps between two environments</title>
+    <authors>Clement O.</authors>
+    <owners>Clement O.</owners>
+    <projectUrl>https://github.com/carfup/XTBPlugins.DeltaAssemblyvsCrm</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Find out if there is differences about your plugin steps between two of your environments</description>
+    <summary>Really sweet plugin that does awesome things</summary>
+    <releaseNotes>
+      1.2017.6.1
+      Find out if there is differences about your plugin steps between two of your environments
+    </releaseNotes>
+    <copyright>Copyright 2017</copyright>
+    <tags>XrmToolBox Plugin DeltaStepsBetweenEnvironments</tags>
+    <dependencies>
+      <dependency id="XrmToolBox" version="1.2017.6.16" />
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="bin\Release\Carfup.XTBPlugins.*.dll" target="lib\net452\Plugins" />
+  </files>
+</package>

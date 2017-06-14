@@ -123,10 +123,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+    <None Include="DeltaStepsBetweenEnvironments.nuspec" />
     <None Include="packages.config" />
-    <None Include="XrmToolBox.exe.config">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
+    <None Include="XrmToolBox.exe.config" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="DeltaStepsBetweenEnvironments.resx">

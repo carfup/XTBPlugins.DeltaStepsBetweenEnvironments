@@ -19,8 +19,9 @@ using Microsoft.Xrm.Sdk;
 
 namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
 {
-	public partial class DeltaStepsBetweenEnvironments : PluginControlBase, IXrmToolBoxPluginControl
+	public partial class DeltaStepsBetweenEnvironments : PluginControlBase, IXrmToolBoxPluginControl, IGitHubPlugin
 	{
+		#region varibables
 		private string[] solutionsList = null;
 		private ConnectionDetail sourceDetail = null;
 		private ConnectionDetail targetDetail = null;
@@ -29,9 +30,24 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
 		List<string> stepsCrmSource = new List<string>();
 		List<string> stepsCrmTarget = new List<string>();
 		private static string solutionPluginStepsName = null;
-
-
 		public event EventHandler OnRequestConnection;
+		public string RepositoryName
+		{
+			get
+			{
+				return "XTBPlugins.DeltaStepsBetweenEnvironments";
+			}
+		}
+
+		public string UserName
+		{
+			get
+			{
+				return "carfup";
+			}
+		}
+
+		#endregion
 
 		public DeltaStepsBetweenEnvironments()
 		{
