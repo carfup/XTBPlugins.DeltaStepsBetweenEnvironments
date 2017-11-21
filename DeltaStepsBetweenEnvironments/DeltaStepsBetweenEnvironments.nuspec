@@ -1,7 +1,7 @@
 ﻿<package>
   <metadata>
     <id>Carfup.XTBPlugins.DeltaStepsBetweenEnvironments</id>
-    <version>1.0</version>
+    <version>1.2017.11.3</version>
     <title>Delta Plugin Steps between two environments</title>
     <authors>Clement O.</authors>
     <owners>Clement O.</owners>
@@ -10,9 +10,14 @@
     <description>Find out if there is differences about your plugin steps between two of your environments</description>
     <summary>Really sweet plugin that does awesome things</summary>
     <releaseNotes>
-      1.2017.6.1
-      Find out if there is differences about your plugin steps between two of your environments
-    </releaseNotes>
+1.2017.11.3
+Fix resizing of the components
+Improved background processes
+Fix unwanted behaviors on the form
+Improved visibility and error messages
+1.2017.6.1
+Find out if there is differences about your plugin steps between two of your environments
+	</releaseNotes>
     <copyright>Copyright 2017</copyright>
     <tags>XrmToolBox Plugin DeltaStepsBetweenEnvironments</tags>
     <dependencies>

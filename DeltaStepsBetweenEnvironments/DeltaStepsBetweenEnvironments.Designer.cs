@@ -218,8 +218,6 @@
             // 
             // comboBoxSolutionsList
             // 
-            this.comboBoxSolutionsList.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
             this.comboBoxSolutionsList.FormattingEnabled = true;
             this.comboBoxSolutionsList.Location = new System.Drawing.Point(175, 24);
             this.comboBoxSolutionsList.Name = "comboBoxSolutionsList";
