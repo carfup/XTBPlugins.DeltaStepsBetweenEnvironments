@@ -55,6 +55,7 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
 
 			sourceDetail = this.ConnectionDetail;
 			sourceService = this.Service;
+            buttonCompare.Visible = false;
 		}
 
 		private void toolStripButtonClose_Click(object sender, EventArgs e)
@@ -67,10 +68,6 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
 			if (canProceed())
 			{
 				solutionPluginStepsName = comboBoxSolutionsList.SelectedItem.ToString();
-			}
-			else
-			{
-				MessageBox.Show("Please connect / select the source and target environment first");
 			}
 		}
 
@@ -132,6 +129,11 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
 				sourceDetail = connectionDetail;
 				SetConnectionLabel(connectionDetail, "Source");
 			}
+
+            if (targetService != null && sourceService != null)
+                buttonCompare.Visible = true;
+            else
+                buttonCompare.Visible = false;
 		}
 		private void SetConnectionLabel(ConnectionDetail detail, string serviceType)
 		{
@@ -193,7 +195,7 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
 					}
 					if (diffCrmSourceTarget.Count() == 0)
 					{
-						listBoxSourceTarget.Visible = false;
+						//listBoxSourceTarget.Visible = false;
 						labelSourceTargetMatch.Visible = true;
 					}
 					else
@@ -206,7 +208,7 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
 
 					if (diffCrmTargetSource.Count() == 0)
 					{
-						listBoxTargetSource.Visible = false;
+						//listBoxTargetSource.Visible = false;
 						labelTargetSourceMatch.Visible = true;
 					}
 					else
@@ -221,10 +223,8 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
 		}
 
 		private void buttonLoadSolutions_Click(object sender, EventArgs evt)
-		{
-			if (!canProceed())
-				MessageBox.Show("Please select a source environment first.");
-			else
+		{				
+			if(canProceed())
 			{
 				comboBoxSolutionsList.Items.Clear();
 				WorkAsync(new WorkAsyncInfo
@@ -235,7 +235,7 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
 						solutionsList = sourceService.RetrieveMultiple(new QueryExpression("solution")
 						{
 							ColumnSet = new ColumnSet("uniquename"),
-						}).Entities.Select(p => p.Attributes["uniquename"].ToString()).ToArray();
+						}).Entities.Select(p => p.Attributes["uniquename"].ToString()).OrderBy(p => p).ToArray();
 					},
 					PostWorkCallBack = e =>
 					{
@@ -270,10 +270,12 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
 
 		public bool canProceed()
 		{
-			if (sourceService != null && targetService != null)
-				return true;
-			else
-				return false;
+			if (sourceService == null || targetService == null)
+            {
+                MessageBox.Show("Make sure you are connected to a Source AND Target environments first.");
+                return false;
+            }
+			return true;
 		}
 	}
 }
