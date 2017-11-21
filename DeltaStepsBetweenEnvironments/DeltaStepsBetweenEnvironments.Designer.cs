@@ -65,7 +65,7 @@
             this.toolStripButtonClose});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Size = new System.Drawing.Size(1038, 25);
+            this.toolStrip1.Size = new System.Drawing.Size(1046, 25);
             this.toolStrip1.TabIndex = 0;
             this.toolStrip1.Text = "toolStrip1";
             // 
@@ -84,22 +84,21 @@
             this.tableLayoutPanel1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.tableLayoutPanel1.ColumnCount = 2;
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 40F));
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 60F));
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.tableLayoutPanel1.Controls.Add(this.groupBox3, 0, 0);
             this.tableLayoutPanel1.Controls.Add(this.groupBoxSolutionComparing, 1, 0);
             this.tableLayoutPanel1.Location = new System.Drawing.Point(3, 37);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
             this.tableLayoutPanel1.RowCount = 1;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(1025, 100);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(1033, 100);
             this.tableLayoutPanel1.TabIndex = 29;
             // 
             // groupBox3
             // 
-            this.groupBox3.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox3.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
             this.groupBox3.Controls.Add(this.buttonChangeSource);
             this.groupBox3.Controls.Add(this.btnChangeTargetEnvironment);
             this.groupBox3.Controls.Add(this.labelTargetEnvironment);
@@ -181,8 +180,9 @@
             this.groupBoxSolutionComparing.Controls.Add(this.label4);
             this.groupBoxSolutionComparing.Controls.Add(this.comboBoxSolutionsList);
             this.groupBoxSolutionComparing.Location = new System.Drawing.Point(413, 3);
+            this.groupBoxSolutionComparing.MinimumSize = new System.Drawing.Size(420, 98);
             this.groupBoxSolutionComparing.Name = "groupBoxSolutionComparing";
-            this.groupBoxSolutionComparing.Size = new System.Drawing.Size(609, 94);
+            this.groupBoxSolutionComparing.Size = new System.Drawing.Size(617, 98);
             this.groupBoxSolutionComparing.TabIndex = 1;
             this.groupBoxSolutionComparing.TabStop = false;
             this.groupBoxSolutionComparing.Text = "Details selection";
@@ -219,7 +219,7 @@
             // comboBoxSolutionsList
             // 
             this.comboBoxSolutionsList.FormattingEnabled = true;
-            this.comboBoxSolutionsList.Location = new System.Drawing.Point(175, 24);
+            this.comboBoxSolutionsList.Location = new System.Drawing.Point(184, 24);
             this.comboBoxSolutionsList.Name = "comboBoxSolutionsList";
             this.comboBoxSolutionsList.Size = new System.Drawing.Size(293, 21);
             this.comboBoxSolutionsList.TabIndex = 26;
@@ -239,7 +239,7 @@
             this.tableLayoutPanel2.Name = "tableLayoutPanel2";
             this.tableLayoutPanel2.RowCount = 1;
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel2.Size = new System.Drawing.Size(1025, 444);
+            this.tableLayoutPanel2.Size = new System.Drawing.Size(1033, 444);
             this.tableLayoutPanel2.TabIndex = 30;
             // 
             // groupBox2
@@ -249,9 +249,9 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox2.Controls.Add(this.labelTargetSourceMatch);
             this.groupBox2.Controls.Add(this.listBoxTargetSource);
-            this.groupBox2.Location = new System.Drawing.Point(515, 3);
+            this.groupBox2.Location = new System.Drawing.Point(519, 3);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(507, 438);
+            this.groupBox2.Size = new System.Drawing.Size(511, 438);
             this.groupBox2.TabIndex = 29;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Steps which are on Target but Source environment";
@@ -277,7 +277,7 @@
             this.listBoxTargetSource.FormattingEnabled = true;
             this.listBoxTargetSource.Location = new System.Drawing.Point(6, 19);
             this.listBoxTargetSource.Name = "listBoxTargetSource";
-            this.listBoxTargetSource.Size = new System.Drawing.Size(495, 407);
+            this.listBoxTargetSource.Size = new System.Drawing.Size(499, 407);
             this.listBoxTargetSource.TabIndex = 22;
             // 
             // groupBox1
@@ -289,7 +289,7 @@
             this.groupBox1.Controls.Add(this.listBoxSourceTarget);
             this.groupBox1.Location = new System.Drawing.Point(3, 3);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(506, 438);
+            this.groupBox1.Size = new System.Drawing.Size(510, 438);
             this.groupBox1.TabIndex = 28;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Steps which are on Source but Target environment";
@@ -315,7 +315,7 @@
             this.listBoxSourceTarget.FormattingEnabled = true;
             this.listBoxSourceTarget.Location = new System.Drawing.Point(9, 19);
             this.listBoxSourceTarget.Name = "listBoxSourceTarget";
-            this.listBoxSourceTarget.Size = new System.Drawing.Size(491, 407);
+            this.listBoxSourceTarget.Size = new System.Drawing.Size(495, 407);
             this.listBoxSourceTarget.TabIndex = 22;
             // 
             // DeltaStepsBetweenEnvironments
@@ -327,7 +327,7 @@
             this.Controls.Add(this.tableLayoutPanel1);
             this.Controls.Add(this.toolStrip1);
             this.Name = "DeltaStepsBetweenEnvironments";
-            this.Size = new System.Drawing.Size(1038, 613);
+            this.Size = new System.Drawing.Size(1046, 613);
             this.toolStrip1.ResumeLayout(false);
             this.toolStrip1.PerformLayout();
             this.tableLayoutPanel1.ResumeLayout(false);
