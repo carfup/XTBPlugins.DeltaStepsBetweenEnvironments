@@ -283,5 +283,15 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
             }
             return true;
         }
+
+        private void buttonCopyTargetToSource_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void buttonCopySourceToTarget_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }

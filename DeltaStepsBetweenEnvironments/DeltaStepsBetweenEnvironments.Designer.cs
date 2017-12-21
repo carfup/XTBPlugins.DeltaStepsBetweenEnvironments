@@ -50,6 +50,9 @@
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.labelSourceTargetMatch = new System.Windows.Forms.Label();
             this.listBoxSourceTarget = new System.Windows.Forms.ListBox();
+            this.groupBox4 = new System.Windows.Forms.GroupBox();
+            this.buttonCopyTargetToSource = new System.Windows.Forms.Button();
+            this.buttonCopySourceToTarget = new System.Windows.Forms.Button();
             this.toolStrip1.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -57,6 +60,7 @@
             this.tableLayoutPanel2.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox1.SuspendLayout();
+            this.groupBox4.SuspendLayout();
             this.SuspendLayout();
             // 
             // toolStrip1
@@ -231,15 +235,17 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.tableLayoutPanel2.AutoSize = true;
-            this.tableLayoutPanel2.ColumnCount = 2;
-            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel2.Controls.Add(this.groupBox2, 0, 0);
+            this.tableLayoutPanel2.ColumnCount = 3;
+            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 47F));
+            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 6F));
+            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 47F));
             this.tableLayoutPanel2.Controls.Add(this.groupBox1, 0, 0);
+            this.tableLayoutPanel2.Controls.Add(this.groupBox2, 2, 0);
+            this.tableLayoutPanel2.Controls.Add(this.groupBox4, 1, 0);
             this.tableLayoutPanel2.Location = new System.Drawing.Point(3, 158);
             this.tableLayoutPanel2.Name = "tableLayoutPanel2";
             this.tableLayoutPanel2.RowCount = 1;
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel2.Size = new System.Drawing.Size(1025, 444);
             this.tableLayoutPanel2.TabIndex = 30;
             // 
@@ -250,9 +256,9 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox2.Controls.Add(this.labelTargetSourceMatch);
             this.groupBox2.Controls.Add(this.listBoxTargetSource);
-            this.groupBox2.Location = new System.Drawing.Point(515, 3);
+            this.groupBox2.Location = new System.Drawing.Point(545, 3);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(507, 438);
+            this.groupBox2.Size = new System.Drawing.Size(477, 438);
             this.groupBox2.TabIndex = 29;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Steps which are on Target but Source environment";
@@ -278,7 +284,7 @@
             this.listBoxTargetSource.FormattingEnabled = true;
             this.listBoxTargetSource.Location = new System.Drawing.Point(6, 19);
             this.listBoxTargetSource.Name = "listBoxTargetSource";
-            this.listBoxTargetSource.Size = new System.Drawing.Size(495, 407);
+            this.listBoxTargetSource.Size = new System.Drawing.Size(465, 407);
             this.listBoxTargetSource.TabIndex = 22;
             // 
             // groupBox1
@@ -290,7 +296,7 @@
             this.groupBox1.Controls.Add(this.listBoxSourceTarget);
             this.groupBox1.Location = new System.Drawing.Point(3, 3);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(506, 438);
+            this.groupBox1.Size = new System.Drawing.Size(475, 438);
             this.groupBox1.TabIndex = 28;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Steps which are on Source but Target environment";
@@ -316,8 +322,41 @@
             this.listBoxSourceTarget.FormattingEnabled = true;
             this.listBoxSourceTarget.Location = new System.Drawing.Point(9, 19);
             this.listBoxSourceTarget.Name = "listBoxSourceTarget";
-            this.listBoxSourceTarget.Size = new System.Drawing.Size(491, 407);
+            this.listBoxSourceTarget.Size = new System.Drawing.Size(460, 407);
             this.listBoxSourceTarget.TabIndex = 22;
+            // 
+            // groupBox4
+            // 
+            this.groupBox4.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox4.Controls.Add(this.buttonCopySourceToTarget);
+            this.groupBox4.Controls.Add(this.buttonCopyTargetToSource);
+            this.groupBox4.Location = new System.Drawing.Point(484, 3);
+            this.groupBox4.Name = "groupBox4";
+            this.groupBox4.Size = new System.Drawing.Size(55, 438);
+            this.groupBox4.TabIndex = 30;
+            this.groupBox4.TabStop = false;
+            // 
+            // buttonCopyTargetToSource
+            // 
+            this.buttonCopyTargetToSource.Location = new System.Drawing.Point(6, 143);
+            this.buttonCopyTargetToSource.Name = "buttonCopyTargetToSource";
+            this.buttonCopyTargetToSource.Size = new System.Drawing.Size(43, 23);
+            this.buttonCopyTargetToSource.TabIndex = 0;
+            this.buttonCopyTargetToSource.Text = "<";
+            this.buttonCopyTargetToSource.UseVisualStyleBackColor = true;
+            this.buttonCopyTargetToSource.Click += new System.EventHandler(this.buttonCopyTargetToSource_Click);
+            // 
+            // buttonCopySourceToTarget
+            // 
+            this.buttonCopySourceToTarget.Location = new System.Drawing.Point(6, 188);
+            this.buttonCopySourceToTarget.Name = "buttonCopySourceToTarget";
+            this.buttonCopySourceToTarget.Size = new System.Drawing.Size(43, 23);
+            this.buttonCopySourceToTarget.TabIndex = 1;
+            this.buttonCopySourceToTarget.Text = ">";
+            this.buttonCopySourceToTarget.UseVisualStyleBackColor = true;
+            this.buttonCopySourceToTarget.Click += new System.EventHandler(this.buttonCopySourceToTarget_Click);
             // 
             // DeltaStepsBetweenEnvironments
             // 
@@ -341,6 +380,7 @@
             this.groupBox2.PerformLayout();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
+            this.groupBox4.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -370,5 +410,8 @@
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.Label labelSourceTargetMatch;
         private System.Windows.Forms.ListBox listBoxSourceTarget;
+        private System.Windows.Forms.GroupBox groupBox4;
+        private System.Windows.Forms.Button buttonCopySourceToTarget;
+        private System.Windows.Forms.Button buttonCopyTargetToSource;
     }
 }
