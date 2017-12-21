@@ -219,10 +219,11 @@
             // comboBoxSolutionsList
             // 
             this.comboBoxSolutionsList.FormattingEnabled = true;
-            this.comboBoxSolutionsList.Location = new System.Drawing.Point(175, 24);
+            this.comboBoxSolutionsList.Location = new System.Drawing.Point(183, 24);
             this.comboBoxSolutionsList.Name = "comboBoxSolutionsList";
             this.comboBoxSolutionsList.Size = new System.Drawing.Size(293, 21);
             this.comboBoxSolutionsList.TabIndex = 26;
+            this.comboBoxSolutionsList.SelectedIndexChanged += new System.EventHandler(this.comboBoxSolutionsList_SelectedIndexChanged);
             // 
             // tableLayoutPanel2
             // 
