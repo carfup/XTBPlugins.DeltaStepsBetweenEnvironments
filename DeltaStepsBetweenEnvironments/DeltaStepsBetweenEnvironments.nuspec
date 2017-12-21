@@ -10,6 +10,8 @@
     <description>Find out if there is differences about your plugin steps between two of your environments</description>
     <summary>Really sweet plugin that does awesome things</summary>
     <releaseNotes>
+1.2017.12.5
+Fixed unexpected error while clicking on compare button but not having selected a solution.
 1.2017.11.3
 Fix resizing of the components
 Improved background processes
