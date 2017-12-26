@@ -44,22 +44,22 @@
             this.label4 = new System.Windows.Forms.Label();
             this.comboBoxSolutionsList = new System.Windows.Forms.ComboBox();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
-            this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.labelTargetSourceMatch = new System.Windows.Forms.Label();
-            this.listBoxTargetSource = new System.Windows.Forms.ListBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.labelSourceTargetMatch = new System.Windows.Forms.Label();
             this.listBoxSourceTarget = new System.Windows.Forms.ListBox();
+            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.labelTargetSourceMatch = new System.Windows.Forms.Label();
+            this.listBoxTargetSource = new System.Windows.Forms.ListBox();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
-            this.buttonCopyTargetToSource = new System.Windows.Forms.Button();
             this.buttonCopySourceToTarget = new System.Windows.Forms.Button();
+            this.buttonCopyTargetToSource = new System.Windows.Forms.Button();
             this.toolStrip1.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
             this.groupBox3.SuspendLayout();
             this.groupBoxSolutionComparing.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
-            this.groupBox2.SuspendLayout();
             this.groupBox1.SuspendLayout();
+            this.groupBox2.SuspendLayout();
             this.groupBox4.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -249,6 +249,44 @@
             this.tableLayoutPanel2.Size = new System.Drawing.Size(1025, 444);
             this.tableLayoutPanel2.TabIndex = 30;
             // 
+            // groupBox1
+            // 
+            this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox1.Controls.Add(this.labelSourceTargetMatch);
+            this.groupBox1.Controls.Add(this.listBoxSourceTarget);
+            this.groupBox1.Location = new System.Drawing.Point(3, 3);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(475, 438);
+            this.groupBox1.TabIndex = 28;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "Steps which are on Source but Target environment";
+            // 
+            // labelSourceTargetMatch
+            // 
+            this.labelSourceTargetMatch.AutoSize = true;
+            this.labelSourceTargetMatch.BackColor = System.Drawing.Color.White;
+            this.labelSourceTargetMatch.Font = new System.Drawing.Font("Microsoft Sans Serif", 20F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelSourceTargetMatch.ForeColor = System.Drawing.Color.Green;
+            this.labelSourceTargetMatch.Location = new System.Drawing.Point(86, 154);
+            this.labelSourceTargetMatch.Name = "labelSourceTargetMatch";
+            this.labelSourceTargetMatch.Size = new System.Drawing.Size(302, 31);
+            this.labelSourceTargetMatch.TabIndex = 25;
+            this.labelSourceTargetMatch.Text = "This is a perfect match !";
+            this.labelSourceTargetMatch.Visible = false;
+            // 
+            // listBoxSourceTarget
+            // 
+            this.listBoxSourceTarget.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.listBoxSourceTarget.FormattingEnabled = true;
+            this.listBoxSourceTarget.Location = new System.Drawing.Point(9, 19);
+            this.listBoxSourceTarget.Name = "listBoxSourceTarget";
+            this.listBoxSourceTarget.Size = new System.Drawing.Size(460, 407);
+            this.listBoxSourceTarget.TabIndex = 22;
+            // 
             // groupBox2
             // 
             this.groupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -272,7 +310,7 @@
             this.labelTargetSourceMatch.Location = new System.Drawing.Point(83, 154);
             this.labelTargetSourceMatch.Name = "labelTargetSourceMatch";
             this.labelTargetSourceMatch.Size = new System.Drawing.Size(302, 31);
-            this.labelTargetSourceMatch.TabIndex = 24;
+            this.labelTargetSourceMatch.TabIndex = 27;
             this.labelTargetSourceMatch.Text = "This is a perfect match !";
             this.labelTargetSourceMatch.Visible = false;
             // 
@@ -287,49 +325,10 @@
             this.listBoxTargetSource.Size = new System.Drawing.Size(465, 407);
             this.listBoxTargetSource.TabIndex = 22;
             // 
-            // groupBox1
-            // 
-            this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBox1.Controls.Add(this.labelSourceTargetMatch);
-            this.groupBox1.Controls.Add(this.listBoxSourceTarget);
-            this.groupBox1.Location = new System.Drawing.Point(3, 3);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(475, 438);
-            this.groupBox1.TabIndex = 28;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Steps which are on Source but Target environment";
-            // 
-            // labelSourceTargetMatch
-            // 
-            this.labelSourceTargetMatch.AutoSize = true;
-            this.labelSourceTargetMatch.BackColor = System.Drawing.Color.White;
-            this.labelSourceTargetMatch.Font = new System.Drawing.Font("Microsoft Sans Serif", 20F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelSourceTargetMatch.ForeColor = System.Drawing.Color.Green;
-            this.labelSourceTargetMatch.Location = new System.Drawing.Point(82, 154);
-            this.labelSourceTargetMatch.Name = "labelSourceTargetMatch";
-            this.labelSourceTargetMatch.Size = new System.Drawing.Size(302, 31);
-            this.labelSourceTargetMatch.TabIndex = 23;
-            this.labelSourceTargetMatch.Text = "This is a perfect match !";
-            this.labelSourceTargetMatch.Visible = false;
-            // 
-            // listBoxSourceTarget
-            // 
-            this.listBoxSourceTarget.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.listBoxSourceTarget.FormattingEnabled = true;
-            this.listBoxSourceTarget.Location = new System.Drawing.Point(9, 19);
-            this.listBoxSourceTarget.Name = "listBoxSourceTarget";
-            this.listBoxSourceTarget.Size = new System.Drawing.Size(460, 407);
-            this.listBoxSourceTarget.TabIndex = 22;
-            // 
             // groupBox4
             // 
-            this.groupBox4.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox4.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
             this.groupBox4.Controls.Add(this.buttonCopySourceToTarget);
             this.groupBox4.Controls.Add(this.buttonCopyTargetToSource);
             this.groupBox4.Location = new System.Drawing.Point(484, 3);
@@ -337,16 +336,6 @@
             this.groupBox4.Size = new System.Drawing.Size(55, 438);
             this.groupBox4.TabIndex = 30;
             this.groupBox4.TabStop = false;
-            // 
-            // buttonCopyTargetToSource
-            // 
-            this.buttonCopyTargetToSource.Location = new System.Drawing.Point(6, 143);
-            this.buttonCopyTargetToSource.Name = "buttonCopyTargetToSource";
-            this.buttonCopyTargetToSource.Size = new System.Drawing.Size(43, 23);
-            this.buttonCopyTargetToSource.TabIndex = 0;
-            this.buttonCopyTargetToSource.Text = "<";
-            this.buttonCopyTargetToSource.UseVisualStyleBackColor = true;
-            this.buttonCopyTargetToSource.Click += new System.EventHandler(this.buttonCopyTargetToSource_Click);
             // 
             // buttonCopySourceToTarget
             // 
@@ -357,6 +346,16 @@
             this.buttonCopySourceToTarget.Text = ">";
             this.buttonCopySourceToTarget.UseVisualStyleBackColor = true;
             this.buttonCopySourceToTarget.Click += new System.EventHandler(this.buttonCopySourceToTarget_Click);
+            // 
+            // buttonCopyTargetToSource
+            // 
+            this.buttonCopyTargetToSource.Location = new System.Drawing.Point(6, 143);
+            this.buttonCopyTargetToSource.Name = "buttonCopyTargetToSource";
+            this.buttonCopyTargetToSource.Size = new System.Drawing.Size(43, 23);
+            this.buttonCopyTargetToSource.TabIndex = 0;
+            this.buttonCopyTargetToSource.Text = "<";
+            this.buttonCopyTargetToSource.UseVisualStyleBackColor = true;
+            this.buttonCopyTargetToSource.Click += new System.EventHandler(this.buttonCopyTargetToSource_Click);
             // 
             // DeltaStepsBetweenEnvironments
             // 
@@ -376,10 +375,10 @@
             this.groupBoxSolutionComparing.ResumeLayout(false);
             this.groupBoxSolutionComparing.PerformLayout();
             this.tableLayoutPanel2.ResumeLayout(false);
-            this.groupBox2.ResumeLayout(false);
-            this.groupBox2.PerformLayout();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
+            this.groupBox2.ResumeLayout(false);
+            this.groupBox2.PerformLayout();
             this.groupBox4.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -405,13 +404,13 @@
         private System.Windows.Forms.ComboBox comboBoxSolutionsList;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;
         private System.Windows.Forms.GroupBox groupBox2;
-        private System.Windows.Forms.Label labelTargetSourceMatch;
         private System.Windows.Forms.ListBox listBoxTargetSource;
         private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.Label labelSourceTargetMatch;
         private System.Windows.Forms.ListBox listBoxSourceTarget;
         private System.Windows.Forms.GroupBox groupBox4;
         private System.Windows.Forms.Button buttonCopySourceToTarget;
         private System.Windows.Forms.Button buttonCopyTargetToSource;
+        private System.Windows.Forms.Label labelSourceTargetMatch;
+        private System.Windows.Forms.Label labelTargetSourceMatch;
     }
 }
