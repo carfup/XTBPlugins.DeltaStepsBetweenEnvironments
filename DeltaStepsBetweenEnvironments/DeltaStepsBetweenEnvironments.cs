@@ -348,8 +348,32 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
                 Message = "Creating the step in the environment...",
                 Work = (bw, e) =>
                 {
-                    Entity newStepToCreate = new Entity("sdkmessageprocessingstep");
+                    var pluginType = getPluginType(returnAliasedValue(selectedStep, "plugintype.typename").ToString());
+                    var sdkMessage = getSdkMessage(returnAliasedValue(selectedStep, "sdkmessage.name").ToString());
+                    var messageFilter = getMessageFilter(returnAliasedValue(selectedStep, "messagefilter.primaryobjecttypecode").ToString());
 
+                    if (pluginType == null)
+                    {
+                        MessageBox.Show($"Sorry, but we didn't find the necessary Plugin Type information in the destination system...");
+                        return;
+                    }
+
+                    if (sdkMessage == null)
+                    {
+                        MessageBox.Show($"Sorry, but we didn't find the necessary SDK Message information in the destination system...");
+                        return;
+                    }
+
+                    if (messageFilter == null)
+                    {
+                        MessageBox.Show($"Sorry, but we didn't find the necessary Message Filter information in the destination system...");
+                        return;
+                    }
+
+                    Entity newStepToCreate = new Entity("sdkmessageprocessingstep");
+                    newStepToCreate["plugintypeid"] = new EntityReference("plugintype", pluginType.Id);
+                    newStepToCreate["sdkmessageid"] = new EntityReference("plugintype", sdkMessage.Id);
+                    newStepToCreate["sdkmessagefilterid"] = new EntityReference("sdkmessagefilter", messageFilter.Id);
                     newStepToCreate["name"] = returnAliasedValue(selectedStep, "step.name");
                     newStepToCreate["configuration"] = returnAliasedValue(selectedStep, "step.configuration");
                     newStepToCreate["mode"] = returnAliasedValue(selectedStep, "step.mode");
@@ -362,9 +386,6 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
                     newStepToCreate["description"] = returnAliasedValue(selectedStep, "step.description");
                     newStepToCreate["asyncautodelete"] = returnAliasedValue(selectedStep, "step.asyncautodelete");
                     newStepToCreate["customizationlevel"] = returnAliasedValue(selectedStep, "step.customizationlevel");
-                    newStepToCreate["plugintypeid"] = new EntityReference("plugintype", getPluginType(returnAliasedValue(selectedStep, "plugintype.typename").ToString()).Id);
-                    newStepToCreate["sdkmessageid"] = new EntityReference("plugintype", getSdkMessage(returnAliasedValue(selectedStep, "sdkmessage.name").ToString()).Id);
-                    newStepToCreate["sdkmessagefilterid"] = new EntityReference("sdkmessagefilter", getMessageFilter(returnAliasedValue(selectedStep, "messagefilter.primaryobjecttypecode").ToString()).Id);
 
                     e.Result = targetService.Create(newStepToCreate);
                 },
@@ -400,8 +421,32 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
                 Message = "Creating the step in the environment...",
                 Work = (bw, e) =>
                 {
-                    Entity newStepToCreate = new Entity("sdkmessageprocessingstep");
+                    var pluginType = getPluginType(returnAliasedValue(selectedStep, "plugintype.typename").ToString());
+                    var sdkMessage = getSdkMessage(returnAliasedValue(selectedStep, "sdkmessage.name").ToString());
+                    var messageFilter = getMessageFilter(returnAliasedValue(selectedStep, "messagefilter.primaryobjecttypecode").ToString());
 
+                    if (pluginType == null)
+                    {
+                        MessageBox.Show($"Sorry, but we didn't find the necessary Plugin Type information in the destination system...");
+                        return;
+                    }
+
+                    if (sdkMessage == null)
+                    {
+                        MessageBox.Show($"Sorry, but we didn't find the necessary SDK Message information in the destination system...");
+                        return;
+                    }
+
+                    if (messageFilter == null)
+                    {
+                        MessageBox.Show($"Sorry, but we didn't find the necessary Message Filter information in the destination system...");
+                        return;
+                    }
+
+                    Entity newStepToCreate = new Entity("sdkmessageprocessingstep");
+                    newStepToCreate["plugintypeid"] = new EntityReference("plugintype", pluginType.Id);
+                    newStepToCreate["sdkmessageid"] = new EntityReference("plugintype", sdkMessage.Id);
+                    newStepToCreate["sdkmessagefilterid"] = new EntityReference("sdkmessagefilter", messageFilter.Id);
                     newStepToCreate["name"] = returnAliasedValue(selectedStep, "step.name");
                     newStepToCreate["configuration"] = returnAliasedValue(selectedStep, "step.configuration");
                     newStepToCreate["mode"] = returnAliasedValue(selectedStep, "step.mode");
@@ -414,9 +459,7 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
                     newStepToCreate["description"] = returnAliasedValue(selectedStep, "step.description");
                     newStepToCreate["asyncautodelete"] = returnAliasedValue(selectedStep, "step.asyncautodelete");
                     newStepToCreate["customizationlevel"] = returnAliasedValue(selectedStep, "step.customizationlevel");
-                    newStepToCreate["plugintypeid"] = new EntityReference("plugintype", getPluginType(returnAliasedValue(selectedStep, "plugintype.typename").ToString()).Id);
-                    newStepToCreate["sdkmessageid"] = new EntityReference("plugintype", getSdkMessage(returnAliasedValue(selectedStep, "sdkmessage.name").ToString()).Id);
-                    newStepToCreate["sdkmessagefilterid"] = new EntityReference("sdkmessagefilter", getMessageFilter(returnAliasedValue(selectedStep, "messagefilter.primaryobjecttypecode").ToString()).Id);
+
                     e.Result = targetService.Create(newStepToCreate);
                 },
                 PostWorkCallBack = e =>
@@ -429,7 +472,7 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
 
                     if((Guid)e.Result != null)
                     {
-                        MessageBox.Show($"Your step was successfully copied");
+                        MessageBox.Show($"Your step was successfully copied.");
                         listBoxTargetSource.Items.Add(returnAliasedValue(selectedStep, "step.name"));
                     }
                         

@@ -236,9 +236,9 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.tableLayoutPanel2.AutoSize = true;
             this.tableLayoutPanel2.ColumnCount = 3;
-            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 47F));
-            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 6F));
-            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 47F));
+            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 60F));
+            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tableLayoutPanel2.Controls.Add(this.groupBox1, 0, 0);
             this.tableLayoutPanel2.Controls.Add(this.groupBox2, 2, 0);
             this.tableLayoutPanel2.Controls.Add(this.groupBox4, 1, 0);
@@ -258,7 +258,7 @@
             this.groupBox1.Controls.Add(this.listBoxSourceTarget);
             this.groupBox1.Location = new System.Drawing.Point(3, 3);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(475, 438);
+            this.groupBox1.Size = new System.Drawing.Size(476, 438);
             this.groupBox1.TabIndex = 28;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Steps which are on Source but Target environment";
@@ -284,7 +284,7 @@
             this.listBoxSourceTarget.FormattingEnabled = true;
             this.listBoxSourceTarget.Location = new System.Drawing.Point(9, 19);
             this.listBoxSourceTarget.Name = "listBoxSourceTarget";
-            this.listBoxSourceTarget.Size = new System.Drawing.Size(460, 407);
+            this.listBoxSourceTarget.Size = new System.Drawing.Size(461, 407);
             this.listBoxSourceTarget.TabIndex = 22;
             // 
             // groupBox2
@@ -331,9 +331,9 @@
             | System.Windows.Forms.AnchorStyles.Left)));
             this.groupBox4.Controls.Add(this.buttonCopySourceToTarget);
             this.groupBox4.Controls.Add(this.buttonCopyTargetToSource);
-            this.groupBox4.Location = new System.Drawing.Point(484, 3);
+            this.groupBox4.Location = new System.Drawing.Point(485, 3);
             this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Size = new System.Drawing.Size(55, 438);
+            this.groupBox4.Size = new System.Drawing.Size(54, 438);
             this.groupBox4.TabIndex = 30;
             this.groupBox4.TabStop = false;
             // 
