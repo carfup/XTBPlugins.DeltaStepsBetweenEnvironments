@@ -602,8 +602,8 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
 
         private void DeltaStepsBetweenEnvironments_Load(object sender, EventArgs e)
         {
-            this.log.LogData(EventType.Event, "Loading plugin");
             log = new LogUsage(this);
+            this.log.LogData(EventType.Event, "Loading plugin");
             LoadSetting();
         }
 
