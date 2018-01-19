@@ -9,6 +9,7 @@ namespace Carfup.XTBPlugins.AppCode
     public class PluginSettings
     {
         public bool? AllowLogUsage { get; set; }
+        public string CurrentVersion { get; set; }
     }
 
     static class EventType
@@ -17,5 +18,10 @@ namespace Carfup.XTBPlugins.AppCode
         public const string Trace = "trace";
         public const string Dependency = "dependency";
         public const string Exception = "exception";
+    }
+
+    public static class CustomParameter
+    {
+        public static string INSIGHTS_INTRUMENTATIONKEY = "INSIGHTS_INTRUMENTATIONKEY_TOREPLACE";
     }
 }

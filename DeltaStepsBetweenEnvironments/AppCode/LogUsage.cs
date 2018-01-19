@@ -22,9 +22,9 @@ namespace Carfup.XTBPlugins.AppCode
         {
             this.dbe = dbe;
 
-            TelemetryConfiguration.Active.InstrumentationKey = ConfigurationManager.AppSettings["INSIGHTS_INTRUMENTATIONKEY"];
+            TelemetryConfiguration.Active.InstrumentationKey = CustomParameter.INSIGHTS_INTRUMENTATIONKEY;
             this.telemetry = new TelemetryClient();
-            this.telemetry.Context.Component.Version = this.CurrentVersion;
+            this.telemetry.Context.Component.Version = this.dbe.CurrentVersion;
             this.telemetry.Context.Device.Id = this.dbe.GetType().Name;
         }
 
@@ -55,7 +55,7 @@ namespace Carfup.XTBPlugins.AppCode
             }
 
             if (this.forceLog)
-                this.forceLog = !this.forceLog;
+                this.forceLog = false;
         }
 
         public void Flush()
@@ -63,15 +63,6 @@ namespace Carfup.XTBPlugins.AppCode
             this.telemetry.Flush();
         }
 
-        public string CurrentVersion
-        {
-            get
-            {
-                Assembly assembly = Assembly.GetExecutingAssembly();
-                FileVersionInfo fileVersionInfo = FileVersionInfo.GetVersionInfo(assembly.Location);
-                return fileVersionInfo.ProductVersion;
-            }
-        }
 
         public Dictionary<string, string> completeLog(string action = null)
         {

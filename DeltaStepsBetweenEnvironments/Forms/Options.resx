@@ -117,7 +117,4 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="label1.Text" xml:space="preserve">
-    <value>FetchXML Builder collects completely anonymous usage statistics. No information regarding connected CRM or any kind of data is collected! Allowing the application to send statistics is greatly appreciated!</value>
-  </data>
 </root>

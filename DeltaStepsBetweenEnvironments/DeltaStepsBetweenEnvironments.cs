@@ -627,5 +627,15 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
             }
             settings = new PluginSettings();
         }
+
+        public string CurrentVersion
+        {
+            get
+            {
+                Assembly assembly = Assembly.GetExecutingAssembly();
+                FileVersionInfo fileVersionInfo = FileVersionInfo.GetVersionInfo(assembly.Location);
+                return fileVersionInfo.ProductVersion;
+            }
+        }
     }
 }

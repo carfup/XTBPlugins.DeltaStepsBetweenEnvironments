@@ -28,6 +28,7 @@ namespace Carfup.XTBPlugins.Forms
         {
             var settings = dbe.settings;
             settings.AllowLogUsage = checkboxAllowStats.Checked;
+            settings.CurrentVersion = this.dbe.CurrentVersion;
 
             return settings;
         }

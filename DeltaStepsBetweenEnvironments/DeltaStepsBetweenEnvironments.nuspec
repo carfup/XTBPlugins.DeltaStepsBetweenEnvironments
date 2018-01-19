@@ -30,7 +30,7 @@ Find out if there is differences about your plugin steps between two of your env
     <copyright>Copyright 2017</copyright>
     <tags>XrmToolBox Plugin DeltaStepsBetweenEnvironments</tags>
     <dependencies>
-      <dependency id="XrmToolBox" version="1.2017.6.16" />
+      <dependency id="XrmToolBox" version="1.2018.1.20" />
     </dependencies>
   </metadata>
   <files>
