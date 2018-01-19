@@ -254,8 +254,8 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
                     stepsCrmSource = querySteps(sourceService, stepsCrmSource);
                     stepsCrmTarget = querySteps(targetService, stepsCrmTarget);
 
-                    diffCrmSourceTarget = stepsCrmSource.Except(stepsCrmTarget).Select(x => ((AliasedValue)x["step.name"]).Value.ToString()).ToArray();
-                    diffCrmTargetSource = stepsCrmTarget.Except(stepsCrmSource).Select(x => ((AliasedValue)x["step.name"]).Value.ToString()).ToArray();
+                    diffCrmSourceTarget = stepsCrmSource.Select(x => ((AliasedValue)x["step.name"]).Value.ToString()).Except(stepsCrmTarget.Select(x => ((AliasedValue)x["step.name"]).Value.ToString())).ToArray();
+                    diffCrmTargetSource = stepsCrmTarget.Select(x => ((AliasedValue)x["step.name"]).Value.ToString()).Except(stepsCrmSource.Select(x => ((AliasedValue)x["step.name"]).Value.ToString())).ToArray();
                 },
                 PostWorkCallBack = e =>
                 {
