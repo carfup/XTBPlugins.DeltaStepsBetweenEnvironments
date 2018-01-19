@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
+using System.Configuration;
 using System.Data;
 using System.Linq;
 using System.Text;
@@ -10,12 +11,15 @@ using System.Windows.Forms;
 using XrmToolBox.Extensibility;
 using XrmToolBox.Extensibility.Args;
 using XrmToolBox.Extensibility.Interfaces;
-
-
-
 using Microsoft.Xrm.Sdk.Query;
 using McTools.Xrm.Connection;
 using Microsoft.Xrm.Sdk;
+using Microsoft.ApplicationInsights;
+using Microsoft.ApplicationInsights.Extensibility;
+using System.Reflection;
+using System.Diagnostics;
+using Carfup.XTBPlugins.Forms;
+using Carfup.XTBPlugins.AppCode;
 
 namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
 {
@@ -31,6 +35,7 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
         List<Entity> stepsCrmTarget = new List<Entity>();
         private static string solutionPluginStepsName = null;
         public event EventHandler OnRequestConnection;
+        internal PluginSettings settings = new PluginSettings();
         public string RepositoryName
         {
             get
@@ -52,6 +57,11 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
         public DeltaStepsBetweenEnvironments()
         {
             InitializeComponent();
+
+            TelemetryConfiguration.Active.InstrumentationKey = ConfigurationManager.AppSettings["INSIGHTS_INTRUMENTATIONKEY"];
+            TelemetryClient telemetry = new TelemetryClient();
+            telemetry.Context.Device.Id = System.AppDomain.CurrentDomain.FriendlyName.Replace(".exe", String.Empty);
+            telemetry.Context.Component.Version = CurrentVersion;
 
             sourceDetail = this.ConnectionDetail;
             sourceService = this.Service;
@@ -545,6 +555,62 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
             var messageFilter = targetService.RetrieveMultiple(queryRetrieveMessageFilter).Entities;
 
             return messageFilter.FirstOrDefault();
+        }
+
+        public static string CurrentVersion
+        {
+            get
+            {
+                Assembly assembly = Assembly.GetExecutingAssembly();
+                FileVersionInfo fileVersionInfo = FileVersionInfo.GetVersionInfo(assembly.Location);
+                return fileVersionInfo.ProductVersion;
+            }
+        }
+
+        private void toolStripButtonOptions_Click(object sender, EventArgs e)
+        {
+            var allowLogUsage = settings.AllowLogUsage;
+            var options = new Options(this);
+            
+            var optionDlg = new Options(this);
+            if (optionDlg.ShowDialog(this) == DialogResult.OK)
+            {
+                settings = optionDlg.GetSettings();
+                if (allowLogUsage != settings.AllowLogUsage)
+                {
+                    if (settings.AllowLogUsage == true)
+                    {
+                       // LogUse("Accept", true);
+                    }
+                    else if (!settings.AllowLogUsage == true)
+                    {
+                       // LogUse("Deny", true);
+                    }
+                }
+            }
+        }
+
+        private void SaveSetting()
+        {
+            SettingsManager.Instance.Save(typeof(DeltaStepsBetweenEnvironments), settings, "[Common]");
+        }
+
+        private void DeltaStepsBetweenEnvironments_Load(object sender, EventArgs e)
+        {
+            LoadSetting();
+        }
+
+        private void LoadSetting()
+        {
+            try
+            {
+                if (SettingsManager.Instance.TryLoad<PluginSettings>(typeof(DeltaStepsBetweenEnvironments), out settings, "[Common]"))
+                {
+                    return;
+                }
+            }
+            catch (InvalidOperationException) { }
+            settings = new PluginSettings();
         }
     }
 }

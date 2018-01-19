@@ -28,8 +28,10 @@
 		/// </summary>
 		private void InitializeComponent()
 		{
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DeltaStepsBetweenEnvironments));
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.toolStripButtonClose = new System.Windows.Forms.ToolStripButton();
+            this.toolStripButtonOptions = new System.Windows.Forms.ToolStripButton();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.buttonChangeSource = new System.Windows.Forms.Button();
@@ -66,7 +68,8 @@
             // toolStrip1
             // 
             this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripButtonClose});
+            this.toolStripButtonClose,
+            this.toolStripButtonOptions});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.Size = new System.Drawing.Size(1038, 25);
@@ -82,6 +85,16 @@
             this.toolStripButtonClose.Size = new System.Drawing.Size(23, 22);
             this.toolStripButtonClose.Text = "toolStripButton1";
             this.toolStripButtonClose.Click += new System.EventHandler(this.toolStripButtonClose_Click);
+            // 
+            // toolStripButtonOptions
+            // 
+            this.toolStripButtonOptions.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonOptions.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonOptions.Image")));
+            this.toolStripButtonOptions.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonOptions.Name = "toolStripButtonOptions";
+            this.toolStripButtonOptions.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButtonOptions.Text = "Options";
+            this.toolStripButtonOptions.Click += new System.EventHandler(this.toolStripButtonOptions_Click);
             // 
             // tableLayoutPanel1
             // 
@@ -367,6 +380,7 @@
             this.Controls.Add(this.toolStrip1);
             this.Name = "DeltaStepsBetweenEnvironments";
             this.Size = new System.Drawing.Size(1038, 613);
+            this.Load += new System.EventHandler(this.DeltaStepsBetweenEnvironments_Load);
             this.toolStrip1.ResumeLayout(false);
             this.toolStrip1.PerformLayout();
             this.tableLayoutPanel1.ResumeLayout(false);
@@ -412,5 +426,6 @@
         private System.Windows.Forms.Button buttonCopyTargetToSource;
         private System.Windows.Forms.Label labelSourceTargetMatch;
         private System.Windows.Forms.Label labelTargetSourceMatch;
+        private System.Windows.Forms.ToolStripButton toolStripButtonOptions;
     }
 }
