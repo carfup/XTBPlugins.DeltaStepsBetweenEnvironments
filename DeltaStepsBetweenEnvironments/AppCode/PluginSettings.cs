@@ -10,4 +10,12 @@ namespace Carfup.XTBPlugins.AppCode
     {
         public bool? AllowLogUsage { get; set; }
     }
+
+    static class EventType
+    {
+        public const string Event = "event";
+        public const string Trace = "trace";
+        public const string Dependency = "dependency";
+        public const string Exception = "exception";
+    }
 }

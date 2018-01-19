@@ -31,5 +31,17 @@ namespace Carfup.XTBPlugins.Forms
 
             return settings;
         }
+
+        private void buttonCancel_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+
+        private void buttonOk_Click(object sender, EventArgs e)
+        {
+            this.dbe.settings = GetSettings();
+            this.dbe.SaveSettings();
+            this.Close();
+        }
     }
 }
