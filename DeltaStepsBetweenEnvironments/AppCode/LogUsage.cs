@@ -30,7 +30,7 @@ namespace Carfup.XTBPlugins.AppCode
 
         public void updateForceLog()
         {
-            this.forceLog = !this.forceLog;
+            this.forceLog = true;
         }
 
         public void LogData(string type, string action, Exception exception = null)
@@ -53,6 +53,9 @@ namespace Carfup.XTBPlugins.AppCode
                         break;
                 }
             }
+
+            if (this.forceLog)
+                this.forceLog = !this.forceLog;
         }
 
         public void Flush()

@@ -67,7 +67,11 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
         private void toolStripButtonClose_Click(object sender, EventArgs e)
         {
             this.log.LogData(EventType.Event, "Closing plugin");
+
+            // Saving settings for the next usage of plugin
             SaveSettings();
+
+            // Making sure that all message are sent if stats are enabled
             this.log.Flush();
             CloseTool();
         }
@@ -584,10 +588,12 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
                 {
                     if (settings.AllowLogUsage == true)
                     {
+                        this.log.updateForceLog();
                         this.log.LogData(EventType.Event, "Accept Stats");
                     }
                     else if (!settings.AllowLogUsage == true)
                     {
+                        this.log.updateForceLog();
                         this.log.LogData(EventType.Event, "Deny Stats");
                     }
                 }
