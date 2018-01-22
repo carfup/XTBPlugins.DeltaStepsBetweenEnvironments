@@ -34,6 +34,6 @@ Find out if there is differences about your plugin steps between two of your env
     </dependencies>
   </metadata>
   <files>
-    <file src="bin\Release\Carfup.XTBPlugins.*.dll" target="lib\net452\Plugins" />
+    <file src="bin\Release\Carfup.XTBPlugins.*.dll" target="lib\net462\Plugins" />
   </files>
 </package>

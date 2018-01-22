@@ -58,15 +58,11 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
         public DeltaStepsBetweenEnvironments()
         {
             InitializeComponent();
-
-            sourceDetail = this.ConnectionDetail;
-            sourceService = this.Service;
-            buttonCompare.Visible = false;
         }
 
         private void toolStripButtonClose_Click(object sender, EventArgs e)
         {
-            this.log.LogData(EventType.Event, "Closing plugin");
+            this.log.LogData(EventType.Event, LogAction.PluginClosed);
 
             // Saving settings for the next usage of plugin
             SaveSettings();
@@ -261,13 +257,11 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
                 {
                     if (e.Error != null)
                     {
-                        this.log.LogData(EventType.Exception, "Error comparing the 2 solutions", e.Error);
+                        this.log.LogData(EventType.Exception, LogAction.SolutionsCompared, e.Error);
                         MessageBox.Show(this, e.Error.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         return;
                     }
 
-
-                    this.log.LogData(EventType.Event, "2 solutions compared");
                     if (diffCrmSourceTarget.Count() == 0)
                     {
                         //listBoxSourceTarget.Visible = false;
@@ -292,6 +286,8 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
                         listBoxTargetSource.Visible = true;
                         labelTargetSourceMatch.Visible = false;
                     }
+
+                    this.log.LogData(EventType.Event, LogAction.SolutionsCompared);
                 },
                 ProgressChanged = e => { SetWorkingMessage(e.UserState.ToString()); }
             });
@@ -307,6 +303,7 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
                     Message = "Loading CRM Solutions...",
                     Work = (bw, e) =>
                     {
+                        this.log.LogData(EventType.Event, LogAction.SolutionsLoaded);
                         solutionsList = sourceService.RetrieveMultiple(new QueryExpression("solution")
                         {
                             ColumnSet = new ColumnSet("uniquename"),
@@ -316,7 +313,7 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
                     {
                         if (e.Error != null)
                         {
-                            this.log.LogData(EventType.Exception, "Error retrieving solutions", e.Error);
+                            this.log.LogData(EventType.Exception, LogAction.SolutionsLoaded, e.Error);
                             MessageBox.Show(this, e.Error.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                             return;
                         }
@@ -349,7 +346,7 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
         {
             if (sourceService == null || targetService == null)
             {
-                this.log.LogData(EventType.Event, "Not connected on both environments");
+                this.log.LogData(EventType.Event, LogAction.CanProceed);
                 MessageBox.Show("Make sure you are connected to a Source AND Target environments first.");
                 return false;
             }
@@ -374,24 +371,28 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
 
                     if (pluginType == null)
                     {
-                        this.log.LogData(EventType.Exception, "Issue retrieving : pluginType (target to source)");
+                        this.log.LogData(EventType.Exception, LogAction.PluginTypeRetrievedTargetToSource);
                         MessageBox.Show($"Sorry, but we didn't find the necessary Plugin Type information in the destination system...");
                         return;
                     }
 
                     if (sdkMessage == null)
                     {
-                        this.log.LogData(EventType.Exception, "Issue retrieving : sdkMessage (target to source)");
+                        this.log.LogData(EventType.Exception, LogAction.SDKMessageRetrievedTargetToSource);
                         MessageBox.Show($"Sorry, but we didn't find the necessary SDK Message information in the destination system...");
                         return;
                     }
 
                     if (messageFilter == null)
                     {
-                        this.log.LogData(EventType.Exception, "Issue retrieving : messageFilter (target to source)");
+                        this.log.LogData(EventType.Exception, LogAction.MessageFilterRetrievedTargetToSource);
                         MessageBox.Show($"Sorry, but we didn't find the necessary Message Filter information in the destination system...");
                         return;
                     }
+
+                    this.log.LogData(EventType.Event, LogAction.PluginTypeRetrievedTargetToSource);
+                    this.log.LogData(EventType.Event, LogAction.SDKMessageRetrievedTargetToSource);
+                    this.log.LogData(EventType.Event, LogAction.MessageFilterRetrievedTargetToSource);
 
                     Entity newStepToCreate = new Entity("sdkmessageprocessingstep");
                     newStepToCreate["plugintypeid"] = new EntityReference("plugintype", pluginType.Id);
@@ -416,14 +417,14 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
                 {
                     if (e.Error != null)
                     {
-                        this.log.LogData(EventType.Exception, "Error creating step, target to source", e.Error);
+                        this.log.LogData(EventType.Exception, LogAction.StepCreatedTargetToSource, e.Error);
                         MessageBox.Show(this, e.Error.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         return;
                     }
 
                     if ((Guid)e.Result != null)
                     {
-                        this.log.LogData(EventType.Event, "Your step was successfully copied. (target to source)");
+                        this.log.LogData(EventType.Exception, LogAction.StepCreatedTargetToSource, e.Error);
                         MessageBox.Show($"Your step was successfully copied");
                         listBoxSourceTarget.Items.Add(returnAliasedValue(selectedStep, "step.name"));
                     }
@@ -452,24 +453,29 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
 
                     if (pluginType == null)
                     {
-                        this.log.LogData(EventType.Exception, "Issue retrieving : pluginType (source to target)");
+                        this.log.LogData(EventType.Exception, LogAction.PluginTypeRetrievedSourceToTarget);
                         MessageBox.Show($"Sorry, but we didn't find the necessary Plugin Type information in the destination system...");
                         return;
                     }
 
                     if (sdkMessage == null)
                     {
-                        this.log.LogData(EventType.Exception, "Issue retrieving : sdkMessage (source to target)");
+                        this.log.LogData(EventType.Exception, LogAction.SDKMessageRetrievedSourceToTarget);
                         MessageBox.Show($"Sorry, but we didn't find the necessary SDK Message information in the destination system...");
                         return;
                     }
 
                     if (messageFilter == null)
                     {
-                        this.log.LogData(EventType.Exception, "Issue retrieving : messageFilter (source to target)");
+                        this.log.LogData(EventType.Exception, LogAction.MessageFilterRetrievedSourceToTarget);
                         MessageBox.Show($"Sorry, but we didn't find the necessary Message Filter information in the destination system...");
                         return;
                     }
+
+
+                    this.log.LogData(EventType.Event, LogAction.PluginTypeRetrievedSourceToTarget);
+                    this.log.LogData(EventType.Event, LogAction.SDKMessageRetrievedSourceToTarget);
+                    this.log.LogData(EventType.Event, LogAction.MessageFilterRetrievedSourceToTarget);
 
                     Entity newStepToCreate = new Entity("sdkmessageprocessingstep");
                     newStepToCreate["plugintypeid"] = new EntityReference("plugintype", pluginType.Id);
@@ -494,14 +500,14 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
                 {
                     if (e.Error != null)
                     {
-                        this.log.LogData(EventType.Exception, "Error creating step, source to target", e.Error);
+                        this.log.LogData(EventType.Exception, LogAction.StepCreeatedSourceToTarget, e.Error);
                         MessageBox.Show(this, e.Error.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         return;
                     }
 
                     if((Guid)e.Result != null)
                     {
-                        this.log.LogData(EventType.Event, "Your step was successfully copied. (source to target)");
+                        this.log.LogData(EventType.Event, LogAction.StepCreeatedSourceToTarget);
                         MessageBox.Show($"Your step was successfully copied.");
                         listBoxTargetSource.Items.Add(returnAliasedValue(selectedStep, "step.name"));
                     }
@@ -589,12 +595,12 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
                     if (settings.AllowLogUsage == true)
                     {
                         this.log.updateForceLog();
-                        this.log.LogData(EventType.Event, "Accept Stats");
+                        this.log.LogData(EventType.Event, LogAction.StatsAccepted);
                     }
                     else if (!settings.AllowLogUsage == true)
                     {
                         this.log.updateForceLog();
-                        this.log.LogData(EventType.Event, "Deny Stats");
+                        this.log.LogData(EventType.Event, LogAction.StatsDenied);
                     }
                 }
             }
@@ -602,14 +608,19 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
 
         public void SaveSettings()
         {
-            this.log.LogData(EventType.Event, "Saving Settings");
+            this.log.LogData(EventType.Event, LogAction.SettingsSaved);
             SettingsManager.Instance.Save(typeof(DeltaStepsBetweenEnvironments), settings);
         }
 
         private void DeltaStepsBetweenEnvironments_Load(object sender, EventArgs e)
         {
+            sourceDetail = this.ConnectionDetail;
+            sourceService = this.Service;
+            buttonCompare.Visible = false;
+
+            // initializing log class
             log = new LogUsage(this);
-            this.log.LogData(EventType.Event, "Loading plugin");
+            this.log.LogData(EventType.Event, LogAction.PluginsLoaded);
             LoadSetting();
         }
 
@@ -623,9 +634,11 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
                 }
             }
             catch (InvalidOperationException ex) {
-                this.log.LogData(EventType.Exception, "Loading Settings", ex);
+                this.log.LogData(EventType.Exception, LogAction.SettingLoaded, ex);
             }
             settings = new PluginSettings();
+
+            this.log.LogData(EventType.Event, LogAction.SettingLoaded);
         }
 
         public string CurrentVersion
