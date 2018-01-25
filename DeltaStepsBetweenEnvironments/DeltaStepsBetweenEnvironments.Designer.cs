@@ -351,7 +351,7 @@
             // 
             // buttonCopySourceToTarget
             // 
-            this.buttonCopySourceToTarget.Location = new System.Drawing.Point(11, 130);
+            this.buttonCopySourceToTarget.Location = new System.Drawing.Point(10, 87);
             this.buttonCopySourceToTarget.Name = "buttonCopySourceToTarget";
             this.buttonCopySourceToTarget.Size = new System.Drawing.Size(43, 23);
             this.buttonCopySourceToTarget.TabIndex = 1;
@@ -361,7 +361,7 @@
             // 
             // buttonCopyTargetToSource
             // 
-            this.buttonCopyTargetToSource.Location = new System.Drawing.Point(11, 88);
+            this.buttonCopyTargetToSource.Location = new System.Drawing.Point(11, 44);
             this.buttonCopyTargetToSource.Name = "buttonCopyTargetToSource";
             this.buttonCopyTargetToSource.Size = new System.Drawing.Size(43, 23);
             this.buttonCopyTargetToSource.TabIndex = 0;

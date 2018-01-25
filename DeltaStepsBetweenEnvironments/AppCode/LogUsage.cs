@@ -85,7 +85,7 @@ namespace Carfup.XTBPlugins.AppCode
                       "Thanks!";
 
             this.dbe.settings.AllowLogUsage = true;
-            MessageBox.Show(msg);
+            MessageBox.Show(msg, "Information");
         }
     }
 }

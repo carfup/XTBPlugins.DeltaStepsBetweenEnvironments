@@ -430,6 +430,9 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
                         this.log.LogData(EventType.Exception, LogAction.StepCreatedTargetToSource, e.Error);
                         MessageBox.Show($"Your step was successfully copied");
                         listBoxSourceTarget.Items.Add(returnAliasedValue(selectedStep, "step.name"));
+
+                        labelSourceTargetMatch.Visible = false;
+                        labelTargetSourceMatch.Visible = false;
                     }
 
 
@@ -513,6 +516,9 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
                         this.log.LogData(EventType.Event, LogAction.StepCreeatedSourceToTarget);
                         MessageBox.Show($"Your step was successfully copied.");
                         listBoxTargetSource.Items.Add(returnAliasedValue(selectedStep, "step.name"));
+
+                        labelSourceTargetMatch.Visible = false;
+                        labelTargetSourceMatch.Visible = false;
                     }
                         
 
