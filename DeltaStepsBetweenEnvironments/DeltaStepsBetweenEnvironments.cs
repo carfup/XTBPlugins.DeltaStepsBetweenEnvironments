@@ -58,6 +58,9 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
         public DeltaStepsBetweenEnvironments()
         {
             InitializeComponent();
+            sourceDetail = this.ConnectionDetail;
+            sourceService = this.Service;
+            buttonCompare.Visible = false;
         }
 
         private void toolStripButtonClose_Click(object sender, EventArgs e)
@@ -614,13 +617,11 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
 
         private void DeltaStepsBetweenEnvironments_Load(object sender, EventArgs e)
         {
-            sourceDetail = this.ConnectionDetail;
-            sourceService = this.Service;
-            buttonCompare.Visible = false;
+            
 
             // initializing log class
             log = new LogUsage(this);
-            this.log.LogData(EventType.Event, LogAction.PluginsLoaded);
+            this.log.LogData(EventType.Event, LogAction.PluginOpened);
             LoadSetting();
         }
 
@@ -632,16 +633,24 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
                 {
                     return;
                 }
+                else
+                    settings = new PluginSettings();
             }
             catch (InvalidOperationException ex) {
                 this.log.LogData(EventType.Exception, LogAction.SettingLoaded, ex);
             }
-            settings = new PluginSettings();
+            
 
             this.log.LogData(EventType.Event, LogAction.SettingLoaded);
+
+            if (!settings.AllowLogUsage.HasValue)
+            {
+                this.log.PromptToLog();
+                this.SaveSettings();
+            }
         }
 
-        public string CurrentVersion
+        public static string CurrentVersion
         {
             get
             {

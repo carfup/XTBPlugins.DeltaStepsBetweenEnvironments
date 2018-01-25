@@ -6,6 +6,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using Microsoft.ApplicationInsights;
 using Microsoft.ApplicationInsights.Extensibility;
 
@@ -24,7 +25,7 @@ namespace Carfup.XTBPlugins.AppCode
 
             TelemetryConfiguration.Active.InstrumentationKey = CustomParameter.INSIGHTS_INTRUMENTATIONKEY;
             this.telemetry = new TelemetryClient();
-            this.telemetry.Context.Component.Version = this.dbe.CurrentVersion;
+            this.telemetry.Context.Component.Version = DeltaStepsBetweenEnvironments.DeltaStepsBetweenEnvironments.CurrentVersion;
             this.telemetry.Context.Device.Id = this.dbe.GetType().Name;
         }
 
@@ -75,6 +76,16 @@ namespace Carfup.XTBPlugins.AppCode
                 dictionary.Add("action", action);
 
             return dictionary;
+        }
+
+        internal void PromptToLog()
+        {
+            var msg = "Anonymous statistics will be collected to improve plugin functionalities.\n\n" +
+                      "You can change this setting in plugin's options anytime.\n\n" +
+                      "Thanks!";
+
+            this.dbe.settings.AllowLogUsage = true;
+            MessageBox.Show(msg);
         }
     }
 }

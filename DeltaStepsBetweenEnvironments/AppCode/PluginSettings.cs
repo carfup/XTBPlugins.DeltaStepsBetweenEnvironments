@@ -9,7 +9,7 @@ namespace Carfup.XTBPlugins.AppCode
     public class PluginSettings
     {
         public bool? AllowLogUsage { get; set; }
-        public string CurrentVersion { get; set; }
+        public string CurrentVersion { get; set; } = DeltaStepsBetweenEnvironments.DeltaStepsBetweenEnvironments.CurrentVersion;
     }
 
     static class EventType
@@ -33,6 +33,7 @@ namespace Carfup.XTBPlugins.AppCode
         public const string SettingsSaved = "SettingsSaved";
         public const string SettingLoaded = "SettingLoaded";
         public const string SolutionsCompared = "SolutionsCompared";
+        public const string PluginOpened = "PluginOpened";
         public const string SolutionsLoaded = "SolutionsLoaded";
         public const string CRMAssembliesLoaded = "CRMAssembliesLoaded";
         public const string AssemblyLoaded = "AssemblyLoaded";

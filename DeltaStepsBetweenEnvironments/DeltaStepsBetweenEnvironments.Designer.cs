@@ -29,6 +29,8 @@
 		private void InitializeComponent()
 		{
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
+            this.toolStripButtonClose = new System.Windows.Forms.ToolStripButton();
+            this.toolStripButtonOptions = new System.Windows.Forms.ToolStripButton();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.buttonChangeSource = new System.Windows.Forms.Button();
@@ -52,8 +54,6 @@
             this.groupBox4 = new System.Windows.Forms.GroupBox();
             this.buttonCopySourceToTarget = new System.Windows.Forms.Button();
             this.buttonCopyTargetToSource = new System.Windows.Forms.Button();
-            this.toolStripButtonClose = new System.Windows.Forms.ToolStripButton();
-            this.toolStripButtonOptions = new System.Windows.Forms.ToolStripButton();
             this.toolStrip1.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -74,6 +74,24 @@
             this.toolStrip1.Size = new System.Drawing.Size(1038, 25);
             this.toolStrip1.TabIndex = 0;
             this.toolStrip1.Text = "toolStrip1";
+            // 
+            // toolStripButtonClose
+            // 
+            this.toolStripButtonClose.Image = global::Carfup.XTBPlugins.Properties.Resources.close;
+            this.toolStripButtonClose.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonClose.Name = "toolStripButtonClose";
+            this.toolStripButtonClose.Size = new System.Drawing.Size(56, 22);
+            this.toolStripButtonClose.Text = "Close";
+            this.toolStripButtonClose.Click += new System.EventHandler(this.toolStripButtonClose_Click);
+            // 
+            // toolStripButtonOptions
+            // 
+            this.toolStripButtonOptions.Image = global::Carfup.XTBPlugins.Properties.Resources.gear;
+            this.toolStripButtonOptions.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonOptions.Name = "toolStripButtonOptions";
+            this.toolStripButtonOptions.Size = new System.Drawing.Size(69, 22);
+            this.toolStripButtonOptions.Text = "Options";
+            this.toolStripButtonOptions.Click += new System.EventHandler(this.toolStripButtonOptions_Click);
             // 
             // tableLayoutPanel1
             // 
@@ -229,7 +247,7 @@
             this.tableLayoutPanel2.AutoSize = true;
             this.tableLayoutPanel2.ColumnCount = 3;
             this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 60F));
+            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 70F));
             this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tableLayoutPanel2.Controls.Add(this.groupBox1, 0, 0);
             this.tableLayoutPanel2.Controls.Add(this.groupBox2, 2, 0);
@@ -250,10 +268,10 @@
             this.groupBox1.Controls.Add(this.listBoxSourceTarget);
             this.groupBox1.Location = new System.Drawing.Point(3, 3);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(476, 438);
+            this.groupBox1.Size = new System.Drawing.Size(471, 438);
             this.groupBox1.TabIndex = 28;
             this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Steps which are on Source but Target environment";
+            this.groupBox1.Text = "Steps which are on Source but not on Target environment";
             // 
             // labelSourceTargetMatch
             // 
@@ -276,7 +294,7 @@
             this.listBoxSourceTarget.FormattingEnabled = true;
             this.listBoxSourceTarget.Location = new System.Drawing.Point(9, 19);
             this.listBoxSourceTarget.Name = "listBoxSourceTarget";
-            this.listBoxSourceTarget.Size = new System.Drawing.Size(461, 407);
+            this.listBoxSourceTarget.Size = new System.Drawing.Size(456, 407);
             this.listBoxSourceTarget.TabIndex = 22;
             // 
             // groupBox2
@@ -286,12 +304,12 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox2.Controls.Add(this.labelTargetSourceMatch);
             this.groupBox2.Controls.Add(this.listBoxTargetSource);
-            this.groupBox2.Location = new System.Drawing.Point(545, 3);
+            this.groupBox2.Location = new System.Drawing.Point(550, 3);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(477, 438);
+            this.groupBox2.Size = new System.Drawing.Size(472, 438);
             this.groupBox2.TabIndex = 29;
             this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "Steps which are on Target but Source environment";
+            this.groupBox2.Text = "Steps which are on Target but not on Source environment";
             // 
             // labelTargetSourceMatch
             // 
@@ -314,24 +332,26 @@
             this.listBoxTargetSource.FormattingEnabled = true;
             this.listBoxTargetSource.Location = new System.Drawing.Point(6, 19);
             this.listBoxTargetSource.Name = "listBoxTargetSource";
-            this.listBoxTargetSource.Size = new System.Drawing.Size(465, 407);
+            this.listBoxTargetSource.Size = new System.Drawing.Size(460, 407);
             this.listBoxTargetSource.TabIndex = 22;
             // 
             // groupBox4
             // 
-            this.groupBox4.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left)));
+            this.groupBox4.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox4.Controls.Add(this.buttonCopySourceToTarget);
             this.groupBox4.Controls.Add(this.buttonCopyTargetToSource);
-            this.groupBox4.Location = new System.Drawing.Point(485, 3);
+            this.groupBox4.Location = new System.Drawing.Point(480, 3);
             this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Size = new System.Drawing.Size(54, 438);
+            this.groupBox4.Size = new System.Drawing.Size(64, 438);
             this.groupBox4.TabIndex = 30;
             this.groupBox4.TabStop = false;
+            this.groupBox4.Text = "Actions";
             // 
             // buttonCopySourceToTarget
             // 
-            this.buttonCopySourceToTarget.Location = new System.Drawing.Point(6, 188);
+            this.buttonCopySourceToTarget.Location = new System.Drawing.Point(11, 130);
             this.buttonCopySourceToTarget.Name = "buttonCopySourceToTarget";
             this.buttonCopySourceToTarget.Size = new System.Drawing.Size(43, 23);
             this.buttonCopySourceToTarget.TabIndex = 1;
@@ -341,31 +361,13 @@
             // 
             // buttonCopyTargetToSource
             // 
-            this.buttonCopyTargetToSource.Location = new System.Drawing.Point(6, 143);
+            this.buttonCopyTargetToSource.Location = new System.Drawing.Point(11, 88);
             this.buttonCopyTargetToSource.Name = "buttonCopyTargetToSource";
             this.buttonCopyTargetToSource.Size = new System.Drawing.Size(43, 23);
             this.buttonCopyTargetToSource.TabIndex = 0;
             this.buttonCopyTargetToSource.Text = "<";
             this.buttonCopyTargetToSource.UseVisualStyleBackColor = true;
             this.buttonCopyTargetToSource.Click += new System.EventHandler(this.buttonCopyTargetToSource_Click);
-            // 
-            // toolStripButtonClose
-            // 
-            this.toolStripButtonClose.Image = global::Carfup.XTBPlugins.Properties.Resources.close;
-            this.toolStripButtonClose.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButtonClose.Name = "toolStripButtonClose";
-            this.toolStripButtonClose.Size = new System.Drawing.Size(56, 22);
-            this.toolStripButtonClose.Text = "Close";
-            this.toolStripButtonClose.Click += new System.EventHandler(this.toolStripButtonClose_Click);
-            // 
-            // toolStripButtonOptions
-            // 
-            this.toolStripButtonOptions.Image = global::Carfup.XTBPlugins.Properties.Resources.gear;
-            this.toolStripButtonOptions.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButtonOptions.Name = "toolStripButtonOptions";
-            this.toolStripButtonOptions.Size = new System.Drawing.Size(69, 22);
-            this.toolStripButtonOptions.Text = "Options";
-            this.toolStripButtonOptions.Click += new System.EventHandler(this.toolStripButtonOptions_Click);
             // 
             // DeltaStepsBetweenEnvironments
             // 
