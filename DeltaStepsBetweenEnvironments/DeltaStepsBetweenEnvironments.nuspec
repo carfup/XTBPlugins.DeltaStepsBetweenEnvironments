@@ -14,6 +14,7 @@
 1.2018.1.6
 Functionality to copy a step from one environment to the other.
 Allow the plugin to log anonymous data, in order to improve the most used features and develop the others.
+Various bug fix and improvements
 
 1.2017.12.5
 Fixed unexpected error while clicking on compare button but not having selected a solution.
