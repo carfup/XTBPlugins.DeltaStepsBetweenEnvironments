@@ -215,7 +215,7 @@
             // 
             this.buttonCompare.Location = new System.Drawing.Point(16, 54);
             this.buttonCompare.Name = "buttonCompare";
-            this.buttonCompare.Size = new System.Drawing.Size(452, 23);
+            this.buttonCompare.Size = new System.Drawing.Size(460, 23);
             this.buttonCompare.TabIndex = 28;
             this.buttonCompare.Text = "Compare the two environments";
             this.buttonCompare.UseVisualStyleBackColor = true;

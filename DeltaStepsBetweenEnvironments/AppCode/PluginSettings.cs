@@ -48,6 +48,7 @@ namespace Carfup.XTBPlugins.AppCode
         public const string PluginTypeRetrievedSourceToTarget = "PluginTypeRetrieved (Source To Target)";
         public const string SDKMessageRetrievedSourceToTarget = "SDKMessageRetrieved (Source To Target)";
         public const string MessageFilterRetrievedSourceToTarget = "MessageFilterRetrieved (Source To Target)";
+        public const string SolutionExistingInTargetEnvChecked = "SolutionExistingInTargetEnvChecked";
     }
 
 }

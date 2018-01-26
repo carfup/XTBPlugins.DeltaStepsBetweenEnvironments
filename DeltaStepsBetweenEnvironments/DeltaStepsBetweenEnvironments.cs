@@ -81,7 +81,47 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
             if (canProceed())
             {
                 solutionPluginStepsName = comboBoxSolutionsList.SelectedItem.ToString();
+
+                isSolutionExistingInTargetEnv();
             }
+        }
+
+        private void isSolutionExistingInTargetEnv()
+        {
+            WorkAsync(new WorkAsyncInfo
+            {
+                Message = "Checking if the solution name exists in the target environment...",
+                Work = (bw, e) =>
+                {
+                    QueryExpression queryExisting = new QueryExpression()
+                    {
+                        EntityName = "solution",
+                        ColumnSet = new ColumnSet(false),
+                        Criteria =
+                        {
+                            Conditions =
+                            {
+                                new ConditionExpression("uniquename", ConditionOperator.Equal, solutionPluginStepsName)
+                            }
+                        }
+                    };
+
+                    e.Result = targetService.RetrieveMultiple(queryExisting).Entities.Count;
+                },
+                PostWorkCallBack = e =>
+                {
+                    if (e.Error != null)
+                    {
+                        this.log.LogData(EventType.Exception, LogAction.SolutionExistingInTargetEnvChecked, e.Error);
+                        MessageBox.Show(this, e.Error.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return;
+                    }
+
+                    if((int)e.Result != 1)
+                        MessageBox.Show("The solution doesn't exist in the Target environment. \rThe compare function will return a \"Perfect match\" in this case.\r\r You will still have the possibility to copy steps from the Source to Target environment.", "Informaton", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                },
+                ProgressChanged = e => { SetWorkingMessage(e.UserState.ToString()); }
+            });
         }
 
         // Query the steps over the environment and return a list
@@ -233,6 +273,12 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
         // We compare the same solution name in both environments
         private void buttonCompare_Click(object sender, EventArgs evt)
         {
+            compareBothSolutions();
+        }
+
+
+        private void compareBothSolutions()
+        {
             if (solutionPluginStepsName == null)
             {
                 MessageBox.Show($"Please select a solution first.");
@@ -298,7 +344,6 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
                 ProgressChanged = e => { SetWorkingMessage(e.UserState.ToString()); }
             });
         }
-
         // Loading solutions from the Source environment
         private void buttonLoadSolutions_Click(object sender, EventArgs evt)
         {
@@ -368,8 +413,6 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
             if (selectedStep == null)
                 return;
 
-            Entity newStepToCreate = new Entity("sdkmessageprocessingstep");
-
             WorkAsync(new WorkAsyncInfo
             {
                 Message = "Creating the step in the environment...",
@@ -404,8 +447,9 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
                     this.log.LogData(EventType.Event, LogAction.PluginTypeRetrievedTargetToSource);
                     this.log.LogData(EventType.Event, LogAction.SDKMessageRetrievedTargetToSource);
                     this.log.LogData(EventType.Event, LogAction.MessageFilterRetrievedTargetToSource);
-                    
+
                     // Preparing the object step
+                    Entity newStepToCreate = new Entity("sdkmessageprocessingstep");
                     newStepToCreate["plugintypeid"] = new EntityReference("plugintype", pluginType.Id);
                     newStepToCreate["sdkmessageid"] = new EntityReference("plugintype", sdkMessage.Id);
                     newStepToCreate["sdkmessagefilterid"] = new EntityReference("sdkmessagefilter", messageFilter.Id);
@@ -436,12 +480,8 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
                     if ((Guid)e.Result != null)
                     {
                         this.log.LogData(EventType.Exception, LogAction.StepCreatedTargetToSource, e.Error);
-                        MessageBox.Show($"Your step was successfully copied to the default solution.");
-                        listBoxSourceTarget.Items.Add(returnAliasedValue(selectedStep, "step.name"));
-
-                        // newStepToCreate is missing Id since we didnt create it yet when object is created
-                        newStepToCreate.Id = (Guid)e.Result;
-                        stepsCrmTarget.Add(newStepToCreate);
+                        MessageBox.Show($"Your step was successfully copied to the default solution of source environment.");
+                        //listBoxSourceTarget.Items.Add(returnAliasedValue(selectedStep, "step.name"));
 
                         labelSourceTargetMatch.Visible = false;
                         labelTargetSourceMatch.Visible = false;
@@ -460,9 +500,6 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
 
             if (selectedStep == null)
                 return;
-
-            // we create the var here to reuse it later
-            Entity newStepToCreate = new Entity("sdkmessageprocessingstep");
 
             WorkAsync(new WorkAsyncInfo
             {
@@ -501,6 +538,7 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
                     this.log.LogData(EventType.Event, LogAction.MessageFilterRetrievedSourceToTarget);
 
                     // Preparing the object step
+                    Entity newStepToCreate = new Entity("sdkmessageprocessingstep");
                     newStepToCreate["plugintypeid"] = new EntityReference("plugintype", pluginType.Id);
                     newStepToCreate["sdkmessageid"] = new EntityReference("plugintype", sdkMessage.Id);
                     newStepToCreate["sdkmessagefilterid"] = new EntityReference("sdkmessagefilter", messageFilter.Id);
@@ -531,12 +569,8 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
                     if(e.Result != null)
                     {
                         this.log.LogData(EventType.Event, LogAction.StepCreeatedSourceToTarget);
-                        MessageBox.Show($"Your step was successfully copied to the default solution.");
-                        listBoxTargetSource.Items.Add(returnAliasedValue(selectedStep, "step.name"));
-
-                        // newStepToCreate is missing Id since we didnt create it yet when object is created
-                        newStepToCreate.Id = (Guid)e.Result;
-                        stepsCrmSource.Add(newStepToCreate);
+                        MessageBox.Show($"Your step was successfully copied to the default solution of target environment.");
+                        //listBoxTargetSource.Items.Add(returnAliasedValue(selectedStep, "step.name"));
 
                         labelSourceTargetMatch.Visible = false;
                         labelTargetSourceMatch.Visible = false;
