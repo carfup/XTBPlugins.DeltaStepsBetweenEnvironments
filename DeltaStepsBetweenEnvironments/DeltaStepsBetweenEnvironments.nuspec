@@ -1,32 +1,41 @@
 ﻿<package>
   <metadata>
     <id>Carfup.XTBPlugins.DeltaStepsBetweenEnvironments</id>
-    <version>1.2017.11.3</version>
+    <version>1.2018.1.6</version>
     <title>Delta Plugin Steps between two environments</title>
     <authors>Clement O.</authors>
     <owners>Clement O.</owners>
     <projectUrl>https://github.com/carfup/XTBPlugins.DeltaAssemblyvsCrm</projectUrl>
+	<iconUrl>http://www.gravatar.com/avatar/8b87aef303e872503c47ef3fdf83c801?s=64</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Find out if there is differences about your plugin steps between two of your environments</description>
     <summary>Really sweet plugin that does awesome things</summary>
     <releaseNotes>
+1.2018.1.6
+Functionality to copy a step from one environment to the other.
+Allow the plugin to log anonymous data, in order to improve the most used features and develop the others.
+Various bug fix and improvements
+
 1.2017.12.5
 Fixed unexpected error while clicking on compare button but not having selected a solution.
+
 1.2017.11.3
 Fix resizing of the components
 Improved background processes
 Fix unwanted behaviors on the form
 Improved visibility and error messages
+
 1.2017.6.1
 Find out if there is differences about your plugin steps between two of your environments
 	</releaseNotes>
     <copyright>Copyright 2017</copyright>
     <tags>XrmToolBox Plugin DeltaStepsBetweenEnvironments</tags>
     <dependencies>
-      <dependency id="XrmToolBox" version="1.2017.6.16" />
+      <dependency id="XrmToolBox" version="1.2018.1.20" />
     </dependencies>
   </metadata>
   <files>
-    <file src="bin\Release\Carfup.XTBPlugins.*.dll" target="lib\net452\Plugins" />
+    <file src="bin\Release\Carfup.XTBPlugins.*.dll" target="lib\net462\Plugins" />
+	<file src="bin\Release\Microsoft.ApplicationInsights.dll" target="lib\net46\Plugins" />
   </files>
 </package>
