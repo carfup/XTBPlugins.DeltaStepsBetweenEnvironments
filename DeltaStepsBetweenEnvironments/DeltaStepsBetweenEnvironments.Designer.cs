@@ -40,10 +40,13 @@
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.groupBoxSolutionComparing = new System.Windows.Forms.GroupBox();
-            this.buttonLoadSolutions = new System.Windows.Forms.Button();
+            this.radioButtonCompareAssembly = new System.Windows.Forms.RadioButton();
+            this.radioButtonCompareSolution = new System.Windows.Forms.RadioButton();
+            this.label3 = new System.Windows.Forms.Label();
+            this.buttonLoadSolutionsAssemblies = new System.Windows.Forms.Button();
             this.buttonCompare = new System.Windows.Forms.Button();
-            this.label4 = new System.Windows.Forms.Label();
-            this.comboBoxSolutionsList = new System.Windows.Forms.ComboBox();
+            this.labelComparing = new System.Windows.Forms.Label();
+            this.comboBoxSolutionsAssembliesList = new System.Windows.Forms.ComboBox();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.labelSourceTargetMatch = new System.Windows.Forms.Label();
@@ -98,8 +101,8 @@
             this.tableLayoutPanel1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.tableLayoutPanel1.ColumnCount = 2;
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 40F));
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 60F));
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 36.78049F));
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 63.21951F));
             this.tableLayoutPanel1.Controls.Add(this.groupBox3, 0, 0);
             this.tableLayoutPanel1.Controls.Add(this.groupBoxSolutionComparing, 1, 0);
             this.tableLayoutPanel1.Location = new System.Drawing.Point(3, 37);
@@ -122,14 +125,14 @@
             this.groupBox3.Controls.Add(this.label1);
             this.groupBox3.Location = new System.Drawing.Point(3, 3);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(404, 94);
+            this.groupBox3.Size = new System.Drawing.Size(371, 94);
             this.groupBox3.TabIndex = 0;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Environments configuration";
             // 
             // buttonChangeSource
             // 
-            this.buttonChangeSource.Location = new System.Drawing.Point(275, 22);
+            this.buttonChangeSource.Location = new System.Drawing.Point(254, 27);
             this.buttonChangeSource.Name = "buttonChangeSource";
             this.buttonChangeSource.Size = new System.Drawing.Size(104, 23);
             this.buttonChangeSource.TabIndex = 32;
@@ -139,7 +142,7 @@
             // 
             // btnChangeTargetEnvironment
             // 
-            this.btnChangeTargetEnvironment.Location = new System.Drawing.Point(275, 49);
+            this.btnChangeTargetEnvironment.Location = new System.Drawing.Point(254, 54);
             this.btnChangeTargetEnvironment.Name = "btnChangeTargetEnvironment";
             this.btnChangeTargetEnvironment.Size = new System.Drawing.Size(104, 23);
             this.btnChangeTargetEnvironment.TabIndex = 31;
@@ -152,7 +155,7 @@
             this.labelTargetEnvironment.AutoSize = true;
             this.labelTargetEnvironment.BackColor = System.Drawing.SystemColors.Control;
             this.labelTargetEnvironment.ForeColor = System.Drawing.Color.Red;
-            this.labelTargetEnvironment.Location = new System.Drawing.Point(143, 54);
+            this.labelTargetEnvironment.Location = new System.Drawing.Point(122, 59);
             this.labelTargetEnvironment.Name = "labelTargetEnvironment";
             this.labelTargetEnvironment.Size = new System.Drawing.Size(33, 13);
             this.labelTargetEnvironment.TabIndex = 30;
@@ -161,7 +164,7 @@
             // labelSourceEnvironment
             // 
             this.labelSourceEnvironment.AutoSize = true;
-            this.labelSourceEnvironment.Location = new System.Drawing.Point(143, 27);
+            this.labelSourceEnvironment.Location = new System.Drawing.Point(122, 32);
             this.labelSourceEnvironment.Name = "labelSourceEnvironment";
             this.labelSourceEnvironment.Size = new System.Drawing.Size(33, 13);
             this.labelSourceEnvironment.TabIndex = 29;
@@ -170,7 +173,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(25, 54);
+            this.label2.Location = new System.Drawing.Point(4, 59);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(109, 13);
             this.label2.TabIndex = 28;
@@ -179,7 +182,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(25, 27);
+            this.label1.Location = new System.Drawing.Point(4, 32);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(112, 13);
             this.label1.TabIndex = 27;
@@ -190,54 +193,90 @@
             this.groupBoxSolutionComparing.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBoxSolutionComparing.Controls.Add(this.buttonLoadSolutions);
+            this.groupBoxSolutionComparing.Controls.Add(this.radioButtonCompareAssembly);
+            this.groupBoxSolutionComparing.Controls.Add(this.radioButtonCompareSolution);
+            this.groupBoxSolutionComparing.Controls.Add(this.label3);
+            this.groupBoxSolutionComparing.Controls.Add(this.buttonLoadSolutionsAssemblies);
             this.groupBoxSolutionComparing.Controls.Add(this.buttonCompare);
-            this.groupBoxSolutionComparing.Controls.Add(this.label4);
-            this.groupBoxSolutionComparing.Controls.Add(this.comboBoxSolutionsList);
-            this.groupBoxSolutionComparing.Location = new System.Drawing.Point(413, 3);
+            this.groupBoxSolutionComparing.Controls.Add(this.labelComparing);
+            this.groupBoxSolutionComparing.Controls.Add(this.comboBoxSolutionsAssembliesList);
+            this.groupBoxSolutionComparing.Location = new System.Drawing.Point(380, 3);
             this.groupBoxSolutionComparing.Name = "groupBoxSolutionComparing";
-            this.groupBoxSolutionComparing.Size = new System.Drawing.Size(609, 94);
+            this.groupBoxSolutionComparing.Size = new System.Drawing.Size(642, 94);
             this.groupBoxSolutionComparing.TabIndex = 1;
             this.groupBoxSolutionComparing.TabStop = false;
             this.groupBoxSolutionComparing.Text = "Details selection";
             // 
-            // buttonLoadSolutions
+            // radioButtonCompareAssembly
             // 
-            this.buttonLoadSolutions.Location = new System.Drawing.Point(483, 22);
-            this.buttonLoadSolutions.Name = "buttonLoadSolutions";
-            this.buttonLoadSolutions.Size = new System.Drawing.Size(120, 23);
-            this.buttonLoadSolutions.TabIndex = 29;
-            this.buttonLoadSolutions.Text = "Load Solutions";
-            this.buttonLoadSolutions.UseVisualStyleBackColor = true;
-            this.buttonLoadSolutions.Click += new System.EventHandler(this.buttonLoadSolutions_Click);
+            this.radioButtonCompareAssembly.AutoSize = true;
+            this.radioButtonCompareAssembly.Location = new System.Drawing.Point(12, 63);
+            this.radioButtonCompareAssembly.Name = "radioButtonCompareAssembly";
+            this.radioButtonCompareAssembly.Size = new System.Drawing.Size(69, 17);
+            this.radioButtonCompareAssembly.TabIndex = 32;
+            this.radioButtonCompareAssembly.Text = "Assembly";
+            this.radioButtonCompareAssembly.UseVisualStyleBackColor = true;
+            this.radioButtonCompareAssembly.Click += new System.EventHandler(this.radioButtonCompareAssembly_Click);
+            // 
+            // radioButtonCompareSolution
+            // 
+            this.radioButtonCompareSolution.AutoSize = true;
+            this.radioButtonCompareSolution.Checked = true;
+            this.radioButtonCompareSolution.Location = new System.Drawing.Point(12, 40);
+            this.radioButtonCompareSolution.Name = "radioButtonCompareSolution";
+            this.radioButtonCompareSolution.Size = new System.Drawing.Size(63, 17);
+            this.radioButtonCompareSolution.TabIndex = 31;
+            this.radioButtonCompareSolution.TabStop = true;
+            this.radioButtonCompareSolution.Text = "Solution";
+            this.radioButtonCompareSolution.UseVisualStyleBackColor = true;
+            this.radioButtonCompareSolution.Click += new System.EventHandler(this.radioButtonCompareSolution_Click);
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(9, 21);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(81, 13);
+            this.label3.TabIndex = 30;
+            this.label3.Text = "Compare from : ";
+            // 
+            // buttonLoadSolutionsAssemblies
+            // 
+            this.buttonLoadSolutionsAssemblies.Location = new System.Drawing.Point(511, 23);
+            this.buttonLoadSolutionsAssemblies.Name = "buttonLoadSolutionsAssemblies";
+            this.buttonLoadSolutionsAssemblies.Size = new System.Drawing.Size(125, 23);
+            this.buttonLoadSolutionsAssemblies.TabIndex = 29;
+            this.buttonLoadSolutionsAssemblies.Text = "Load Solutions";
+            this.buttonLoadSolutionsAssemblies.UseVisualStyleBackColor = true;
+            this.buttonLoadSolutionsAssemblies.Click += new System.EventHandler(this.buttonLoadSolutionsAssemblies_Click);
             // 
             // buttonCompare
             // 
-            this.buttonCompare.Location = new System.Drawing.Point(16, 54);
+            this.buttonCompare.Location = new System.Drawing.Point(111, 54);
             this.buttonCompare.Name = "buttonCompare";
-            this.buttonCompare.Size = new System.Drawing.Size(460, 23);
+            this.buttonCompare.Size = new System.Drawing.Size(525, 23);
             this.buttonCompare.TabIndex = 28;
             this.buttonCompare.Text = "Compare the two environments";
             this.buttonCompare.UseVisualStyleBackColor = true;
             this.buttonCompare.Click += new System.EventHandler(this.buttonCompare_Click);
             // 
-            // label4
+            // labelComparing
             // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(13, 29);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(156, 13);
-            this.label4.TabIndex = 27;
-            this.label4.Text = "Select the solution to compare :";
+            this.labelComparing.AutoSize = true;
+            this.labelComparing.Location = new System.Drawing.Point(108, 29);
+            this.labelComparing.Name = "labelComparing";
+            this.labelComparing.Size = new System.Drawing.Size(156, 13);
+            this.labelComparing.TabIndex = 27;
+            this.labelComparing.Text = "Select the solution to compare :";
             // 
-            // comboBoxSolutionsList
+            // comboBoxSolutionsAssembliesList
             // 
-            this.comboBoxSolutionsList.FormattingEnabled = true;
-            this.comboBoxSolutionsList.Location = new System.Drawing.Point(183, 24);
-            this.comboBoxSolutionsList.Name = "comboBoxSolutionsList";
-            this.comboBoxSolutionsList.Size = new System.Drawing.Size(293, 21);
-            this.comboBoxSolutionsList.TabIndex = 26;
-            this.comboBoxSolutionsList.SelectedIndexChanged += new System.EventHandler(this.comboBoxSolutionsList_SelectedIndexChanged);
+            this.comboBoxSolutionsAssembliesList.FormattingEnabled = true;
+            this.comboBoxSolutionsAssembliesList.Location = new System.Drawing.Point(283, 24);
+            this.comboBoxSolutionsAssembliesList.Name = "comboBoxSolutionsAssembliesList";
+            this.comboBoxSolutionsAssembliesList.Size = new System.Drawing.Size(227, 21);
+            this.comboBoxSolutionsAssembliesList.TabIndex = 26;
+            this.comboBoxSolutionsAssembliesList.SelectedIndexChanged += new System.EventHandler(this.comboBoxSolutionsList_SelectedIndexChanged);
             // 
             // tableLayoutPanel2
             // 
@@ -411,10 +450,10 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.GroupBox groupBoxSolutionComparing;
-        private System.Windows.Forms.Button buttonLoadSolutions;
+        private System.Windows.Forms.Button buttonLoadSolutionsAssemblies;
         private System.Windows.Forms.Button buttonCompare;
-        private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.ComboBox comboBoxSolutionsList;
+        private System.Windows.Forms.Label labelComparing;
+        private System.Windows.Forms.ComboBox comboBoxSolutionsAssembliesList;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.ListBox listBoxTargetSource;
@@ -426,5 +465,8 @@
         private System.Windows.Forms.Label labelSourceTargetMatch;
         private System.Windows.Forms.Label labelTargetSourceMatch;
         private System.Windows.Forms.ToolStripButton toolStripButtonOptions;
+        private System.Windows.Forms.RadioButton radioButtonCompareAssembly;
+        private System.Windows.Forms.RadioButton radioButtonCompareSolution;
+        private System.Windows.Forms.Label label3;
     }
 }

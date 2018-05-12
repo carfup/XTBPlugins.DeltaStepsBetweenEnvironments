@@ -37,6 +37,10 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
         public event EventHandler OnRequestConnection;
         internal PluginSettings settings = new PluginSettings();
         LogUsage log = null;
+        Comparing comparing = Comparing.Solution;
+        ControllerManager controller = null;
+        string whatToCompare = "solution";
+        
         public string RepositoryName
         {
             get
@@ -80,45 +84,36 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
         {
             if (canProceed())
             {
-                solutionPluginStepsName = comboBoxSolutionsList.SelectedItem.ToString();
+                solutionPluginStepsName = comboBoxSolutionsAssembliesList.SelectedItem.ToString();
 
-                isSolutionExistingInTargetEnv();
+                isSolutionOrAssemblyExistingInTargetEnv();
             }
         }
 
-        private void isSolutionExistingInTargetEnv()
+        private void isSolutionOrAssemblyExistingInTargetEnv()
         {
+            string whatToCompare = Wording.getComparingInfo(comparing);
+
             WorkAsync(new WorkAsyncInfo
             {
-                Message = "Checking if the solution name exists in the target environment...",
+                Message = $"Checking if the {whatToCompare} name exists in the target environment...",
                 Work = (bw, e) =>
                 {
-                    QueryExpression queryExisting = new QueryExpression()
-                    {
-                        EntityName = "solution",
-                        ColumnSet = new ColumnSet(false),
-                        Criteria =
-                        {
-                            Conditions =
-                            {
-                                new ConditionExpression("uniquename", ConditionOperator.Equal, solutionPluginStepsName)
-                            }
-                        }
-                    };
-
-                    e.Result = targetService.RetrieveMultiple(queryExisting).Entities.Count;
+                    e.Result = (comparing == Comparing.Solution) ? controller.dataManager.isSolutionExistingInTargetEnv(solutionPluginStepsName) : controller.dataManager.isAssemblyExistingInTargetEnv(solutionPluginStepsName);
                 },
                 PostWorkCallBack = e =>
                 {
                     if (e.Error != null)
                     {
-                        this.log.LogData(EventType.Exception, LogAction.SolutionExistingInTargetEnvChecked, e.Error);
+                        string logAction = (comparing == Comparing.Solution) ? LogAction.SolutionExistingInTargetEnvChecked : LogAction.AssemblyExistingInTargetEnvChecked;
+                        this.log.LogData(EventType.Exception, logAction, e.Error);
+
                         MessageBox.Show(this, e.Error.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         return;
                     }
 
                     if((int)e.Result != 1)
-                        MessageBox.Show("The solution doesn't exist in the Target environment. \rThe compare function will return a \"Perfect match\" in this case.\r\r You will still have the possibility to copy steps from the Source to Target environment.", "Informaton", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        MessageBox.Show($"The {whatToCompare} doesn't exist in the Target environment. \rThe compare function will return a \"Perfect match\" in this case.\r\r You will still have the possibility to copy steps from the Source to Target environment.", "Informaton", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 },
                 ProgressChanged = e => { SetWorkingMessage(e.UserState.ToString()); }
             });
@@ -223,17 +218,21 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
 
         public void UpdateConnection(IOrganizationService newService, ConnectionDetail connectionDetail, string actionName = "", object parameter = null)
         {
+            controller = new ControllerManager(sourceService, targetService);
+
             if (actionName == "TargetOrganization")
             {
                 targetService = newService;
                 targetDetail = connectionDetail;
                 SetConnectionLabel(connectionDetail, "Target");
+                controller.targetService = targetService;
             }
             else
             {
                 sourceService = newService;
                 sourceDetail = connectionDetail;
                 SetConnectionLabel(connectionDetail, "Source");
+                controller.sourceService = sourceService;
             }
 
             if (targetService != null && sourceService != null)
@@ -268,6 +267,8 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
                 };
                 OnRequestConnection(this, arg);
             }
+
+
         }
 
         // We compare the same solution name in both environments
@@ -299,8 +300,8 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
                 Message = "Comparing the 2 Solutions...",
                 Work = (bw, e) =>
                 {
-                    stepsCrmSource = querySteps(sourceService, stepsCrmSource);
-                    stepsCrmTarget = querySteps(targetService, stepsCrmTarget);
+                    stepsCrmSource = controller.dataManager.querySteps(sourceService, stepsCrmSource, solutionPluginStepsName);  //querySteps(sourceService, stepsCrmSource);
+                    stepsCrmTarget = controller.dataManager.querySteps(targetService, stepsCrmTarget, solutionPluginStepsName);  //querySteps(targetService, stepsCrmTarget);
 
                     diffCrmSourceTarget = stepsCrmSource.Select(x => ((AliasedValue)x["step.name"]).Value.ToString()).Except(stepsCrmTarget.Select(x => ((AliasedValue)x["step.name"]).Value.ToString())).ToArray();
                     diffCrmTargetSource = stepsCrmTarget.Select(x => ((AliasedValue)x["step.name"]).Value.ToString()).Except(stepsCrmSource.Select(x => ((AliasedValue)x["step.name"]).Value.ToString())).ToArray();
@@ -345,34 +346,34 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
             });
         }
         // Loading solutions from the Source environment
-        private void buttonLoadSolutions_Click(object sender, EventArgs evt)
+        private void buttonLoadSolutionsAssemblies_Click(object sender, EventArgs evt)
         {
             if (canProceed())
             {
-                comboBoxSolutionsList.Items.Clear();
+                comboBoxSolutionsAssembliesList.Items.Clear();
+                string logAction = (comparing == Comparing.Solution) ? LogAction.SolutionsLoaded : LogAction.AssembliesLoaded;
+
                 WorkAsync(new WorkAsyncInfo
                 {
-                    Message = "Loading CRM Solutions...",
+                    Message = $"Loading CRM {Wording.getComparingInfo(comparing, true, true)}...",
                     Work = (bw, e) =>
                     {
-                        this.log.LogData(EventType.Event, LogAction.SolutionsLoaded);
-                        solutionsList = sourceService.RetrieveMultiple(new QueryExpression("solution")
-                        {
-                            ColumnSet = new ColumnSet("uniquename"),
-                        }).Entities.Select(p => p.Attributes["uniquename"].ToString()).OrderBy(p => p).ToArray();
+                        this.log.LogData(EventType.Event, logAction);
+                        solutionsList = (comparing == Comparing.Solution) ? controller.dataManager.loadSolutions() : controller.dataManager.loadAssemblies();
                     },
                     PostWorkCallBack = e =>
                     {
                         if (e.Error != null)
                         {
-                            this.log.LogData(EventType.Exception, LogAction.SolutionsLoaded, e.Error);
+                            
+                            this.log.LogData(EventType.Exception, logAction, e.Error);
                             MessageBox.Show(this, e.Error.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                             return;
                         }
 
-                        this.log.LogData(EventType.Event, "Solutions retrieved");
+                        this.log.LogData(EventType.Event, $"{Wording.getComparingInfo(comparing, true, true)} retrieved");
                         if (solutionsList != null)
-                            comboBoxSolutionsList.Items.AddRange(solutionsList);
+                            comboBoxSolutionsAssembliesList.Items.AddRange(solutionsList);
 
                     },
                     ProgressChanged = e => { SetWorkingMessage(e.UserState.ToString()); }
@@ -725,6 +726,20 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
                 FileVersionInfo fileVersionInfo = FileVersionInfo.GetVersionInfo(assembly.Location);
                 return fileVersionInfo.ProductVersion;
             }
+        }
+
+        private void radioButtonCompareSolution_Click(object sender, EventArgs e)
+        {
+            comparing = Comparing.Solution;
+            buttonLoadSolutionsAssemblies.Text = "Load Solutions";
+            labelComparing.Text = "Select the solution to compare :";
+        }
+
+        private void radioButtonCompareAssembly_Click(object sender, EventArgs e)
+        {
+            comparing = Comparing.Assembly;
+            buttonLoadSolutionsAssemblies.Text = "Load Assemblies";
+            labelComparing.Text = "Select the assembly to compare :";
         }
     }
 }

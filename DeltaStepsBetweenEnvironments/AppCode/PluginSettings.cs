@@ -20,6 +20,10 @@ namespace Carfup.XTBPlugins.AppCode
         public const string Exception = "exception";
     }
 
+    enum Comparing {
+        Solution, Assembly
+    };
+
     public static class CustomParameter
     {
         public static string INSIGHTS_INTRUMENTATIONKEY = "INSIGHTS_INTRUMENTATIONKEY_TOREPLACE";
@@ -35,6 +39,7 @@ namespace Carfup.XTBPlugins.AppCode
         public const string SolutionsCompared = "SolutionsCompared";
         public const string PluginOpened = "PluginOpened";
         public const string SolutionsLoaded = "SolutionsLoaded";
+        public const string AssembliesLoaded = "AssembliesLoaded";
         public const string CRMAssembliesLoaded = "CRMAssembliesLoaded";
         public const string AssemblyLoaded = "AssemblyLoaded";
         public const string PluginsLoaded = "PluginsLoaded";
@@ -49,6 +54,32 @@ namespace Carfup.XTBPlugins.AppCode
         public const string SDKMessageRetrievedSourceToTarget = "SDKMessageRetrieved (Source To Target)";
         public const string MessageFilterRetrievedSourceToTarget = "MessageFilterRetrieved (Source To Target)";
         public const string SolutionExistingInTargetEnvChecked = "SolutionExistingInTargetEnvChecked";
+        public const string AssemblyExistingInTargetEnvChecked = "AssemblyExistingInTargetEnvChecked";
     }
 
+    static class Wording
+    {
+        public static string getComparingInfo(Comparing comparing, bool plural = false, bool uppercase = false)
+        {
+            string value = "solution";
+            if(comparing == Comparing.Solution)
+            {
+                value = "assembly";
+            }
+
+            if(plural)
+            {
+                if (value == "solution")
+                    value = "solutions";
+                else
+                    value = "assemblies";
+            }
+
+            if (uppercase)
+                value = value.First().ToString().ToUpper() + value.Substring(1);
+
+            return value;
+        }
+
+    }
 }
