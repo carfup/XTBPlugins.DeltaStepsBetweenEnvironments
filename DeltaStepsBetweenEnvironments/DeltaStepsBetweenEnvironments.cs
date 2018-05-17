@@ -733,6 +733,7 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
             comparing = Comparing.Solution;
             buttonLoadSolutionsAssemblies.Text = "Load Solutions";
             labelComparing.Text = "Select the solution to compare :";
+            comboBoxSolutionsAssembliesList.Items.Clear();
         }
 
         private void radioButtonCompareAssembly_Click(object sender, EventArgs e)
@@ -740,6 +741,7 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
             comparing = Comparing.Assembly;
             buttonLoadSolutionsAssemblies.Text = "Load Assemblies";
             labelComparing.Text = "Select the assembly to compare :";
+            comboBoxSolutionsAssembliesList.Items.Clear();
         }
     }
 }
