@@ -151,7 +151,7 @@ namespace Carfup.XTBPlugins.AppCode
             return connection.targetService.RetrieveMultiple(queryExisting).Entities.Count;
         }
 
-        public List<Entity> querySteps(IOrganizationService service, List<Entity> list, string solutionPluginStepsName)
+        public List<Entity> querySteps(IOrganizationService service, List<Entity> list, string solutionName)
         {
             QueryExpression queryExistingSteps = new QueryExpression()
             {
@@ -213,7 +213,7 @@ namespace Carfup.XTBPlugins.AppCode
                         {
                             Conditions =
                             {
-                                new ConditionExpression("uniquename", ConditionOperator.Equal, solutionPluginStepsName)
+                                new ConditionExpression("uniquename", ConditionOperator.Equal, solutionName)
                             }
                         }
                     }
@@ -227,6 +227,88 @@ namespace Carfup.XTBPlugins.AppCode
                     }
                 }
 
+            };
+
+            list = service.RetrieveMultiple(queryExistingSteps).Entities.ToList();
+
+            return list;
+        }
+
+        public List<Entity> queryStepsAssembly(IOrganizationService service, List<Entity> list, string assemblyName)
+        {
+            QueryExpression queryExistingSteps = new QueryExpression()
+            {
+
+                EntityName = "solutioncomponent",
+                ColumnSet = new ColumnSet("componenttype"),
+                LinkEntities =
+                {
+                    new LinkEntity()
+                    {
+                        LinkToEntityName = "sdkmessageprocessingstep",
+                        LinkToAttributeName = "sdkmessageprocessingstepid",
+                        LinkFromEntityName = "solutioncomponent",
+                        LinkFromAttributeName = "objectid",
+                        EntityAlias = "step",
+                        Columns = new ColumnSet("name","configuration","mode","rank","stage","supporteddeployment","invocationsource","configuration","plugintypeid","sdkmessageid","sdkmessagefilterid","filteringattributes","description","asyncautodelete","customizationlevel"),
+                        LinkEntities =
+                        {
+                            new LinkEntity()
+                            {
+                                LinkToEntityName = "sdkmessagefilter",
+                                LinkToAttributeName = "sdkmessagefilterid",
+                                LinkFromEntityName = "sdkmessageprocessingstep",
+                                LinkFromAttributeName = "sdkmessagefilterid",
+                                EntityAlias = "messagefilter",
+                                Columns = new ColumnSet("primaryobjecttypecode"),
+                                JoinOperator = JoinOperator.Inner
+                            },
+                            new LinkEntity()
+                            {
+                                LinkToEntityName = "sdkmessage",
+                                LinkToAttributeName = "sdkmessageid",
+                                LinkFromEntityName = "sdkmessageprocessingstep",
+                                LinkFromAttributeName = "sdkmessageid",
+                                EntityAlias = "sdkmessage",
+                                Columns = new ColumnSet("name"),
+                                JoinOperator = JoinOperator.Inner
+                            },
+                            new LinkEntity()
+                            {
+                                LinkToEntityName = "plugintype",
+                                LinkToAttributeName = "plugintypeid",
+                                LinkFromEntityName = "sdkmessageprocessingstep",
+                                LinkFromAttributeName = "plugintypeid",
+                                EntityAlias = "plugintype",
+                                Columns = new ColumnSet("typename"),
+                                JoinOperator = JoinOperator.Inner
+                            }
+                        }
+                    }
+                    ,
+                    new LinkEntity()
+                    {
+                        LinkToEntityName = "solution",
+                        LinkToAttributeName = "solutionid",
+                        LinkFromEntityName = "solutioncomponent",
+                        LinkFromAttributeName = "solutionid",
+                        LinkCriteria =
+                        {
+                            Conditions =
+                            {
+                                new ConditionExpression("uniquename", ConditionOperator.Equal, assemblyName)
+                            }
+                        }
+                    }
+                }
+                ,
+                Criteria =
+                {
+                    Conditions =
+                    {
+                        new ConditionExpression("componenttype", ConditionOperator.Equal, 92)
+                    }
+                }
             };
 
             list = service.RetrieveMultiple(queryExistingSteps).Entities.ToList();

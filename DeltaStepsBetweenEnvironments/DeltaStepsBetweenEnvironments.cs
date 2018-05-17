@@ -300,8 +300,17 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
                 Message = "Comparing the 2 Solutions...",
                 Work = (bw, e) =>
                 {
-                    stepsCrmSource = controller.dataManager.querySteps(sourceService, stepsCrmSource, solutionPluginStepsName);  //querySteps(sourceService, stepsCrmSource);
-                    stepsCrmTarget = controller.dataManager.querySteps(targetService, stepsCrmTarget, solutionPluginStepsName);  //querySteps(targetService, stepsCrmTarget);
+                    if(comparing == Comparing.Solution)
+                    {
+                        stepsCrmSource = controller.dataManager.querySteps(sourceService, stepsCrmSource, solutionPluginStepsName);  //querySteps(sourceService, stepsCrmSource);
+                        stepsCrmTarget = controller.dataManager.querySteps(targetService, stepsCrmTarget, solutionPluginStepsName);  //querySteps(targetService, stepsCrmTarget);
+                    }
+                    else if(comparing == Comparing.Assembly)
+                    {
+                        stepsCrmSource = controller.dataManager.queryStepsAssembly(sourceService, stepsCrmSource, solutionPluginStepsName);  //querySteps(sourceService, stepsCrmSource);
+                        stepsCrmTarget = controller.dataManager.queryStepsAssembly(targetService, stepsCrmTarget, solutionPluginStepsName);  //querySteps(targetService, stepsCrmTarget);
+                    }
+                    
 
                     diffCrmSourceTarget = stepsCrmSource.Select(x => ((AliasedValue)x["step.name"]).Value.ToString()).Except(stepsCrmTarget.Select(x => ((AliasedValue)x["step.name"]).Value.ToString())).ToArray();
                     diffCrmTargetSource = stepsCrmTarget.Select(x => ((AliasedValue)x["step.name"]).Value.ToString()).Except(stepsCrmSource.Select(x => ((AliasedValue)x["step.name"]).Value.ToString())).ToArray();

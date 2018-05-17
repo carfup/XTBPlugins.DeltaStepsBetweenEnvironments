@@ -62,7 +62,7 @@ namespace Carfup.XTBPlugins.AppCode
         public static string getComparingInfo(Comparing comparing, bool plural = false, bool uppercase = false)
         {
             string value = "solution";
-            if(comparing == Comparing.Solution)
+            if(comparing == Comparing.Assembly)
             {
                 value = "assembly";
             }
