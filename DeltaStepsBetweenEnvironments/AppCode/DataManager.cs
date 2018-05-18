@@ -31,9 +31,14 @@ namespace Carfup.XTBPlugins.AppCode
 
         #region Methods
         // Return the value from an aliasedvalue
-        public object returnAliasedValue(Entity entity, string varName)
+        public string returnAliasedValue(Entity entity, string varName)
         {
-            return entity.GetAttributeValue<AliasedValue>(varName) == null ? "" : entity.GetAttributeValue<AliasedValue>(varName).Value;
+            return entity.GetAttributeValue<AliasedValue>(varName) == null ? "" : entity.GetAttributeValue<AliasedValue>(varName).Value.ToString();
+        }
+
+        public string getStepNameValue(Comparing comparing, Entity entity)
+        {
+           return (comparing == Comparing.Solution) ? this.returnAliasedValue(entity, "step.name") : entity.GetAttributeValue<string>("name");
         }
 
         // return the plugintype
@@ -167,7 +172,7 @@ namespace Carfup.XTBPlugins.AppCode
                         LinkFromEntityName = "solutioncomponent",
                         LinkFromAttributeName = "objectid",
                         EntityAlias = "step",
-                        Columns = new ColumnSet("name","configuration","mode","rank","stage","supporteddeployment","invocationsource","configuration","plugintypeid","sdkmessageid","sdkmessagefilterid","filteringattributes","description","asyncautodelete","customizationlevel"),
+                        Columns = new ColumnSet("name","createdon","modifiedon","configuration","mode","rank","stage","supporteddeployment","invocationsource","configuration","plugintypeid","sdkmessageid","sdkmessagefilterid","filteringattributes","description","asyncautodelete","customizationlevel"),
                         LinkEntities =
                         {
                             new LinkEntity()
@@ -239,79 +244,59 @@ namespace Carfup.XTBPlugins.AppCode
             QueryExpression queryExistingSteps = new QueryExpression()
             {
 
-                EntityName = "solutioncomponent",
-                ColumnSet = new ColumnSet("componenttype"),
+                EntityName = "sdkmessageprocessingstep",
+                ColumnSet = new ColumnSet("name", "createdon", "modifiedon", "configuration", "mode", "rank", "stage", "supporteddeployment", "invocationsource", "configuration", "plugintypeid", "sdkmessageid", "sdkmessagefilterid", "filteringattributes", "description", "asyncautodelete", "customizationlevel"),
                 LinkEntities =
                 {
                     new LinkEntity()
                     {
-                        LinkToEntityName = "sdkmessageprocessingstep",
-                        LinkToAttributeName = "sdkmessageprocessingstepid",
-                        LinkFromEntityName = "solutioncomponent",
-                        LinkFromAttributeName = "objectid",
-                        EntityAlias = "step",
-                        Columns = new ColumnSet("name","configuration","mode","rank","stage","supporteddeployment","invocationsource","configuration","plugintypeid","sdkmessageid","sdkmessagefilterid","filteringattributes","description","asyncautodelete","customizationlevel"),
+                        LinkToEntityName = "sdkmessagefilter",
+                        LinkToAttributeName = "sdkmessagefilterid",
+                        LinkFromEntityName = "sdkmessageprocessingstep",
+                        LinkFromAttributeName = "sdkmessagefilterid",
+                        EntityAlias = "messagefilter",
+                        Columns = new ColumnSet("primaryobjecttypecode"),
+                        JoinOperator = JoinOperator.Inner
+                    },
+                    new LinkEntity()
+                    {
+                        LinkToEntityName = "sdkmessage",
+                        LinkToAttributeName = "sdkmessageid",
+                        LinkFromEntityName = "sdkmessageprocessingstep",
+                        LinkFromAttributeName = "sdkmessageid",
+                        EntityAlias = "sdkmessage",
+                        Columns = new ColumnSet("name"),
+                        JoinOperator = JoinOperator.Inner
+                    },
+                    new LinkEntity()
+                    {
+                        LinkToEntityName = "plugintype",
+                        LinkToAttributeName = "plugintypeid",
+                        LinkFromEntityName = "sdkmessageprocessingstep",
+                        LinkFromAttributeName = "plugintypeid",
+                        EntityAlias = "plugintype",
+                        Columns = new ColumnSet("typename"),
+                        JoinOperator = JoinOperator.Inner,
                         LinkEntities =
                         {
                             new LinkEntity()
                             {
-                                LinkToEntityName = "sdkmessagefilter",
-                                LinkToAttributeName = "sdkmessagefilterid",
-                                LinkFromEntityName = "sdkmessageprocessingstep",
-                                LinkFromAttributeName = "sdkmessagefilterid",
-                                EntityAlias = "messagefilter",
-                                Columns = new ColumnSet("primaryobjecttypecode"),
-                                JoinOperator = JoinOperator.Inner
-                            },
-                            new LinkEntity()
-                            {
-                                LinkToEntityName = "sdkmessage",
-                                LinkToAttributeName = "sdkmessageid",
-                                LinkFromEntityName = "sdkmessageprocessingstep",
-                                LinkFromAttributeName = "sdkmessageid",
-                                EntityAlias = "sdkmessage",
+                                LinkToEntityName = "pluginassembly",
+                                LinkToAttributeName = "pluginassemblyid",
+                                LinkFromEntityName = "plugintype",
+                                LinkFromAttributeName = "pluginassemblyid",
+                                EntityAlias = "pluginassembly",
                                 Columns = new ColumnSet("name"),
-                                JoinOperator = JoinOperator.Inner
-                            },
-                            new LinkEntity()
-                            {
-                                LinkToEntityName = "plugintype",
-                                LinkToAttributeName = "plugintypeid",
-                                LinkFromEntityName = "sdkmessageprocessingstep",
-                                LinkFromAttributeName = "plugintypeid",
-                                EntityAlias = "plugintype",
-                                Columns = new ColumnSet("typename"),
-                                JoinOperator = JoinOperator.Inner,
-                                LinkEntities =
+                                //JoinOperator = JoinOperator.Inner,
+                                LinkCriteria =
                                 {
-                                    new LinkEntity()
+                                    Conditions =
                                     {
-                                        LinkToEntityName = "pluginassembly",
-                                        LinkToAttributeName = "pluginassemblyid",
-                                        LinkFromEntityName = "plugintype",
-                                        LinkFromAttributeName = "pluginassemblyid",
-                                        EntityAlias = "pluginassembly",
-                                        Columns = new ColumnSet("name"),
-                                        JoinOperator = JoinOperator.Inner,
-                                        LinkCriteria =
-                                        {
-                                            Conditions =
-                                            {
-                                                new ConditionExpression("name", ConditionOperator.Equal, assemblyName)
-                                            }
-                                        }
+                                        new ConditionExpression("name", ConditionOperator.Equal, assemblyName)
                                     }
                                 }
                             }
                         }
-                    }
-                }
-                ,
-                Criteria =
-                {
-                    Conditions =
-                    {
-                        new ConditionExpression("componenttype", ConditionOperator.Equal, 92)
                     }
                 }
             };

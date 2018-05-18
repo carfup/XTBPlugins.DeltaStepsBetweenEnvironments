@@ -49,14 +49,24 @@
             this.comboBoxSolutionsAssembliesList = new System.Windows.Forms.ComboBox();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.labelSourceTargetMatch = new System.Windows.Forms.Label();
-            this.listBoxSourceTarget = new System.Windows.Forms.ListBox();
+            this.listViewSourceTarget = new System.Windows.Forms.ListView();
+            this.columnHeaderSTStepName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeaderSTEntity = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeaderSTMessage = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeaderSTModifiedOn = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeaderSTCreatedOn = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.labelTargetSourceMatch = new System.Windows.Forms.Label();
-            this.listBoxTargetSource = new System.Windows.Forms.ListBox();
+            this.listViewTargetSource = new System.Windows.Forms.ListView();
+            this.columnHeaderTSStepName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeaderTSEntity = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeaderTSMessage = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeaderTSModifiedOn = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeaderTSCreatedOn = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.groupBox4 = new System.Windows.Forms.GroupBox();
             this.buttonCopySourceToTarget = new System.Windows.Forms.Button();
             this.buttonCopyTargetToSource = new System.Windows.Forms.Button();
+            this.labelSourceTargetMatch = new System.Windows.Forms.Label();
+            this.labelTargetSourceMatch = new System.Windows.Forms.Label();
             this.toolStrip1.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -304,7 +314,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox1.Controls.Add(this.labelSourceTargetMatch);
-            this.groupBox1.Controls.Add(this.listBoxSourceTarget);
+            this.groupBox1.Controls.Add(this.listViewSourceTarget);
             this.groupBox1.Location = new System.Drawing.Point(3, 3);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(471, 438);
@@ -312,29 +322,47 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Steps which are on Source but not on Target environment";
             // 
-            // labelSourceTargetMatch
+            // listViewSourceTarget
             // 
-            this.labelSourceTargetMatch.AutoSize = true;
-            this.labelSourceTargetMatch.BackColor = System.Drawing.Color.White;
-            this.labelSourceTargetMatch.Font = new System.Drawing.Font("Microsoft Sans Serif", 20F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelSourceTargetMatch.ForeColor = System.Drawing.Color.Green;
-            this.labelSourceTargetMatch.Location = new System.Drawing.Point(86, 154);
-            this.labelSourceTargetMatch.Name = "labelSourceTargetMatch";
-            this.labelSourceTargetMatch.Size = new System.Drawing.Size(302, 31);
-            this.labelSourceTargetMatch.TabIndex = 25;
-            this.labelSourceTargetMatch.Text = "This is a perfect match !";
-            this.labelSourceTargetMatch.Visible = false;
-            // 
-            // listBoxSourceTarget
-            // 
-            this.listBoxSourceTarget.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.listViewSourceTarget.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.listBoxSourceTarget.FormattingEnabled = true;
-            this.listBoxSourceTarget.Location = new System.Drawing.Point(9, 19);
-            this.listBoxSourceTarget.Name = "listBoxSourceTarget";
-            this.listBoxSourceTarget.Size = new System.Drawing.Size(456, 407);
-            this.listBoxSourceTarget.TabIndex = 22;
+            this.listViewSourceTarget.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.columnHeaderSTStepName,
+            this.columnHeaderSTEntity,
+            this.columnHeaderSTMessage,
+            this.columnHeaderSTModifiedOn,
+            this.columnHeaderSTCreatedOn});
+            this.listViewSourceTarget.Location = new System.Drawing.Point(9, 30);
+            this.listViewSourceTarget.Name = "listViewSourceTarget";
+            this.listViewSourceTarget.Size = new System.Drawing.Size(456, 402);
+            this.listViewSourceTarget.TabIndex = 26;
+            this.listViewSourceTarget.UseCompatibleStateImageBehavior = false;
+            this.listViewSourceTarget.View = System.Windows.Forms.View.Details;
+            // 
+            // columnHeaderSTStepName
+            // 
+            this.columnHeaderSTStepName.Text = "Step Name";
+            // 
+            // columnHeaderSTEntity
+            // 
+            this.columnHeaderSTEntity.DisplayIndex = 2;
+            this.columnHeaderSTEntity.Text = "Entity";
+            // 
+            // columnHeaderSTMessage
+            // 
+            this.columnHeaderSTMessage.DisplayIndex = 3;
+            this.columnHeaderSTMessage.Text = "Message";
+            // 
+            // columnHeaderSTModifiedOn
+            // 
+            this.columnHeaderSTModifiedOn.DisplayIndex = 4;
+            this.columnHeaderSTModifiedOn.Text = "Modified On";
+            // 
+            // columnHeaderSTCreatedOn
+            // 
+            this.columnHeaderSTCreatedOn.DisplayIndex = 1;
+            this.columnHeaderSTCreatedOn.Text = "Created On";
             // 
             // groupBox2
             // 
@@ -342,7 +370,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox2.Controls.Add(this.labelTargetSourceMatch);
-            this.groupBox2.Controls.Add(this.listBoxTargetSource);
+            this.groupBox2.Controls.Add(this.listViewTargetSource);
             this.groupBox2.Location = new System.Drawing.Point(550, 3);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(472, 438);
@@ -350,29 +378,45 @@
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Steps which are on Target but not on Source environment";
             // 
-            // labelTargetSourceMatch
+            // listViewTargetSource
             // 
-            this.labelTargetSourceMatch.AutoSize = true;
-            this.labelTargetSourceMatch.BackColor = System.Drawing.Color.White;
-            this.labelTargetSourceMatch.Font = new System.Drawing.Font("Microsoft Sans Serif", 20F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelTargetSourceMatch.ForeColor = System.Drawing.Color.Green;
-            this.labelTargetSourceMatch.Location = new System.Drawing.Point(83, 154);
-            this.labelTargetSourceMatch.Name = "labelTargetSourceMatch";
-            this.labelTargetSourceMatch.Size = new System.Drawing.Size(302, 31);
-            this.labelTargetSourceMatch.TabIndex = 27;
-            this.labelTargetSourceMatch.Text = "This is a perfect match !";
-            this.labelTargetSourceMatch.Visible = false;
-            // 
-            // listBoxTargetSource
-            // 
-            this.listBoxTargetSource.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.listViewTargetSource.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.listBoxTargetSource.FormattingEnabled = true;
-            this.listBoxTargetSource.Location = new System.Drawing.Point(6, 19);
-            this.listBoxTargetSource.Name = "listBoxTargetSource";
-            this.listBoxTargetSource.Size = new System.Drawing.Size(460, 407);
-            this.listBoxTargetSource.TabIndex = 22;
+            this.listViewTargetSource.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.columnHeaderTSStepName,
+            this.columnHeaderTSEntity,
+            this.columnHeaderTSMessage,
+            this.columnHeaderTSModifiedOn,
+            this.columnHeaderTSCreatedOn});
+            this.listViewTargetSource.Location = new System.Drawing.Point(6, 30);
+            this.listViewTargetSource.Name = "listViewTargetSource";
+            this.listViewTargetSource.Size = new System.Drawing.Size(460, 402);
+            this.listViewTargetSource.TabIndex = 27;
+            this.listViewTargetSource.UseCompatibleStateImageBehavior = false;
+            this.listViewTargetSource.View = System.Windows.Forms.View.Details;
+            // 
+            // columnHeaderTSStepName
+            // 
+            this.columnHeaderTSStepName.Text = "Step Name";
+            // 
+            // columnHeaderTSEntity
+            // 
+            this.columnHeaderTSEntity.Text = "Entity";
+            // 
+            // columnHeaderTSMessage
+            // 
+            this.columnHeaderTSMessage.Text = "Message";
+            // 
+            // columnHeaderTSModifiedOn
+            // 
+            this.columnHeaderTSModifiedOn.DisplayIndex = 4;
+            this.columnHeaderTSModifiedOn.Text = "Modified On";
+            // 
+            // columnHeaderTSCreatedOn
+            // 
+            this.columnHeaderTSCreatedOn.DisplayIndex = 3;
+            this.columnHeaderTSCreatedOn.Text = "Created On";
             // 
             // groupBox4
             // 
@@ -407,6 +451,32 @@
             this.buttonCopyTargetToSource.Text = "<";
             this.buttonCopyTargetToSource.UseVisualStyleBackColor = true;
             this.buttonCopyTargetToSource.Click += new System.EventHandler(this.buttonCopyTargetToSource_Click);
+            // 
+            // labelSourceTargetMatch
+            // 
+            this.labelSourceTargetMatch.AutoSize = true;
+            this.labelSourceTargetMatch.BackColor = System.Drawing.Color.White;
+            this.labelSourceTargetMatch.Font = new System.Drawing.Font("Microsoft Sans Serif", 20F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelSourceTargetMatch.ForeColor = System.Drawing.Color.Green;
+            this.labelSourceTargetMatch.Location = new System.Drawing.Point(84, 204);
+            this.labelSourceTargetMatch.Name = "labelSourceTargetMatch";
+            this.labelSourceTargetMatch.Size = new System.Drawing.Size(302, 31);
+            this.labelSourceTargetMatch.TabIndex = 27;
+            this.labelSourceTargetMatch.Text = "This is a perfect match !";
+            this.labelSourceTargetMatch.Visible = false;
+            // 
+            // labelTargetSourceMatch
+            // 
+            this.labelTargetSourceMatch.AutoSize = true;
+            this.labelTargetSourceMatch.BackColor = System.Drawing.Color.White;
+            this.labelTargetSourceMatch.Font = new System.Drawing.Font("Microsoft Sans Serif", 20F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelTargetSourceMatch.ForeColor = System.Drawing.Color.Green;
+            this.labelTargetSourceMatch.Location = new System.Drawing.Point(85, 204);
+            this.labelTargetSourceMatch.Name = "labelTargetSourceMatch";
+            this.labelTargetSourceMatch.Size = new System.Drawing.Size(302, 31);
+            this.labelTargetSourceMatch.TabIndex = 28;
+            this.labelTargetSourceMatch.Text = "This is a perfect match !";
+            this.labelTargetSourceMatch.Visible = false;
             // 
             // DeltaStepsBetweenEnvironments
             // 
@@ -456,17 +526,27 @@
         private System.Windows.Forms.ComboBox comboBoxSolutionsAssembliesList;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;
         private System.Windows.Forms.GroupBox groupBox2;
-        private System.Windows.Forms.ListBox listBoxTargetSource;
         private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.ListBox listBoxSourceTarget;
         private System.Windows.Forms.GroupBox groupBox4;
         private System.Windows.Forms.Button buttonCopySourceToTarget;
         private System.Windows.Forms.Button buttonCopyTargetToSource;
-        private System.Windows.Forms.Label labelSourceTargetMatch;
-        private System.Windows.Forms.Label labelTargetSourceMatch;
         private System.Windows.Forms.ToolStripButton toolStripButtonOptions;
         private System.Windows.Forms.RadioButton radioButtonCompareAssembly;
         private System.Windows.Forms.RadioButton radioButtonCompareSolution;
         private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.ListView listViewSourceTarget;
+        private System.Windows.Forms.ColumnHeader columnHeaderSTStepName;
+        private System.Windows.Forms.ColumnHeader columnHeaderSTEntity;
+        private System.Windows.Forms.ColumnHeader columnHeaderSTMessage;
+        private System.Windows.Forms.ColumnHeader columnHeaderSTModifiedOn;
+        private System.Windows.Forms.ColumnHeader columnHeaderSTCreatedOn;
+        private System.Windows.Forms.ListView listViewTargetSource;
+        private System.Windows.Forms.ColumnHeader columnHeaderTSStepName;
+        private System.Windows.Forms.ColumnHeader columnHeaderTSEntity;
+        private System.Windows.Forms.ColumnHeader columnHeaderTSMessage;
+        private System.Windows.Forms.ColumnHeader columnHeaderTSModifiedOn;
+        private System.Windows.Forms.ColumnHeader columnHeaderTSCreatedOn;
+        private System.Windows.Forms.Label labelSourceTargetMatch;
+        private System.Windows.Forms.Label labelTargetSourceMatch;
     }
 }
