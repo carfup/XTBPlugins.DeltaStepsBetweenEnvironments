@@ -281,22 +281,27 @@ namespace Carfup.XTBPlugins.AppCode
                                 LinkFromAttributeName = "plugintypeid",
                                 EntityAlias = "plugintype",
                                 Columns = new ColumnSet("typename"),
-                                JoinOperator = JoinOperator.Inner
-                            }
-                        }
-                    }
-                    ,
-                    new LinkEntity()
-                    {
-                        LinkToEntityName = "solution",
-                        LinkToAttributeName = "solutionid",
-                        LinkFromEntityName = "solutioncomponent",
-                        LinkFromAttributeName = "solutionid",
-                        LinkCriteria =
-                        {
-                            Conditions =
-                            {
-                                new ConditionExpression("uniquename", ConditionOperator.Equal, assemblyName)
+                                JoinOperator = JoinOperator.Inner,
+                                LinkEntities =
+                                {
+                                    new LinkEntity()
+                                    {
+                                        LinkToEntityName = "pluginassembly",
+                                        LinkToAttributeName = "pluginassemblyid",
+                                        LinkFromEntityName = "plugintype",
+                                        LinkFromAttributeName = "pluginassemblyid",
+                                        EntityAlias = "pluginassembly",
+                                        Columns = new ColumnSet("name"),
+                                        JoinOperator = JoinOperator.Inner,
+                                        LinkCriteria =
+                                        {
+                                            Conditions =
+                                            {
+                                                new ConditionExpression("name", ConditionOperator.Equal, assemblyName)
+                                            }
+                                        }
+                                    }
+                                }
                             }
                         }
                     }
