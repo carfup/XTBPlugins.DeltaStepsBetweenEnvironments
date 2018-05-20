@@ -209,14 +209,11 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
                     {
                         stepsCrmSource = controller.dataManager.querySteps(sourceService, solutionPluginStepsName);  //querySteps(sourceService, stepsCrmSource);
                         stepsCrmTarget = controller.dataManager.querySteps(targetService, solutionPluginStepsName);  //querySteps(targetService, stepsCrmTarget);
-                       
                     }
                     else if(comparing == Comparing.Assembly)
                     {
                         stepsCrmSource = controller.dataManager.queryStepsAssembly(sourceService, solutionPluginStepsName);  //querySteps(sourceService, stepsCrmSource);
                         stepsCrmTarget = controller.dataManager.queryStepsAssembly(targetService, solutionPluginStepsName);  //querySteps(targetService, stepsCrmTarget);
-                  //      diffCrmSourceTarget = stepsCrmSource.Select(x => x.Attributes["name"].ToString()).Except(stepsCrmTarget.Select(x => x.Attributes["name"].ToString())).ToArray();
-                  //      diffCrmTargetSource = stepsCrmTarget.Select(x => x.Attributes["name"].ToString()).Except(stepsCrmSource.Select(x => x.Attributes["name"].ToString())).ToArray();
                     }
 
                     diffCrmSourceTarget = stepsCrmSource.Select(x => x.stepName).Except(stepsCrmTarget.Select(x => x.stepName)).ToArray();
@@ -233,8 +230,9 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
 
                     if (diffCrmSourceTarget.Count() == 0)
                     {
-                        //listBoxSourceTarget.Visible = false;
+                        listViewSourceTarget.Clear();
                         labelSourceTargetMatch.Visible = true;
+                        
                     }
                     else // there are steps in source but not target
                     {
@@ -244,7 +242,7 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
 
                     if (diffCrmTargetSource.Count() == 0)
                     {
-                        //listBoxTargetSource.Visible = false;
+                        listViewTargetSource.Clear();
                         labelTargetSourceMatch.Visible = true;
                     }
                     else // there are steps in source but not target
@@ -334,7 +332,7 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
                 {
                     // retrieving the 3 data mandatory to have a proper step created
                     var pluginType = controller.dataManager.getPluginType(selectedStep.plugintypeName);
-                    var sdkMessage = controller.dataManager.getSdkMessage(selectedStep.messageName);
+                    var sdkMessage = controller.dataManager.getSdkMessage(selectedStep.stepMessageName);
                     var messageFilter = controller.dataManager.getMessageFilter(selectedStep.entityName);
 
                     if (pluginType == null)
@@ -422,7 +420,7 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
                 {
                     // retrieving the 3 data mandatory to have a proper step created
                     var pluginType = controller.dataManager.getPluginType(selectedStep.plugintypeName);
-                    var sdkMessage = controller.dataManager.getSdkMessage(selectedStep.messageName);
+                    var sdkMessage = controller.dataManager.getSdkMessage(selectedStep.stepMessageName);
                     var messageFilter = controller.dataManager.getMessageFilter(selectedStep.entityName);
 
                     if (pluginType == null)
@@ -579,6 +577,7 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
             buttonLoadSolutionsAssemblies.Text = "Load Solutions";
             labelComparing.Text = "Select the solution to compare :";
             comboBoxSolutionsAssembliesList.Items.Clear();
+            comboBoxSolutionsAssembliesList.SelectedItem = null;
         }
 
         private void radioButtonCompareAssembly_Click(object sender, EventArgs e)
@@ -587,6 +586,7 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
             buttonLoadSolutionsAssemblies.Text = "Load Assemblies";
             labelComparing.Text = "Select the assembly to compare :";
             comboBoxSolutionsAssembliesList.Items.Clear();
+            comboBoxSolutionsAssembliesList.SelectedItem = null;
         }
 
         private void fillListViewItems(ListView listView, List<CarfupStep> stepsList, string[] diff)
@@ -601,7 +601,7 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
                 var item = new ListViewItem();
                 item.Text = step.stepName;
                 item.SubItems.Add(step.entityName);
-                item.SubItems.Add(step.messageName);
+                item.SubItems.Add(step.stepMessageName);
                 item.SubItems.Add(createon);
                 item.SubItems.Add(modifiedon);
                 item.Tag = step.entity.Id;

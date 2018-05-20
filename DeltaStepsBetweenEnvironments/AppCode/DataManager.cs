@@ -238,7 +238,7 @@ namespace Carfup.XTBPlugins.AppCode
             {
                 stepName = returnAliasedValue(x, "step.name").ToString(),
                 entityName = returnAliasedValue(x, "messagefilter.primaryobjecttypecode").ToString(),
-                messageName = returnAliasedValue(x, "sdkmessage.name").ToString(),
+                stepMessageName = returnAliasedValue(x, "sdkmessage.name").ToString(),
                 plugintypeName = returnAliasedValue(x, "plugintype.name").ToString(),
                 modifiedOn = (DateTime)returnAliasedValue(x, "step.modifiedon"),
                 createOn = (DateTime)returnAliasedValue(x, "step.createdon"),
@@ -247,7 +247,7 @@ namespace Carfup.XTBPlugins.AppCode
                 stepCustomizationlevel = (int)returnAliasedValue(x, "step.customizationlevel"),
                 stepDescription = returnAliasedValue(x, "step.description").ToString(),
                 stepFilteringattributes = returnAliasedValue(x, "step.filteringattributes").ToString(),
-                stepInvocationsource = returnAliasedValue(x, "step.invocationsource").ToString(),
+                stepInvocationsource = ((OptionSetValue)returnAliasedValue(x, "step.invocationsource")).Value,
                 stepMode = (int)returnAliasedValue(x, "step.mode"),
                 stepRank = (int)returnAliasedValue(x, "step.rank"),
                 stepStage = (int)returnAliasedValue(x, "step.stage"),
@@ -322,20 +322,20 @@ namespace Carfup.XTBPlugins.AppCode
             {
                 stepName = x.GetAttributeValue<string>("name"),
                 entityName = returnAliasedValue(x, "messagefilter.primaryobjecttypecode").ToString(),
-                messageName = returnAliasedValue(x, "sdkmessage.name").ToString(),
+                stepMessageName = returnAliasedValue(x, "sdkmessage.name").ToString(),
                 plugintypeName = returnAliasedValue(x, "plugintype.name").ToString(),
-                modifiedOn = x.GetAttributeValue<DateTime>("name"),
+                modifiedOn = x.GetAttributeValue<DateTime>("modifiedon"),
                 createOn = x.GetAttributeValue<DateTime>("createdon"),
                 stepAsyncautodelete = x.GetAttributeValue<bool>("asyncautodelete"),
                 stepConfiguration = x.GetAttributeValue<string>("configuration"),
                 stepCustomizationlevel = x.GetAttributeValue<int>("customizationlevel"),
                 stepDescription = x.GetAttributeValue<string>("description"),
                 stepFilteringattributes = x.GetAttributeValue<string>("filteringattributes"),
-                stepInvocationsource = x.GetAttributeValue<string>("invocationsource"),
-                stepMode = x.GetAttributeValue<int>("mode"),
+                stepInvocationsource = x.GetAttributeValue<OptionSetValue>("invocationsource").Value,
+                stepMode = x.GetAttributeValue<OptionSetValue>("mode").Value,
                 stepRank = x.GetAttributeValue<int>("rank"),
-                stepStage = x.GetAttributeValue<int>("stage"),
-                stepSupporteddeployment = x.GetAttributeValue<int>("supporteddeployment"),
+                stepStage = x.GetAttributeValue<OptionSetValue>("stage").Value,
+                stepSupporteddeployment = x.GetAttributeValue<OptionSetValue>("supporteddeployment").Value,
                 entity = x
             }).ToList();
         }
@@ -347,7 +347,7 @@ namespace Carfup.XTBPlugins.AppCode
     {
         public string stepName { get; set; }
         public string entityName { get; set; } //messagefilter.primaryobjecttypecode
-        public string messageName { get; set; } //sdkmessage.name
+        public string stepMessageName { get; set; } //sdkmessage.name
         public string plugintypeName { get; set; } // plugintype.name
         public DateTime createOn { get; set; }
         public DateTime modifiedOn { get; set; }
@@ -356,7 +356,7 @@ namespace Carfup.XTBPlugins.AppCode
         public int stepRank { get; set; }
         public int stepStage { get; set; }
         public int stepSupporteddeployment { get; set; }
-        public string stepInvocationsource { get; set; }
+        public int stepInvocationsource { get; set; }
         public string stepFilteringattributes { get; set; }
         public string stepDescription { get; set; }
         public bool stepAsyncautodelete { get; set; }
