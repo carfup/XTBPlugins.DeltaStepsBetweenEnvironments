@@ -330,55 +330,12 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
                 Message = "Creating the step in the environment...",
                 Work = (bw, e) =>
                 {
-                    // retrieving the 3 data mandatory to have a proper step created
-                    var pluginType = controller.dataManager.getPluginType(selectedStep.plugintypeName);
-                    var sdkMessage = controller.dataManager.getSdkMessage(selectedStep.stepMessageName);
-                    var messageFilter = controller.dataManager.getMessageFilter(selectedStep.entityName);
+                    Guid? stepCreated = creatingStep(selectedStep, false);
 
-                    if (pluginType == null)
-                    {
-                        this.log.LogData(EventType.Exception, LogAction.PluginTypeRetrievedTargetToSource);
-                        MessageBox.Show($"Sorry, but we didn't find the necessary Plugin Type information in the destination system...");
+                    if (stepCreated == null)
                         return;
-                    }
 
-                    if (sdkMessage == null)
-                    {
-                        this.log.LogData(EventType.Exception, LogAction.SDKMessageRetrievedTargetToSource);
-                        MessageBox.Show($"Sorry, but we didn't find the necessary SDK Message information in the destination system...");
-                        return;
-                    }
-
-                    if (messageFilter == null)
-                    {
-                        this.log.LogData(EventType.Exception, LogAction.MessageFilterRetrievedTargetToSource);
-                        MessageBox.Show($"Sorry, but we didn't find the necessary Message Filter information in the destination system...");
-                        return;
-                    }
-
-                    this.log.LogData(EventType.Event, LogAction.PluginTypeRetrievedTargetToSource);
-                    this.log.LogData(EventType.Event, LogAction.SDKMessageRetrievedTargetToSource);
-                    this.log.LogData(EventType.Event, LogAction.MessageFilterRetrievedTargetToSource);
-
-                    // Preparing the object step
-                    Entity newStepToCreate = new Entity("sdkmessageprocessingstep");
-                    newStepToCreate["plugintypeid"] = new EntityReference("plugintype", pluginType.Id);
-                    newStepToCreate["sdkmessageid"] = new EntityReference("plugintype", sdkMessage.Id);
-                    newStepToCreate["sdkmessagefilterid"] = new EntityReference("sdkmessagefilter", messageFilter.Id);
-                    newStepToCreate["name"] = selectedStep.stepName;
-                    newStepToCreate["configuration"] = selectedStep.stepConfiguration;
-                    newStepToCreate["mode"] = selectedStep.stepMode;
-                    newStepToCreate["rank"] = selectedStep.stepRank;
-                    newStepToCreate["stage"] = selectedStep.stepStage;
-                    newStepToCreate["supporteddeployment"] = selectedStep.stepSupporteddeployment;
-                    newStepToCreate["invocationsource"] = selectedStep.stepInvocationsource;
-                    newStepToCreate["configuration"] = selectedStep.stepConfiguration;
-                    newStepToCreate["filteringattributes"] = selectedStep.stepFilteringattributes;
-                    newStepToCreate["description"] = selectedStep.stepDescription;
-                    newStepToCreate["asyncautodelete"] = selectedStep.stepAsyncautodelete;
-                    newStepToCreate["customizationlevel"] = selectedStep.stepCustomizationlevel;
-
-                    e.Result = targetService.Create(newStepToCreate);
+                    e.Result = stepCreated.Value;
                 },
                 PostWorkCallBack = e =>
                 {
@@ -418,56 +375,12 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
                 Message = "Creating the step in the environment...",
                 Work = (bw, e) =>
                 {
-                    // retrieving the 3 data mandatory to have a proper step created
-                    var pluginType = controller.dataManager.getPluginType(selectedStep.plugintypeName);
-                    var sdkMessage = controller.dataManager.getSdkMessage(selectedStep.stepMessageName);
-                    var messageFilter = controller.dataManager.getMessageFilter(selectedStep.entityName);
+                    Guid? stepCreated = creatingStep(selectedStep);
 
-                    if (pluginType == null)
-                    {
-                        this.log.LogData(EventType.Exception, LogAction.PluginTypeRetrievedSourceToTarget);
-                        MessageBox.Show($"Sorry, but we didn't find the necessary Plugin Type information in the destination system...");
+                    if (stepCreated == null)
                         return;
-                    }
 
-                    if (sdkMessage == null)
-                    {
-                        this.log.LogData(EventType.Exception, LogAction.SDKMessageRetrievedSourceToTarget);
-                        MessageBox.Show($"Sorry, but we didn't find the necessary SDK Message information in the destination system...");
-                        return;
-                    }
-
-                    if (messageFilter == null)
-                    {
-                        this.log.LogData(EventType.Exception, LogAction.MessageFilterRetrievedSourceToTarget);
-                        MessageBox.Show($"Sorry, but we didn't find the necessary Message Filter information in the destination system...");
-                        return;
-                    }
-
-
-                    this.log.LogData(EventType.Event, LogAction.PluginTypeRetrievedSourceToTarget);
-                    this.log.LogData(EventType.Event, LogAction.SDKMessageRetrievedSourceToTarget);
-                    this.log.LogData(EventType.Event, LogAction.MessageFilterRetrievedSourceToTarget);
-
-                    // Preparing the object step
-                    Entity newStepToCreate = new Entity("sdkmessageprocessingstep");
-                    newStepToCreate["plugintypeid"] = new EntityReference("plugintype", pluginType.Id);
-                    newStepToCreate["sdkmessageid"] = new EntityReference("plugintype", sdkMessage.Id);
-                    newStepToCreate["sdkmessagefilterid"] = new EntityReference("sdkmessagefilter", messageFilter.Id);
-                    newStepToCreate["name"] = selectedStep.stepName;
-                    newStepToCreate["configuration"] = selectedStep.stepConfiguration;
-                    newStepToCreate["mode"] = selectedStep.stepMode;
-                    newStepToCreate["rank"] = selectedStep.stepRank;
-                    newStepToCreate["stage"] = selectedStep.stepStage;
-                    newStepToCreate["supporteddeployment"] = selectedStep.stepSupporteddeployment;
-                    newStepToCreate["invocationsource"] = selectedStep.stepInvocationsource;
-                    newStepToCreate["configuration"] = selectedStep.stepConfiguration;
-                    newStepToCreate["filteringattributes"] = selectedStep.stepFilteringattributes;
-                    newStepToCreate["description"] = selectedStep.stepDescription;
-                    newStepToCreate["asyncautodelete"] = selectedStep.stepAsyncautodelete;
-                    newStepToCreate["customizationlevel"] = selectedStep.stepCustomizationlevel;
-
-                    e.Result = targetService.Create(newStepToCreate);
+                    e.Result = stepCreated.Value;
                 },
                 PostWorkCallBack = e =>
                 {
@@ -517,6 +430,65 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
                     }
                 }
             }
+        }
+
+
+        public Guid? creatingStep(CarfupStep selectedStep, bool toTarget = true)
+        {
+            string PluginTypeRetrievedLogAction = (toTarget) ? LogAction.PluginTypeRetrievedSourceToTarget : LogAction.PluginTypeRetrievedTargetToSource;
+            string SDKMessageRetrievedLogAction = (toTarget) ? LogAction.SDKMessageRetrievedSourceToTarget : LogAction.SDKMessageRetrievedTargetToSource;
+            string MessageFilterRetrievedLogAction = (toTarget) ? LogAction.MessageFilterRetrievedSourceToTarget : LogAction.MessageFilterRetrievedTargetToSource;
+
+            // retrieving the 3 data mandatory to have a proper step created
+            var pluginType = controller.dataManager.getPluginType(selectedStep.plugintypeName);
+            var sdkMessage = controller.dataManager.getSdkMessage(selectedStep.stepMessageName);
+            var messageFilter = controller.dataManager.getMessageFilter(selectedStep.entityName);
+
+            if (pluginType == null)
+            {
+                this.log.LogData(EventType.Exception, PluginTypeRetrievedLogAction);
+                MessageBox.Show($"Sorry, but we didn't find the necessary Plugin Type information in the destination system...");
+                return null;
+            }
+
+            if (sdkMessage == null)
+            {
+                this.log.LogData(EventType.Exception, SDKMessageRetrievedLogAction);
+                MessageBox.Show($"Sorry, but we didn't find the necessary SDK Message information in the destination system...");
+                return null;
+            }
+
+            if (messageFilter == null)
+            {
+                this.log.LogData(EventType.Exception, MessageFilterRetrievedLogAction);
+                MessageBox.Show($"Sorry, but we didn't find the necessary Message Filter information in the destination system...");
+                return null;
+            }
+
+
+            this.log.LogData(EventType.Event, PluginTypeRetrievedLogAction);
+            this.log.LogData(EventType.Event, SDKMessageRetrievedLogAction);
+            this.log.LogData(EventType.Event, MessageFilterRetrievedLogAction);
+
+            // Preparing the object step
+            Entity newStepToCreate = new Entity("sdkmessageprocessingstep");
+            newStepToCreate["plugintypeid"] = new EntityReference("plugintype", pluginType.Id);
+            newStepToCreate["sdkmessageid"] = new EntityReference("plugintype", sdkMessage.Id);
+            newStepToCreate["sdkmessagefilterid"] = new EntityReference("sdkmessagefilter", messageFilter.Id);
+            newStepToCreate["name"] = selectedStep.stepName;
+            newStepToCreate["configuration"] = selectedStep.stepConfiguration;
+            newStepToCreate["mode"] = selectedStep.stepMode;
+            newStepToCreate["rank"] = selectedStep.stepRank;
+            newStepToCreate["stage"] = selectedStep.stepStage;
+            newStepToCreate["supporteddeployment"] = selectedStep.stepSupporteddeployment;
+            newStepToCreate["invocationsource"] = selectedStep.stepInvocationsource;
+            newStepToCreate["configuration"] = selectedStep.stepConfiguration;
+            newStepToCreate["filteringattributes"] = selectedStep.stepFilteringattributes;
+            newStepToCreate["description"] = selectedStep.stepDescription;
+            newStepToCreate["asyncautodelete"] = selectedStep.stepAsyncautodelete;
+            newStepToCreate["customizationlevel"] = selectedStep.stepCustomizationlevel;
+
+            return targetService.Create(newStepToCreate);
         }
 
         // will save personal settings
@@ -574,19 +546,31 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
         private void radioButtonCompareSolution_Click(object sender, EventArgs e)
         {
             comparing = Comparing.Solution;
-            buttonLoadSolutionsAssemblies.Text = "Load Solutions";
-            labelComparing.Text = "Select the solution to compare :";
-            comboBoxSolutionsAssembliesList.Items.Clear();
-            comboBoxSolutionsAssembliesList.SelectedItem = null;
+            manageRadioButtonsAssemblySolution();
         }
 
         private void radioButtonCompareAssembly_Click(object sender, EventArgs e)
         {
             comparing = Comparing.Assembly;
-            buttonLoadSolutionsAssemblies.Text = "Load Assemblies";
-            labelComparing.Text = "Select the assembly to compare :";
+            manageRadioButtonsAssemblySolution();
+        }
+
+        private void manageRadioButtonsAssemblySolution()
+        {
+            
+            if(comparing == Comparing.Solution)
+            {
+                buttonLoadSolutionsAssemblies.Text = "Load Solutions";
+                labelComparing.Text = "Select the solution to compare :";
+            }
+            else if(comparing == Comparing.Assembly)
+            {
+                buttonLoadSolutionsAssemblies.Text = "Load Assemblies";
+                labelComparing.Text = "Select the assembly to compare :";
+            }
+
             comboBoxSolutionsAssembliesList.Items.Clear();
-            comboBoxSolutionsAssembliesList.SelectedItem = null;
+            comboBoxSolutionsAssembliesList.SelectedIndex = -1;
         }
 
         private void fillListViewItems(ListView listView, List<CarfupStep> stepsList, string[] diff)

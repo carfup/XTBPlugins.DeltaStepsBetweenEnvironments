@@ -49,6 +49,7 @@
             this.comboBoxSolutionsAssembliesList = new System.Windows.Forms.ComboBox();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.labelSourceTargetMatch = new System.Windows.Forms.Label();
             this.listViewSourceTarget = new System.Windows.Forms.ListView();
             this.columnHeaderSTStepName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeaderSTEntity = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -56,6 +57,7 @@
             this.columnHeaderSTModifiedOn = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeaderSTCreatedOn = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.labelTargetSourceMatch = new System.Windows.Forms.Label();
             this.listViewTargetSource = new System.Windows.Forms.ListView();
             this.columnHeaderTSStepName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeaderTSEntity = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -65,8 +67,6 @@
             this.groupBox4 = new System.Windows.Forms.GroupBox();
             this.buttonCopySourceToTarget = new System.Windows.Forms.Button();
             this.buttonCopyTargetToSource = new System.Windows.Forms.Button();
-            this.labelSourceTargetMatch = new System.Windows.Forms.Label();
-            this.labelTargetSourceMatch = new System.Windows.Forms.Label();
             this.toolStrip1.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -322,6 +322,19 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Steps which are on Source but not on Target environment";
             // 
+            // labelSourceTargetMatch
+            // 
+            this.labelSourceTargetMatch.AutoSize = true;
+            this.labelSourceTargetMatch.BackColor = System.Drawing.Color.White;
+            this.labelSourceTargetMatch.Font = new System.Drawing.Font("Microsoft Sans Serif", 20F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelSourceTargetMatch.ForeColor = System.Drawing.Color.Green;
+            this.labelSourceTargetMatch.Location = new System.Drawing.Point(84, 204);
+            this.labelSourceTargetMatch.Name = "labelSourceTargetMatch";
+            this.labelSourceTargetMatch.Size = new System.Drawing.Size(302, 31);
+            this.labelSourceTargetMatch.TabIndex = 27;
+            this.labelSourceTargetMatch.Text = "This is a perfect match !";
+            this.labelSourceTargetMatch.Visible = false;
+            // 
             // listViewSourceTarget
             // 
             this.listViewSourceTarget.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -346,12 +359,10 @@
             // 
             // columnHeaderSTEntity
             // 
-            this.columnHeaderSTEntity.DisplayIndex = 2;
             this.columnHeaderSTEntity.Text = "Entity";
             // 
             // columnHeaderSTMessage
             // 
-            this.columnHeaderSTMessage.DisplayIndex = 3;
             this.columnHeaderSTMessage.Text = "Message";
             // 
             // columnHeaderSTModifiedOn
@@ -361,7 +372,7 @@
             // 
             // columnHeaderSTCreatedOn
             // 
-            this.columnHeaderSTCreatedOn.DisplayIndex = 1;
+            this.columnHeaderSTCreatedOn.DisplayIndex = 3;
             this.columnHeaderSTCreatedOn.Text = "Created On";
             // 
             // groupBox2
@@ -377,6 +388,19 @@
             this.groupBox2.TabIndex = 29;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Steps which are on Target but not on Source environment";
+            // 
+            // labelTargetSourceMatch
+            // 
+            this.labelTargetSourceMatch.AutoSize = true;
+            this.labelTargetSourceMatch.BackColor = System.Drawing.Color.White;
+            this.labelTargetSourceMatch.Font = new System.Drawing.Font("Microsoft Sans Serif", 20F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelTargetSourceMatch.ForeColor = System.Drawing.Color.Green;
+            this.labelTargetSourceMatch.Location = new System.Drawing.Point(85, 204);
+            this.labelTargetSourceMatch.Name = "labelTargetSourceMatch";
+            this.labelTargetSourceMatch.Size = new System.Drawing.Size(302, 31);
+            this.labelTargetSourceMatch.TabIndex = 28;
+            this.labelTargetSourceMatch.Text = "This is a perfect match !";
+            this.labelTargetSourceMatch.Visible = false;
             // 
             // listViewTargetSource
             // 
@@ -451,32 +475,6 @@
             this.buttonCopyTargetToSource.Text = "<";
             this.buttonCopyTargetToSource.UseVisualStyleBackColor = true;
             this.buttonCopyTargetToSource.Click += new System.EventHandler(this.buttonCopyTargetToSource_Click);
-            // 
-            // labelSourceTargetMatch
-            // 
-            this.labelSourceTargetMatch.AutoSize = true;
-            this.labelSourceTargetMatch.BackColor = System.Drawing.Color.White;
-            this.labelSourceTargetMatch.Font = new System.Drawing.Font("Microsoft Sans Serif", 20F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelSourceTargetMatch.ForeColor = System.Drawing.Color.Green;
-            this.labelSourceTargetMatch.Location = new System.Drawing.Point(84, 204);
-            this.labelSourceTargetMatch.Name = "labelSourceTargetMatch";
-            this.labelSourceTargetMatch.Size = new System.Drawing.Size(302, 31);
-            this.labelSourceTargetMatch.TabIndex = 27;
-            this.labelSourceTargetMatch.Text = "This is a perfect match !";
-            this.labelSourceTargetMatch.Visible = false;
-            // 
-            // labelTargetSourceMatch
-            // 
-            this.labelTargetSourceMatch.AutoSize = true;
-            this.labelTargetSourceMatch.BackColor = System.Drawing.Color.White;
-            this.labelTargetSourceMatch.Font = new System.Drawing.Font("Microsoft Sans Serif", 20F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelTargetSourceMatch.ForeColor = System.Drawing.Color.Green;
-            this.labelTargetSourceMatch.Location = new System.Drawing.Point(85, 204);
-            this.labelTargetSourceMatch.Name = "labelTargetSourceMatch";
-            this.labelTargetSourceMatch.Size = new System.Drawing.Size(302, 31);
-            this.labelTargetSourceMatch.TabIndex = 28;
-            this.labelTargetSourceMatch.Text = "This is a perfect match !";
-            this.labelTargetSourceMatch.Visible = false;
             // 
             // DeltaStepsBetweenEnvironments
             // 
