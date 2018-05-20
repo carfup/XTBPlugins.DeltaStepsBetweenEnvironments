@@ -31,14 +31,14 @@ namespace Carfup.XTBPlugins.AppCode
 
         #region Methods
         // Return the value from an aliasedvalue
-        public string returnAliasedValue(Entity entity, string varName)
+        public object returnAliasedValue(Entity entity, string varName)
         {
-            return entity.GetAttributeValue<AliasedValue>(varName) == null ? "" : entity.GetAttributeValue<AliasedValue>(varName).Value.ToString();
+            return entity.GetAttributeValue<AliasedValue>(varName) == null ? "" : entity.GetAttributeValue<AliasedValue>(varName).Value;
         }
 
         public string getStepNameValue(Comparing comparing, Entity entity)
         {
-           return (comparing == Comparing.Solution) ? this.returnAliasedValue(entity, "step.name") : entity.GetAttributeValue<string>("name");
+           return (comparing == Comparing.Solution) ? this.returnAliasedValue(entity, "step.name").ToString() : entity.GetAttributeValue<string>("name");
         }
 
         // return the plugintype
@@ -172,7 +172,7 @@ namespace Carfup.XTBPlugins.AppCode
                         LinkFromEntityName = "solutioncomponent",
                         LinkFromAttributeName = "objectid",
                         EntityAlias = "step",
-                        Columns = new ColumnSet("name","createdon","modifiedon","configuration","mode","rank","stage","supporteddeployment","invocationsource","configuration","plugintypeid","sdkmessageid","sdkmessagefilterid","filteringattributes","description","asyncautodelete","customizationlevel"),
+                        Columns = new ColumnSet("name","createdon","modifiedon","configuration","mode","rank","stage","supporteddeployment","invocationsource","plugintypeid","sdkmessageid","sdkmessagefilterid","filteringattributes","description","asyncautodelete","customizationlevel"),
                         LinkEntities =
                         {
                             new LinkEntity()
@@ -239,13 +239,13 @@ namespace Carfup.XTBPlugins.AppCode
             return list;
         }
 
-        public List<Entity> queryStepsAssembly(IOrganizationService service, List<Entity> list, string assemblyName)
+        public List<CarfupStep> queryStepsAssembly(IOrganizationService service, List<Entity> list, string assemblyName)
         {
             QueryExpression queryExistingSteps = new QueryExpression()
             {
 
                 EntityName = "sdkmessageprocessingstep",
-                ColumnSet = new ColumnSet("name", "createdon", "modifiedon", "configuration", "mode", "rank", "stage", "supporteddeployment", "invocationsource", "configuration", "plugintypeid", "sdkmessageid", "sdkmessagefilterid", "filteringattributes", "description", "asyncautodelete", "customizationlevel"),
+                ColumnSet = new ColumnSet("name", "createdon", "modifiedon", "configuration", "mode", "rank", "stage", "supporteddeployment", "invocationsource", "plugintypeid", "sdkmessageid", "sdkmessagefilterid", "filteringattributes", "description", "asyncautodelete", "customizationlevel"),
                 LinkEntities =
                 {
                     new LinkEntity()
@@ -301,11 +301,49 @@ namespace Carfup.XTBPlugins.AppCode
                 }
             };
 
-            list = service.RetrieveMultiple(queryExistingSteps).Entities.ToList();
-
-            return list;
+            return service.RetrieveMultiple(queryExistingSteps).Entities.ToList().Select(x => new CarfupStep
+            {
+                stepName = x.GetAttributeValue<string>("name"),
+                entityName = x.GetAttributeValue<string>("name"),
+                messageName = x.GetAttributeValue<string>("name"),
+                plugintypeName = returnAliasedValue(x, "plugintype.name").ToString(),
+                modifiedOn = x.GetAttributeValue<DateTime>("name"),
+                createOn = x.GetAttributeValue<DateTime>("createdon"),
+                stepAsyncautodelete = x.GetAttributeValue<bool>("asyncautodelete"),
+                stepConfiguration = x.GetAttributeValue<string>("configuration"),
+                stepCustomizationlevel = x.GetAttributeValue<int>("customizationlevel"),
+                stepDescription = x.GetAttributeValue<string>("description"),
+                stepFilteringattributes = x.GetAttributeValue<string>("filteringattributes"),
+                stepInvocationsource = x.GetAttributeValue<string>("invocationsource"),
+                stepMode = x.GetAttributeValue<int>("mode"),
+                stepRank = x.GetAttributeValue<int>("rank"),
+                stepStage = x.GetAttributeValue<int>("stage"),
+                stepSupporteddeployment = x.GetAttributeValue<int>("supporteddeployment"),
+                entity = x
+            }).ToList();
         }
-
         #endregion Methods
+    }
+
+    // Will be used to implement the step 
+    public class CarfupStep
+    {
+        public string stepName { get; set; }
+        public string entityName { get; set; } //messagefilter.primaryobjecttypecode
+        public string messageName { get; set; } //sdkmessage.name
+        public string plugintypeName { get; set; } // plugintype.name
+        public DateTime createOn { get; set; }
+        public DateTime modifiedOn { get; set; }
+        public string stepConfiguration { get; set; }
+        public int stepMode { get; set; }
+        public int stepRank { get; set; }
+        public int stepStage { get; set; }
+        public int stepSupporteddeployment { get; set; }
+        public string stepInvocationsource { get; set; }
+        public string stepFilteringattributes { get; set; }
+        public string stepDescription { get; set; }
+        public bool stepAsyncautodelete { get; set; }
+        public int stepCustomizationlevel { get; set; }
+        public Entity entity { get; set; }
     }
 }
