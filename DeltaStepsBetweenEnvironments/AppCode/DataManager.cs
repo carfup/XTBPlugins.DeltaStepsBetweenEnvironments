@@ -156,7 +156,7 @@ namespace Carfup.XTBPlugins.AppCode
             return connection.targetService.RetrieveMultiple(queryExisting).Entities.Count;
         }
 
-        public List<Entity> querySteps(IOrganizationService service, List<Entity> list, string solutionName)
+        public List<CarfupStep> querySteps(IOrganizationService service, string solutionName)
         {
             QueryExpression queryExistingSteps = new QueryExpression()
             {
@@ -234,12 +234,29 @@ namespace Carfup.XTBPlugins.AppCode
 
             };
 
-            list = service.RetrieveMultiple(queryExistingSteps).Entities.ToList();
-
-            return list;
+            return service.RetrieveMultiple(queryExistingSteps).Entities.Select(x => new CarfupStep
+            {
+                stepName = returnAliasedValue(x, "step.name").ToString(),
+                entityName = returnAliasedValue(x, "messagefilter.primaryobjecttypecode").ToString(),
+                messageName = returnAliasedValue(x, "sdkmessage.name").ToString(),
+                plugintypeName = returnAliasedValue(x, "plugintype.name").ToString(),
+                modifiedOn = (DateTime)returnAliasedValue(x, "step.modifiedon"),
+                createOn = (DateTime)returnAliasedValue(x, "step.createdon"),
+                stepAsyncautodelete = (bool)returnAliasedValue(x, "step.asyncautodelete"),
+                stepConfiguration = returnAliasedValue(x, "step.configuration").ToString(),
+                stepCustomizationlevel = (int)returnAliasedValue(x, "step.customizationlevel"),
+                stepDescription = returnAliasedValue(x, "step.description").ToString(),
+                stepFilteringattributes = returnAliasedValue(x, "step.filteringattributes").ToString(),
+                stepInvocationsource = returnAliasedValue(x, "step.invocationsource").ToString(),
+                stepMode = (int)returnAliasedValue(x, "step.mode"),
+                stepRank = (int)returnAliasedValue(x, "step.rank"),
+                stepStage = (int)returnAliasedValue(x, "step.stage"),
+                stepSupporteddeployment = (int)returnAliasedValue(x, "step.supporteddeployment"),
+                entity = x
+            }).ToList();
         }
 
-        public List<CarfupStep> queryStepsAssembly(IOrganizationService service, List<Entity> list, string assemblyName)
+        public List<CarfupStep> queryStepsAssembly(IOrganizationService service, string assemblyName)
         {
             QueryExpression queryExistingSteps = new QueryExpression()
             {
@@ -301,11 +318,11 @@ namespace Carfup.XTBPlugins.AppCode
                 }
             };
 
-            return service.RetrieveMultiple(queryExistingSteps).Entities.ToList().Select(x => new CarfupStep
+            return service.RetrieveMultiple(queryExistingSteps).Entities.Select(x => new CarfupStep
             {
                 stepName = x.GetAttributeValue<string>("name"),
-                entityName = x.GetAttributeValue<string>("name"),
-                messageName = x.GetAttributeValue<string>("name"),
+                entityName = returnAliasedValue(x, "messagefilter.primaryobjecttypecode").ToString(),
+                messageName = returnAliasedValue(x, "sdkmessage.name").ToString(),
                 plugintypeName = returnAliasedValue(x, "plugintype.name").ToString(),
                 modifiedOn = x.GetAttributeValue<DateTime>("name"),
                 createOn = x.GetAttributeValue<DateTime>("createdon"),

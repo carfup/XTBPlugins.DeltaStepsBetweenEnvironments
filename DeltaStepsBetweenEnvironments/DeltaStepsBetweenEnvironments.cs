@@ -23,8 +23,8 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
         private ConnectionDetail targetDetail = null;
         IOrganizationService sourceService = null;
         IOrganizationService targetService = null;
-        List<Entity> stepsCrmSource = new List<Entity>();
-        List<Entity> stepsCrmTarget = new List<Entity>();
+        List<CarfupStep> stepsCrmSource = new List<CarfupStep>();
+        List<CarfupStep> stepsCrmTarget = new List<CarfupStep>();
         private static string solutionPluginStepsName = null;
         public event EventHandler OnRequestConnection;
         internal PluginSettings settings = new PluginSettings();
@@ -207,20 +207,20 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
                 {
                     if(comparing == Comparing.Solution)
                     {
-                        stepsCrmSource = controller.dataManager.querySteps(sourceService, stepsCrmSource, solutionPluginStepsName);  //querySteps(sourceService, stepsCrmSource);
-                        stepsCrmTarget = controller.dataManager.querySteps(targetService, stepsCrmTarget, solutionPluginStepsName);  //querySteps(targetService, stepsCrmTarget);
+                        stepsCrmSource = controller.dataManager.querySteps(sourceService, solutionPluginStepsName);  //querySteps(sourceService, stepsCrmSource);
+                        stepsCrmTarget = controller.dataManager.querySteps(targetService, solutionPluginStepsName);  //querySteps(targetService, stepsCrmTarget);
                        
                     }
                     else if(comparing == Comparing.Assembly)
                     {
-                        stepsCrmSource = controller.dataManager.queryStepsAssembly(sourceService, stepsCrmSource, solutionPluginStepsName);  //querySteps(sourceService, stepsCrmSource);
-                        stepsCrmTarget = controller.dataManager.queryStepsAssembly(targetService, stepsCrmTarget, solutionPluginStepsName);  //querySteps(targetService, stepsCrmTarget);
+                        stepsCrmSource = controller.dataManager.queryStepsAssembly(sourceService, solutionPluginStepsName);  //querySteps(sourceService, stepsCrmSource);
+                        stepsCrmTarget = controller.dataManager.queryStepsAssembly(targetService, solutionPluginStepsName);  //querySteps(targetService, stepsCrmTarget);
                   //      diffCrmSourceTarget = stepsCrmSource.Select(x => x.Attributes["name"].ToString()).Except(stepsCrmTarget.Select(x => x.Attributes["name"].ToString())).ToArray();
                   //      diffCrmTargetSource = stepsCrmTarget.Select(x => x.Attributes["name"].ToString()).Except(stepsCrmSource.Select(x => x.Attributes["name"].ToString())).ToArray();
                     }
 
-                    diffCrmSourceTarget = stepsCrmSource.Select(x => controller.dataManager.getStepNameValue(comparing, x)).Except(stepsCrmTarget.Select(x => controller.dataManager.getStepNameValue(comparing, x))).ToArray();
-                    diffCrmTargetSource = stepsCrmTarget.Select(x => controller.dataManager.getStepNameValue(comparing, x)).Except(stepsCrmSource.Select(x => controller.dataManager.getStepNameValue(comparing, x))).ToArray();
+                    diffCrmSourceTarget = stepsCrmSource.Select(x => x.stepName).Except(stepsCrmTarget.Select(x => x.stepName)).ToArray();
+                    diffCrmTargetSource = stepsCrmTarget.Select(x => x.stepName).Except(stepsCrmSource.Select(x => x.stepName)).ToArray();
                 },
                 PostWorkCallBack = e =>
                 {
@@ -322,7 +322,7 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
         // Copying a step from the target to source environment
         private void buttonCopyTargetToSource_Click(object sender, EventArgs evt)
         {
-            var selectedStep = stepsCrmTarget.Where(x => controller.dataManager.getStepNameValue(comparing, x) == listViewTargetSource.SelectedItems.ToString()).FirstOrDefault();
+            var selectedStep = stepsCrmTarget.Where(x => x.stepName == listViewTargetSource.SelectedItems.ToString()).FirstOrDefault();
 
             if (selectedStep == null)
                 return;
@@ -333,9 +333,9 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
                 Work = (bw, e) =>
                 {
                     // retrieving the 3 data mandatory to have a proper step created
-                    var pluginType = controller.dataManager.getPluginType(controller.dataManager.returnAliasedValue(selectedStep, "plugintype.typename"));
-                    var sdkMessage = controller.dataManager.getSdkMessage(controller.dataManager.returnAliasedValue(selectedStep, "sdkmessage.name"));
-                    var messageFilter = controller.dataManager.getMessageFilter(controller.dataManager.returnAliasedValue(selectedStep, "messagefilter.primaryobjecttypecode"));
+                    var pluginType = controller.dataManager.getPluginType(selectedStep.plugintypeName);
+                    var sdkMessage = controller.dataManager.getSdkMessage(selectedStep.messageName);
+                    var messageFilter = controller.dataManager.getMessageFilter(selectedStep.entityName);
 
                     if (pluginType == null)
                     {
@@ -367,18 +367,18 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
                     newStepToCreate["plugintypeid"] = new EntityReference("plugintype", pluginType.Id);
                     newStepToCreate["sdkmessageid"] = new EntityReference("plugintype", sdkMessage.Id);
                     newStepToCreate["sdkmessagefilterid"] = new EntityReference("sdkmessagefilter", messageFilter.Id);
-                    newStepToCreate["name"] = controller.dataManager.returnAliasedValue(selectedStep, "step.name");
-                    newStepToCreate["configuration"] = controller.dataManager.returnAliasedValue(selectedStep, "step.configuration");
-                    newStepToCreate["mode"] = controller.dataManager.returnAliasedValue(selectedStep, "step.mode");
-                    newStepToCreate["rank"] = controller.dataManager.returnAliasedValue(selectedStep, "step.rank");
-                    newStepToCreate["stage"] = controller.dataManager.returnAliasedValue(selectedStep, "step.stage");
-                    newStepToCreate["supporteddeployment"] = controller.dataManager.returnAliasedValue(selectedStep, "step.supporteddeployment");
-                    newStepToCreate["invocationsource"] = controller.dataManager.returnAliasedValue(selectedStep, "step.invocationsource");
-                    newStepToCreate["configuration"] = controller.dataManager.returnAliasedValue(selectedStep, "step.configuration");
-                    newStepToCreate["filteringattributes"] = controller.dataManager.returnAliasedValue(selectedStep, "step.filteringattributes");
-                    newStepToCreate["description"] = controller.dataManager.returnAliasedValue(selectedStep, "step.description");
-                    newStepToCreate["asyncautodelete"] = controller.dataManager.returnAliasedValue(selectedStep, "step.asyncautodelete");
-                    newStepToCreate["customizationlevel"] = controller.dataManager.returnAliasedValue(selectedStep, "step.customizationlevel");
+                    newStepToCreate["name"] = selectedStep.stepName;
+                    newStepToCreate["configuration"] = selectedStep.stepConfiguration;
+                    newStepToCreate["mode"] = selectedStep.stepMode;
+                    newStepToCreate["rank"] = selectedStep.stepRank;
+                    newStepToCreate["stage"] = selectedStep.stepStage;
+                    newStepToCreate["supporteddeployment"] = selectedStep.stepSupporteddeployment;
+                    newStepToCreate["invocationsource"] = selectedStep.stepInvocationsource;
+                    newStepToCreate["configuration"] = selectedStep.stepConfiguration;
+                    newStepToCreate["filteringattributes"] = selectedStep.stepFilteringattributes;
+                    newStepToCreate["description"] = selectedStep.stepDescription;
+                    newStepToCreate["asyncautodelete"] = selectedStep.stepAsyncautodelete;
+                    newStepToCreate["customizationlevel"] = selectedStep.stepCustomizationlevel;
 
                     e.Result = targetService.Create(newStepToCreate);
                 },
@@ -410,7 +410,7 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
         // Copying a step from the source to target environment
         private void buttonCopySourceToTarget_Click(object sender, EventArgs evt)
         {
-            var selectedStep = stepsCrmSource.Where(x => controller.dataManager.getStepNameValue(comparing, x) == listViewSourceTarget.SelectedItems.ToString()).FirstOrDefault();
+            var selectedStep = stepsCrmSource.Where(x => x.stepName == listViewSourceTarget.SelectedItems.ToString()).FirstOrDefault();
 
             if (selectedStep == null)
                 return;
@@ -421,9 +421,9 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
                 Work = (bw, e) =>
                 {
                     // retrieving the 3 data mandatory to have a proper step created
-                    var pluginType = controller.dataManager.getPluginType(controller.dataManager.returnAliasedValue(selectedStep, "plugintype.typename"));
-                    var sdkMessage = controller.dataManager.getSdkMessage(controller.dataManager.returnAliasedValue(selectedStep, "sdkmessage.name"));
-                    var messageFilter = controller.dataManager.getMessageFilter(controller.dataManager.returnAliasedValue(selectedStep, "messagefilter.primaryobjecttypecode"));
+                    var pluginType = controller.dataManager.getPluginType(selectedStep.plugintypeName);
+                    var sdkMessage = controller.dataManager.getSdkMessage(selectedStep.messageName);
+                    var messageFilter = controller.dataManager.getMessageFilter(selectedStep.entityName);
 
                     if (pluginType == null)
                     {
@@ -456,18 +456,18 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
                     newStepToCreate["plugintypeid"] = new EntityReference("plugintype", pluginType.Id);
                     newStepToCreate["sdkmessageid"] = new EntityReference("plugintype", sdkMessage.Id);
                     newStepToCreate["sdkmessagefilterid"] = new EntityReference("sdkmessagefilter", messageFilter.Id);
-                    newStepToCreate["name"] = controller.dataManager.returnAliasedValue(selectedStep, "step.name");
-                    newStepToCreate["configuration"] = controller.dataManager.returnAliasedValue(selectedStep, "step.configuration");
-                    newStepToCreate["mode"] = controller.dataManager.returnAliasedValue(selectedStep, "step.mode");
-                    newStepToCreate["rank"] = controller.dataManager.returnAliasedValue(selectedStep, "step.rank");
-                    newStepToCreate["stage"] = controller.dataManager.returnAliasedValue(selectedStep, "step.stage");
-                    newStepToCreate["supporteddeployment"] = controller.dataManager.returnAliasedValue(selectedStep, "step.supporteddeployment");
-                    newStepToCreate["invocationsource"] = controller.dataManager.returnAliasedValue(selectedStep, "step.invocationsource");
-                    newStepToCreate["configuration"] = controller.dataManager.returnAliasedValue(selectedStep, "step.configuration");
-                    newStepToCreate["filteringattributes"] = controller.dataManager.returnAliasedValue(selectedStep, "step.filteringattributes");
-                    newStepToCreate["description"] = controller.dataManager.returnAliasedValue(selectedStep, "step.description");
-                    newStepToCreate["asyncautodelete"] = controller.dataManager.returnAliasedValue(selectedStep, "step.asyncautodelete");
-                    newStepToCreate["customizationlevel"] = controller.dataManager.returnAliasedValue(selectedStep, "step.customizationlevel");
+                    newStepToCreate["name"] = selectedStep.stepName;
+                    newStepToCreate["configuration"] = selectedStep.stepConfiguration;
+                    newStepToCreate["mode"] = selectedStep.stepMode;
+                    newStepToCreate["rank"] = selectedStep.stepRank;
+                    newStepToCreate["stage"] = selectedStep.stepStage;
+                    newStepToCreate["supporteddeployment"] = selectedStep.stepSupporteddeployment;
+                    newStepToCreate["invocationsource"] = selectedStep.stepInvocationsource;
+                    newStepToCreate["configuration"] = selectedStep.stepConfiguration;
+                    newStepToCreate["filteringattributes"] = selectedStep.stepFilteringattributes;
+                    newStepToCreate["description"] = selectedStep.stepDescription;
+                    newStepToCreate["asyncautodelete"] = selectedStep.stepAsyncautodelete;
+                    newStepToCreate["customizationlevel"] = selectedStep.stepCustomizationlevel;
 
                     e.Result = targetService.Create(newStepToCreate);
                 },
@@ -589,24 +589,22 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
             comboBoxSolutionsAssembliesList.Items.Clear();
         }
 
-        private void fillListViewItems(ListView listView, List<Entity> stepsList, string[] diff)
+        private void fillListViewItems(ListView listView, List<CarfupStep> stepsList, string[] diff)
         {
             listView.Items.Clear();
 
-            foreach (var step in stepsList.Where(
-                x => diff.Contains(controller.dataManager.getStepNameValue(comparing, x))
-            ))
+            foreach (var step in stepsList.Where(x => diff.Contains(x.stepName)))
             {
-                string createon = (comparing == Comparing.Solution) ? ((DateTime)step.GetAttributeValue<AliasedValue>("step.createdon").Value).ToLocalTime().ToString("dd-MMM-yyyy HH:mm") : (step.GetAttributeValue<DateTime>("createdon")).ToLocalTime().ToString("dd-MMM-yyyy HH:mm");
-                string modifiedon = (comparing == Comparing.Solution) ? ((DateTime)step.GetAttributeValue<AliasedValue>("step.modifiedon").Value).ToLocalTime().ToString("dd-MMM-yyyy HH:mm") : (step.GetAttributeValue<DateTime>("modifiedon")).ToLocalTime().ToString("dd-MMM-yyyy HH:mm");
+                string createon = step.createOn.ToLocalTime().ToString("dd-MMM-yyyy HH:mm");
+                string modifiedon = step.modifiedOn.ToLocalTime().ToString("dd-MMM-yyyy HH:mm");
 
                 var item = new ListViewItem();
-                item.Text = controller.dataManager.getStepNameValue(comparing, step);
-                item.SubItems.Add(controller.dataManager.returnAliasedValue(step, "messagefilter.primaryobjecttypecode"));
-                item.SubItems.Add(controller.dataManager.returnAliasedValue(step, "sdkmessage.name"));
+                item.Text = step.stepName;
+                item.SubItems.Add(step.entityName);
+                item.SubItems.Add(step.messageName);
                 item.SubItems.Add(createon);
                 item.SubItems.Add(modifiedon);
-                item.Tag = step.Id;
+                item.Tag = step.entity.Id;
 
                 listView.Items.Add((ListViewItem)item.Clone());
             }
