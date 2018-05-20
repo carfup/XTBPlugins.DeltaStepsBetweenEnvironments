@@ -347,6 +347,7 @@
             this.columnHeaderSTModifiedOn,
             this.columnHeaderSTCreatedOn});
             this.listViewSourceTarget.Location = new System.Drawing.Point(9, 30);
+            this.listViewSourceTarget.MultiSelect = false;
             this.listViewSourceTarget.Name = "listViewSourceTarget";
             this.listViewSourceTarget.Size = new System.Drawing.Size(456, 402);
             this.listViewSourceTarget.TabIndex = 26;
@@ -414,6 +415,7 @@
             this.columnHeaderTSModifiedOn,
             this.columnHeaderTSCreatedOn});
             this.listViewTargetSource.Location = new System.Drawing.Point(6, 30);
+            this.listViewTargetSource.MultiSelect = false;
             this.listViewTargetSource.Name = "listViewTargetSource";
             this.listViewTargetSource.Size = new System.Drawing.Size(460, 402);
             this.listViewTargetSource.TabIndex = 27;

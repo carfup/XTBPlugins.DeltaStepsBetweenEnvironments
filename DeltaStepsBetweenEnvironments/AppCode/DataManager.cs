@@ -42,7 +42,7 @@ namespace Carfup.XTBPlugins.AppCode
         }
 
         // return the plugintype
-        public Entity getPluginType(string plugintype)
+        public Entity getPluginType(string plugintype, IOrganizationService service)
         {
             QueryExpression queryRetrievePluginType = new QueryExpression
             {
@@ -57,13 +57,11 @@ namespace Carfup.XTBPlugins.AppCode
                 }
             };
 
-            var pluginType = this.connection.targetService.RetrieveMultiple(queryRetrievePluginType).Entities;
-
-            return pluginType.FirstOrDefault();
+            return service.RetrieveMultiple(queryRetrievePluginType).Entities.FirstOrDefault();
         }
 
         //return the sdk message
-        public Entity getSdkMessage(string name)
+        public Entity getSdkMessage(string name, IOrganizationService service)
         {
             QueryExpression queryRetrieveSdkMessage = new QueryExpression
             {
@@ -78,13 +76,11 @@ namespace Carfup.XTBPlugins.AppCode
                 }
             };
 
-            var sdkMessage = this.connection.targetService.RetrieveMultiple(queryRetrieveSdkMessage).Entities;
-
-            return sdkMessage.FirstOrDefault();
+            return service.RetrieveMultiple(queryRetrieveSdkMessage).Entities.FirstOrDefault();
         }
 
         // return the message filter
-        public Entity getMessageFilter(string primaryobjecttypecode)
+        public Entity getMessageFilter(string primaryobjecttypecode, IOrganizationService service)
         {
             QueryExpression queryRetrieveMessageFilter = new QueryExpression
             {
@@ -99,9 +95,7 @@ namespace Carfup.XTBPlugins.AppCode
                 }
             };
 
-            var messageFilter = this.connection.targetService.RetrieveMultiple(queryRetrieveMessageFilter).Entities;
-
-            return messageFilter.FirstOrDefault();
+            return service.RetrieveMultiple(queryRetrieveMessageFilter).Entities.FirstOrDefault();
         }
 
         public string[] loadSolutions()
@@ -239,7 +233,7 @@ namespace Carfup.XTBPlugins.AppCode
                 stepName = returnAliasedValue(x, "step.name").ToString(),
                 entityName = returnAliasedValue(x, "messagefilter.primaryobjecttypecode").ToString(),
                 stepMessageName = returnAliasedValue(x, "sdkmessage.name").ToString(),
-                plugintypeName = returnAliasedValue(x, "plugintype.name").ToString(),
+                plugintypeName = returnAliasedValue(x, "plugintype.typename").ToString(),
                 modifiedOn = (DateTime)returnAliasedValue(x, "step.modifiedon"),
                 createOn = (DateTime)returnAliasedValue(x, "step.createdon"),
                 stepAsyncautodelete = (bool)returnAliasedValue(x, "step.asyncautodelete"),
@@ -323,7 +317,7 @@ namespace Carfup.XTBPlugins.AppCode
                 stepName = x.GetAttributeValue<string>("name"),
                 entityName = returnAliasedValue(x, "messagefilter.primaryobjecttypecode").ToString(),
                 stepMessageName = returnAliasedValue(x, "sdkmessage.name").ToString(),
-                plugintypeName = returnAliasedValue(x, "plugintype.name").ToString(),
+                plugintypeName = returnAliasedValue(x, "plugintype.typename").ToString(),
                 modifiedOn = x.GetAttributeValue<DateTime>("modifiedon"),
                 createOn = x.GetAttributeValue<DateTime>("createdon"),
                 stepAsyncautodelete = x.GetAttributeValue<bool>("asyncautodelete"),

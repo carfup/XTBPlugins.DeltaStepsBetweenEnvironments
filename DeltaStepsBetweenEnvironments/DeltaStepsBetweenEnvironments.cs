@@ -320,7 +320,10 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
         // Copying a step from the target to source environment
         private void buttonCopyTargetToSource_Click(object sender, EventArgs evt)
         {
-            var selectedStep = stepsCrmTarget.Where(x => x.stepName == listViewTargetSource.SelectedItems.ToString()).FirstOrDefault();
+            if (listViewTargetSource.SelectedItems.Count == 0 || listViewTargetSource.SelectedItems.Count > 1)
+                return;
+
+            var selectedStep = stepsCrmTarget.Where(x => x.stepName == listViewTargetSource.SelectedItems[0].Text).FirstOrDefault();
 
             if (selectedStep == null)
                 return;
@@ -346,7 +349,7 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
                         return;
                     }
 
-                    if ((Guid)e.Result != null)
+                    if (e.Result != null && (Guid)e.Result != null)
                     {
                         this.log.LogData(EventType.Exception, LogAction.StepCreatedTargetToSource, e.Error);
                         MessageBox.Show($"Your step was successfully copied to the default solution of source environment.");
@@ -365,7 +368,10 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
         // Copying a step from the source to target environment
         private void buttonCopySourceToTarget_Click(object sender, EventArgs evt)
         {
-            var selectedStep = stepsCrmSource.Where(x => x.stepName == listViewSourceTarget.SelectedItems.ToString()).FirstOrDefault();
+            if (listViewSourceTarget.SelectedItems.Count == 0 || listViewSourceTarget.SelectedItems.Count > 1)
+                return;
+
+            var selectedStep = stepsCrmSource.Where(x => x.stepName == listViewSourceTarget.SelectedItems[0].Text).FirstOrDefault();
 
             if (selectedStep == null)
                 return;
@@ -438,11 +444,12 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
             string PluginTypeRetrievedLogAction = (toTarget) ? LogAction.PluginTypeRetrievedSourceToTarget : LogAction.PluginTypeRetrievedTargetToSource;
             string SDKMessageRetrievedLogAction = (toTarget) ? LogAction.SDKMessageRetrievedSourceToTarget : LogAction.SDKMessageRetrievedTargetToSource;
             string MessageFilterRetrievedLogAction = (toTarget) ? LogAction.MessageFilterRetrievedSourceToTarget : LogAction.MessageFilterRetrievedTargetToSource;
+            IOrganizationService service = (toTarget) ? targetService : sourceService;
 
             // retrieving the 3 data mandatory to have a proper step created
-            var pluginType = controller.dataManager.getPluginType(selectedStep.plugintypeName);
-            var sdkMessage = controller.dataManager.getSdkMessage(selectedStep.stepMessageName);
-            var messageFilter = controller.dataManager.getMessageFilter(selectedStep.entityName);
+            var pluginType = controller.dataManager.getPluginType(selectedStep.plugintypeName, service);
+            var sdkMessage = controller.dataManager.getSdkMessage(selectedStep.stepMessageName, service);
+            var messageFilter = controller.dataManager.getMessageFilter(selectedStep.entityName, service);
 
             if (pluginType == null)
             {
@@ -569,8 +576,8 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
                 labelComparing.Text = "Select the assembly to compare :";
             }
 
-            comboBoxSolutionsAssembliesList.Items.Clear();
             comboBoxSolutionsAssembliesList.SelectedIndex = -1;
+            comboBoxSolutionsAssembliesList.Items.Clear();
         }
 
         private void fillListViewItems(ListView listView, List<CarfupStep> stepsList, string[] diff)
