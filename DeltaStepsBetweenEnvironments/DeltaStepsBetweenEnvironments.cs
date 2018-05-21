@@ -104,7 +104,7 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
                     }
 
                     if((int)e.Result != 1)
-                        MessageBox.Show($"The {whatToCompare} doesn't exist in the Target environment. \rThe compare function will return a \"Perfect match\" in this case.\r\r You will still have the possibility to copy steps from the Source to Target environment.", "Informaton", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        MessageBox.Show($"The {whatToCompare} doesn't exist in the Target environment. \rThe compare function will return a \"Perfect match\" in this case.\r\r You will still have the possibility to copy steps from the Source to Target environment.", "Information", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 },
                 ProgressChanged = e => { SetWorkingMessage(e.UserState.ToString()); }
             });
@@ -608,7 +608,7 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
         {
             if (listViewTargetSource.SelectedItems.Count != 1 || listViewSourceTarget.SelectedItems.Count != 1)
             {
-                MessageBox.Show($"Make sure you select a step before trying to delete one.", "Informaton", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show($"Make sure you select a step before trying to delete one.", "Information", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
