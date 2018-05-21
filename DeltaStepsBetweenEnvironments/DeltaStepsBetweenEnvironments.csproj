@@ -182,6 +182,12 @@
   <ItemGroup>
     <None Include="Resources\logocarfup.png" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\move-left.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\move-right.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>if $(ConfigurationName) == Debug (

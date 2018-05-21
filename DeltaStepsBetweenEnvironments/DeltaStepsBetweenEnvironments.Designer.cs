@@ -28,9 +28,8 @@
 		/// </summary>
 		private void InitializeComponent()
 		{
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DeltaStepsBetweenEnvironments));
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
-            this.toolStripButtonClose = new System.Windows.Forms.ToolStripButton();
-            this.toolStripButtonOptions = new System.Windows.Forms.ToolStripButton();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.buttonChangeSource = new System.Windows.Forms.Button();
@@ -65,8 +64,11 @@
             this.columnHeaderTSModifiedOn = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeaderTSCreatedOn = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.groupBox4 = new System.Windows.Forms.GroupBox();
+            this.buttonDeleteStep = new System.Windows.Forms.Button();
             this.buttonCopySourceToTarget = new System.Windows.Forms.Button();
             this.buttonCopyTargetToSource = new System.Windows.Forms.Button();
+            this.toolStripButtonClose = new System.Windows.Forms.ToolStripButton();
+            this.toolStripButtonOptions = new System.Windows.Forms.ToolStripButton();
             this.toolStrip1.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -87,24 +89,6 @@
             this.toolStrip1.Size = new System.Drawing.Size(1038, 25);
             this.toolStrip1.TabIndex = 0;
             this.toolStrip1.Text = "toolStrip1";
-            // 
-            // toolStripButtonClose
-            // 
-            this.toolStripButtonClose.Image = global::Carfup.XTBPlugins.Properties.Resources.close;
-            this.toolStripButtonClose.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButtonClose.Name = "toolStripButtonClose";
-            this.toolStripButtonClose.Size = new System.Drawing.Size(56, 22);
-            this.toolStripButtonClose.Text = "Close";
-            this.toolStripButtonClose.Click += new System.EventHandler(this.toolStripButtonClose_Click);
-            // 
-            // toolStripButtonOptions
-            // 
-            this.toolStripButtonOptions.Image = global::Carfup.XTBPlugins.Properties.Resources.gear;
-            this.toolStripButtonOptions.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButtonOptions.Name = "toolStripButtonOptions";
-            this.toolStripButtonOptions.Size = new System.Drawing.Size(69, 22);
-            this.toolStripButtonOptions.Text = "Options";
-            this.toolStripButtonOptions.Click += new System.EventHandler(this.toolStripButtonOptions_Click);
             // 
             // tableLayoutPanel1
             // 
@@ -449,6 +433,7 @@
             this.groupBox4.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox4.Controls.Add(this.buttonDeleteStep);
             this.groupBox4.Controls.Add(this.buttonCopySourceToTarget);
             this.groupBox4.Controls.Add(this.buttonCopyTargetToSource);
             this.groupBox4.Location = new System.Drawing.Point(480, 3);
@@ -458,25 +443,53 @@
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "Actions";
             // 
+            // buttonDeleteStep
+            // 
+            this.buttonDeleteStep.Image = ((System.Drawing.Image)(resources.GetObject("buttonDeleteStep.Image")));
+            this.buttonDeleteStep.Location = new System.Drawing.Point(11, 130);
+            this.buttonDeleteStep.Name = "buttonDeleteStep";
+            this.buttonDeleteStep.Size = new System.Drawing.Size(42, 36);
+            this.buttonDeleteStep.TabIndex = 2;
+            this.buttonDeleteStep.UseVisualStyleBackColor = true;
+            this.buttonDeleteStep.Click += new System.EventHandler(this.buttonDeleteStep_Click);
+            // 
             // buttonCopySourceToTarget
             // 
+            this.buttonCopySourceToTarget.Image = global::Carfup.XTBPlugins.Properties.Resources.move_right;
             this.buttonCopySourceToTarget.Location = new System.Drawing.Point(10, 87);
             this.buttonCopySourceToTarget.Name = "buttonCopySourceToTarget";
-            this.buttonCopySourceToTarget.Size = new System.Drawing.Size(43, 23);
+            this.buttonCopySourceToTarget.Size = new System.Drawing.Size(43, 37);
             this.buttonCopySourceToTarget.TabIndex = 1;
-            this.buttonCopySourceToTarget.Text = ">";
             this.buttonCopySourceToTarget.UseVisualStyleBackColor = true;
             this.buttonCopySourceToTarget.Click += new System.EventHandler(this.buttonCopySourceToTarget_Click);
             // 
             // buttonCopyTargetToSource
             // 
+            this.buttonCopyTargetToSource.Image = global::Carfup.XTBPlugins.Properties.Resources.move_left;
             this.buttonCopyTargetToSource.Location = new System.Drawing.Point(11, 44);
             this.buttonCopyTargetToSource.Name = "buttonCopyTargetToSource";
-            this.buttonCopyTargetToSource.Size = new System.Drawing.Size(43, 23);
+            this.buttonCopyTargetToSource.Size = new System.Drawing.Size(43, 37);
             this.buttonCopyTargetToSource.TabIndex = 0;
-            this.buttonCopyTargetToSource.Text = "<";
             this.buttonCopyTargetToSource.UseVisualStyleBackColor = true;
             this.buttonCopyTargetToSource.Click += new System.EventHandler(this.buttonCopyTargetToSource_Click);
+            // 
+            // toolStripButtonClose
+            // 
+            this.toolStripButtonClose.Image = global::Carfup.XTBPlugins.Properties.Resources.close;
+            this.toolStripButtonClose.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonClose.Name = "toolStripButtonClose";
+            this.toolStripButtonClose.Size = new System.Drawing.Size(56, 22);
+            this.toolStripButtonClose.Text = "Close";
+            this.toolStripButtonClose.Click += new System.EventHandler(this.toolStripButtonClose_Click);
+            // 
+            // toolStripButtonOptions
+            // 
+            this.toolStripButtonOptions.Image = global::Carfup.XTBPlugins.Properties.Resources.gear;
+            this.toolStripButtonOptions.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonOptions.Name = "toolStripButtonOptions";
+            this.toolStripButtonOptions.Size = new System.Drawing.Size(69, 22);
+            this.toolStripButtonOptions.Text = "Options";
+            this.toolStripButtonOptions.Click += new System.EventHandler(this.toolStripButtonOptions_Click);
             // 
             // DeltaStepsBetweenEnvironments
             // 
@@ -548,5 +561,6 @@
         private System.Windows.Forms.ColumnHeader columnHeaderTSCreatedOn;
         private System.Windows.Forms.Label labelSourceTargetMatch;
         private System.Windows.Forms.Label labelTargetSourceMatch;
+        private System.Windows.Forms.Button buttonDeleteStep;
     }
 }

@@ -603,5 +603,10 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
             listView.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
             listView.AutoResizeColumns(ColumnHeaderAutoResizeStyle.HeaderSize);
         }
+
+        private void buttonDeleteStep_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }
