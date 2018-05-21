@@ -73,6 +73,16 @@ namespace Carfup.XTBPlugins.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap delete {
+            get {
+                object obj = ResourceManager.GetObject("delete", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap gear {
             get {
                 object obj = ResourceManager.GetObject("gear", resourceCulture);
@@ -83,9 +93,19 @@ namespace Carfup.XTBPlugins.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap help {
+            get {
+                object obj = ResourceManager.GetObject("help", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap move_left {
             get {
-                object obj = ResourceManager.GetObject("move-left", resourceCulture);
+                object obj = ResourceManager.GetObject("move_left", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -95,7 +115,7 @@ namespace Carfup.XTBPlugins.Properties {
         /// </summary>
         internal static System.Drawing.Bitmap move_right {
             get {
-                object obj = ResourceManager.GetObject("move-right", resourceCulture);
+                object obj = ResourceManager.GetObject("move_right", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

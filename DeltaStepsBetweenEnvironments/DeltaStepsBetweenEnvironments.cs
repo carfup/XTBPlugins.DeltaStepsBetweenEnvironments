@@ -606,7 +606,20 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
 
         private void buttonDeleteStep_Click(object sender, EventArgs e)
         {
+            if (listViewTargetSource.SelectedItems.Count != 1 || listViewSourceTarget.SelectedItems.Count != 1)
+            {
+                MessageBox.Show($"Make sure you select a step before trying to delete one.", "Informaton", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
 
+            var selectedStep = stepsCrmTarget.Where(x => x.stepName == listViewTargetSource.SelectedItems[0].Text).FirstOrDefault();
+        }
+
+        private void toolStripButtonHelp_Click(object sender, EventArgs e)
+        {
+            var helpDlg = new HelpForm();
+            helpDlg.ShowDialog(this);
+            this.log.LogData(EventType.Event, LogAction.ShowHelp);
         }
     }
 }

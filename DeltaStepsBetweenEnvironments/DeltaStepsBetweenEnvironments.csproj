@@ -131,6 +131,12 @@
     <Compile Include="DeltaStepsBetweenEnvironments.Designer.cs">
       <DependentUpon>DeltaStepsBetweenEnvironments.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\HelpForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\HelpForm.Designer.cs">
+      <DependentUpon>HelpForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\Options.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -164,6 +170,9 @@
     <EmbeddedResource Include="DeltaStepsBetweenEnvironments.resx">
       <DependentUpon>DeltaStepsBetweenEnvironments.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\HelpForm.resx">
+      <DependentUpon>HelpForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\Options.resx">
       <DependentUpon>Options.cs</DependentUpon>
     </EmbeddedResource>
@@ -187,6 +196,21 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\move-right.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\help.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\icons8-help-filled-20.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\delete.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\move_left.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\move_right.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

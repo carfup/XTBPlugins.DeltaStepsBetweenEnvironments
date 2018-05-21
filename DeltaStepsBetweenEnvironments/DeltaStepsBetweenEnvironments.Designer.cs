@@ -69,6 +69,7 @@
             this.buttonCopyTargetToSource = new System.Windows.Forms.Button();
             this.toolStripButtonClose = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonOptions = new System.Windows.Forms.ToolStripButton();
+            this.toolStripButtonHelp = new System.Windows.Forms.ToolStripButton();
             this.toolStrip1.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -83,7 +84,8 @@
             // 
             this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripButtonClose,
-            this.toolStripButtonOptions});
+            this.toolStripButtonOptions,
+            this.toolStripButtonHelp});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.Size = new System.Drawing.Size(1038, 25);
@@ -312,7 +314,7 @@
             this.labelSourceTargetMatch.BackColor = System.Drawing.Color.White;
             this.labelSourceTargetMatch.Font = new System.Drawing.Font("Microsoft Sans Serif", 20F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelSourceTargetMatch.ForeColor = System.Drawing.Color.Green;
-            this.labelSourceTargetMatch.Location = new System.Drawing.Point(84, 204);
+            this.labelSourceTargetMatch.Location = new System.Drawing.Point(78, 204);
             this.labelSourceTargetMatch.Name = "labelSourceTargetMatch";
             this.labelSourceTargetMatch.Size = new System.Drawing.Size(302, 31);
             this.labelSourceTargetMatch.TabIndex = 27;
@@ -324,16 +326,17 @@
             this.listViewSourceTarget.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.listViewSourceTarget.CheckBoxes = true;
             this.listViewSourceTarget.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.columnHeaderSTStepName,
             this.columnHeaderSTEntity,
             this.columnHeaderSTMessage,
             this.columnHeaderSTModifiedOn,
             this.columnHeaderSTCreatedOn});
-            this.listViewSourceTarget.Location = new System.Drawing.Point(9, 30);
-            this.listViewSourceTarget.MultiSelect = false;
+            this.listViewSourceTarget.Location = new System.Drawing.Point(9, 19);
             this.listViewSourceTarget.Name = "listViewSourceTarget";
-            this.listViewSourceTarget.Size = new System.Drawing.Size(456, 402);
+            this.listViewSourceTarget.Size = new System.Drawing.Size(456, 413);
+            this.listViewSourceTarget.Sorting = System.Windows.Forms.SortOrder.Ascending;
             this.listViewSourceTarget.TabIndex = 26;
             this.listViewSourceTarget.UseCompatibleStateImageBehavior = false;
             this.listViewSourceTarget.View = System.Windows.Forms.View.Details;
@@ -341,6 +344,7 @@
             // columnHeaderSTStepName
             // 
             this.columnHeaderSTStepName.Text = "Step Name";
+            this.columnHeaderSTStepName.Width = 86;
             // 
             // columnHeaderSTEntity
             // 
@@ -354,6 +358,7 @@
             // 
             this.columnHeaderSTModifiedOn.DisplayIndex = 4;
             this.columnHeaderSTModifiedOn.Text = "Modified On";
+            this.columnHeaderSTModifiedOn.Width = 81;
             // 
             // columnHeaderSTCreatedOn
             // 
@@ -392,16 +397,17 @@
             this.listViewTargetSource.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.listViewTargetSource.CheckBoxes = true;
             this.listViewTargetSource.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.columnHeaderTSStepName,
             this.columnHeaderTSEntity,
             this.columnHeaderTSMessage,
             this.columnHeaderTSModifiedOn,
             this.columnHeaderTSCreatedOn});
-            this.listViewTargetSource.Location = new System.Drawing.Point(6, 30);
-            this.listViewTargetSource.MultiSelect = false;
+            this.listViewTargetSource.Location = new System.Drawing.Point(6, 19);
             this.listViewTargetSource.Name = "listViewTargetSource";
-            this.listViewTargetSource.Size = new System.Drawing.Size(460, 402);
+            this.listViewTargetSource.Size = new System.Drawing.Size(460, 413);
+            this.listViewTargetSource.Sorting = System.Windows.Forms.SortOrder.Ascending;
             this.listViewTargetSource.TabIndex = 27;
             this.listViewTargetSource.UseCompatibleStateImageBehavior = false;
             this.listViewTargetSource.View = System.Windows.Forms.View.Details;
@@ -409,6 +415,7 @@
             // columnHeaderTSStepName
             // 
             this.columnHeaderTSStepName.Text = "Step Name";
+            this.columnHeaderTSStepName.Width = 82;
             // 
             // columnHeaderTSEntity
             // 
@@ -422,6 +429,7 @@
             // 
             this.columnHeaderTSModifiedOn.DisplayIndex = 4;
             this.columnHeaderTSModifiedOn.Text = "Modified On";
+            this.columnHeaderTSModifiedOn.Width = 77;
             // 
             // columnHeaderTSCreatedOn
             // 
@@ -446,7 +454,7 @@
             // buttonDeleteStep
             // 
             this.buttonDeleteStep.Image = ((System.Drawing.Image)(resources.GetObject("buttonDeleteStep.Image")));
-            this.buttonDeleteStep.Location = new System.Drawing.Point(11, 130);
+            this.buttonDeleteStep.Location = new System.Drawing.Point(12, 107);
             this.buttonDeleteStep.Name = "buttonDeleteStep";
             this.buttonDeleteStep.Size = new System.Drawing.Size(42, 36);
             this.buttonDeleteStep.TabIndex = 2;
@@ -456,7 +464,7 @@
             // buttonCopySourceToTarget
             // 
             this.buttonCopySourceToTarget.Image = global::Carfup.XTBPlugins.Properties.Resources.move_right;
-            this.buttonCopySourceToTarget.Location = new System.Drawing.Point(10, 87);
+            this.buttonCopySourceToTarget.Location = new System.Drawing.Point(11, 64);
             this.buttonCopySourceToTarget.Name = "buttonCopySourceToTarget";
             this.buttonCopySourceToTarget.Size = new System.Drawing.Size(43, 37);
             this.buttonCopySourceToTarget.TabIndex = 1;
@@ -465,9 +473,10 @@
             // 
             // buttonCopyTargetToSource
             // 
-            this.buttonCopyTargetToSource.Image = global::Carfup.XTBPlugins.Properties.Resources.move_left;
-            this.buttonCopyTargetToSource.Location = new System.Drawing.Point(11, 44);
+            this.buttonCopyTargetToSource.Image = ((System.Drawing.Image)(resources.GetObject("buttonCopyTargetToSource.Image")));
+            this.buttonCopyTargetToSource.Location = new System.Drawing.Point(12, 21);
             this.buttonCopyTargetToSource.Name = "buttonCopyTargetToSource";
+            this.buttonCopyTargetToSource.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.buttonCopyTargetToSource.Size = new System.Drawing.Size(43, 37);
             this.buttonCopyTargetToSource.TabIndex = 0;
             this.buttonCopyTargetToSource.UseVisualStyleBackColor = true;
@@ -490,6 +499,15 @@
             this.toolStripButtonOptions.Size = new System.Drawing.Size(69, 22);
             this.toolStripButtonOptions.Text = "Options";
             this.toolStripButtonOptions.Click += new System.EventHandler(this.toolStripButtonOptions_Click);
+            // 
+            // toolStripButtonHelp
+            // 
+            this.toolStripButtonHelp.Image = global::Carfup.XTBPlugins.Properties.Resources.help;
+            this.toolStripButtonHelp.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonHelp.Name = "toolStripButtonHelp";
+            this.toolStripButtonHelp.Size = new System.Drawing.Size(52, 22);
+            this.toolStripButtonHelp.Text = "Help";
+            this.toolStripButtonHelp.Click += new System.EventHandler(this.toolStripButtonHelp_Click);
             // 
             // DeltaStepsBetweenEnvironments
             // 
@@ -562,5 +580,6 @@
         private System.Windows.Forms.Label labelSourceTargetMatch;
         private System.Windows.Forms.Label labelTargetSourceMatch;
         private System.Windows.Forms.Button buttonDeleteStep;
+        private System.Windows.Forms.ToolStripButton toolStripButtonHelp;
     }
 }
