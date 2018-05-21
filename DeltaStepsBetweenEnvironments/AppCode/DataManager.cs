@@ -47,7 +47,7 @@ namespace Carfup.XTBPlugins.AppCode
             QueryExpression queryRetrievePluginType = new QueryExpression
             {
                 EntityName = "plugintype",
-                ColumnSet = new ColumnSet(),
+                ColumnSet = new ColumnSet(false),
                 Criteria =
                 {
                     Conditions =
@@ -66,7 +66,7 @@ namespace Carfup.XTBPlugins.AppCode
             QueryExpression queryRetrieveSdkMessage = new QueryExpression
             {
                 EntityName = "sdkmessage",
-                ColumnSet = new ColumnSet(),
+                ColumnSet = new ColumnSet(false),
                 Criteria =
                 {
                     Conditions =
@@ -85,7 +85,7 @@ namespace Carfup.XTBPlugins.AppCode
             QueryExpression queryRetrieveMessageFilter = new QueryExpression
             {
                 EntityName = "sdkmessagefilter",
-                ColumnSet = new ColumnSet(),
+                ColumnSet = new ColumnSet(false),
                 Criteria =
                 {
                     Conditions =
@@ -241,11 +241,11 @@ namespace Carfup.XTBPlugins.AppCode
                 stepCustomizationlevel = (int)returnAliasedValue(x, "step.customizationlevel"),
                 stepDescription = returnAliasedValue(x, "step.description").ToString(),
                 stepFilteringattributes = returnAliasedValue(x, "step.filteringattributes").ToString(),
-                stepInvocationsource = ((OptionSetValue)returnAliasedValue(x, "step.invocationsource")).Value,
-                stepMode = (int)returnAliasedValue(x, "step.mode"),
+                stepInvocationsource = (OptionSetValue)returnAliasedValue(x, "step.invocationsource"),
+                stepMode = (OptionSetValue)returnAliasedValue(x, "step.mode"),
                 stepRank = (int)returnAliasedValue(x, "step.rank"),
-                stepStage = (int)returnAliasedValue(x, "step.stage"),
-                stepSupporteddeployment = (int)returnAliasedValue(x, "step.supporteddeployment"),
+                stepStage = (OptionSetValue)returnAliasedValue(x, "step.stage"),
+                stepSupporteddeployment = (OptionSetValue)returnAliasedValue(x, "step.supporteddeployment"),
                 entity = x
             }).ToList();
         }
@@ -325,36 +325,15 @@ namespace Carfup.XTBPlugins.AppCode
                 stepCustomizationlevel = x.GetAttributeValue<int>("customizationlevel"),
                 stepDescription = x.GetAttributeValue<string>("description"),
                 stepFilteringattributes = x.GetAttributeValue<string>("filteringattributes"),
-                stepInvocationsource = x.GetAttributeValue<OptionSetValue>("invocationsource").Value,
-                stepMode = x.GetAttributeValue<OptionSetValue>("mode").Value,
+                stepInvocationsource = x.GetAttributeValue<OptionSetValue>("invocationsource"),
+                stepMode = x.GetAttributeValue<OptionSetValue>("mode"),
                 stepRank = x.GetAttributeValue<int>("rank"),
-                stepStage = x.GetAttributeValue<OptionSetValue>("stage").Value,
-                stepSupporteddeployment = x.GetAttributeValue<OptionSetValue>("supporteddeployment").Value,
+                stepStage = x.GetAttributeValue<OptionSetValue>("stage"),
+                stepSupporteddeployment = x.GetAttributeValue<OptionSetValue>("supporteddeployment"),
                 entity = x
             }).ToList();
         }
         #endregion Methods
     }
 
-    // Will be used to implement the step 
-    public class CarfupStep
-    {
-        public string stepName { get; set; }
-        public string entityName { get; set; } //messagefilter.primaryobjecttypecode
-        public string stepMessageName { get; set; } //sdkmessage.name
-        public string plugintypeName { get; set; } // plugintype.name
-        public DateTime createOn { get; set; }
-        public DateTime modifiedOn { get; set; }
-        public string stepConfiguration { get; set; }
-        public int stepMode { get; set; }
-        public int stepRank { get; set; }
-        public int stepStage { get; set; }
-        public int stepSupporteddeployment { get; set; }
-        public int stepInvocationsource { get; set; }
-        public string stepFilteringattributes { get; set; }
-        public string stepDescription { get; set; }
-        public bool stepAsyncautodelete { get; set; }
-        public int stepCustomizationlevel { get; set; }
-        public Entity entity { get; set; }
-    }
 }

@@ -25,13 +25,12 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
         IOrganizationService targetService = null;
         List<CarfupStep> stepsCrmSource = new List<CarfupStep>();
         List<CarfupStep> stepsCrmTarget = new List<CarfupStep>();
-        private static string solutionPluginStepsName = null;
+        private static string solutionAssemblyPluginStepsName = null;
         public event EventHandler OnRequestConnection;
         internal PluginSettings settings = new PluginSettings();
         LogUsage log = null;
         Comparing comparing = Comparing.Solution;
         ControllerManager controller = null;
-        string whatToCompare = "solution";
         
         public string RepositoryName
         {
@@ -76,7 +75,7 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
         {
             if (canProceed())
             {
-                solutionPluginStepsName = comboBoxSolutionsAssembliesList.SelectedItem.ToString();
+                solutionAssemblyPluginStepsName = comboBoxSolutionsAssembliesList.SelectedItem.ToString();
 
                 isSolutionOrAssemblyExistingInTargetEnv();
             }
@@ -91,7 +90,7 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
                 Message = $"Checking if the {whatToCompare} name exists in the target environment...",
                 Work = (bw, e) =>
                 {
-                    e.Result = (comparing == Comparing.Solution) ? controller.dataManager.isSolutionExistingInTargetEnv(solutionPluginStepsName) : controller.dataManager.isAssemblyExistingInTargetEnv(solutionPluginStepsName);
+                    e.Result = (comparing == Comparing.Solution) ? controller.dataManager.isSolutionExistingInTargetEnv(solutionAssemblyPluginStepsName) : controller.dataManager.isAssemblyExistingInTargetEnv(solutionAssemblyPluginStepsName);
                 },
                 PostWorkCallBack = e =>
                 {
@@ -182,13 +181,13 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
         // We compare the same solution name in both environments
         private void buttonCompare_Click(object sender, EventArgs evt)
         {
-            compareBothSolutions();
+            compareBothSolutionsAssemblies();
         }
 
 
-        private void compareBothSolutions()
+        private void compareBothSolutionsAssemblies()
         {
-            if (solutionPluginStepsName == null)
+            if (solutionAssemblyPluginStepsName == null)
             {
                 MessageBox.Show($"Please select a solution first.");
                 return;
@@ -200,6 +199,8 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
             stepsCrmSource.Clear();
             stepsCrmTarget.Clear();
 
+            string logAction = (comparing == Comparing.Solution) ? LogAction.SolutionsCompared : LogAction.AssembliesCompared;
+
             WorkAsync(new WorkAsyncInfo
             {
                 Message = "Comparing the 2 Solutions...",
@@ -207,13 +208,13 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
                 {
                     if(comparing == Comparing.Solution)
                     {
-                        stepsCrmSource = controller.dataManager.querySteps(sourceService, solutionPluginStepsName);  //querySteps(sourceService, stepsCrmSource);
-                        stepsCrmTarget = controller.dataManager.querySteps(targetService, solutionPluginStepsName);  //querySteps(targetService, stepsCrmTarget);
+                        stepsCrmSource = controller.dataManager.querySteps(sourceService, solutionAssemblyPluginStepsName);  //querySteps(sourceService, stepsCrmSource);
+                        stepsCrmTarget = controller.dataManager.querySteps(targetService, solutionAssemblyPluginStepsName);  //querySteps(targetService, stepsCrmTarget);
                     }
                     else if(comparing == Comparing.Assembly)
                     {
-                        stepsCrmSource = controller.dataManager.queryStepsAssembly(sourceService, solutionPluginStepsName);  //querySteps(sourceService, stepsCrmSource);
-                        stepsCrmTarget = controller.dataManager.queryStepsAssembly(targetService, solutionPluginStepsName);  //querySteps(targetService, stepsCrmTarget);
+                        stepsCrmSource = controller.dataManager.queryStepsAssembly(sourceService, solutionAssemblyPluginStepsName);  //querySteps(sourceService, stepsCrmSource);
+                        stepsCrmTarget = controller.dataManager.queryStepsAssembly(targetService, solutionAssemblyPluginStepsName);  //querySteps(targetService, stepsCrmTarget);
                     }
 
                     diffCrmSourceTarget = stepsCrmSource.Select(x => x.stepName).Except(stepsCrmTarget.Select(x => x.stepName)).ToArray();
@@ -223,7 +224,8 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
                 {
                     if (e.Error != null)
                     {
-                        this.log.LogData(EventType.Exception, LogAction.SolutionsCompared, e.Error);
+                        
+                        this.log.LogData(EventType.Exception, logAction, e.Error);
                         MessageBox.Show(this, e.Error.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         return;
                     }
@@ -251,7 +253,7 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
                         fillListViewItems(listViewTargetSource, stepsCrmTarget, diffCrmTargetSource);
                     }
 
-                    this.log.LogData(EventType.Event, LogAction.SolutionsCompared);
+                    this.log.LogData(EventType.Event, logAction);
                 },
                 ProgressChanged = e => { SetWorkingMessage(e.UserState.ToString()); }
             });
@@ -269,7 +271,6 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
                     Message = $"Loading CRM {Wording.getComparingInfo(comparing, true, true)}...",
                     Work = (bw, e) =>
                     {
-                        this.log.LogData(EventType.Event, logAction);
                         solutionsList = (comparing == Comparing.Solution) ? controller.dataManager.loadSolutions() : controller.dataManager.loadAssemblies();
                     },
                     PostWorkCallBack = e =>
@@ -286,6 +287,7 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
                         if (solutionsList != null)
                             comboBoxSolutionsAssembliesList.Items.AddRange(solutionsList);
 
+                        this.log.LogData(EventType.Event, logAction);
                     },
                     ProgressChanged = e => { SetWorkingMessage(e.UserState.ToString()); }
                 });
@@ -480,10 +482,9 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
             // Preparing the object step
             Entity newStepToCreate = new Entity("sdkmessageprocessingstep");
             newStepToCreate["plugintypeid"] = new EntityReference("plugintype", pluginType.Id);
-            newStepToCreate["sdkmessageid"] = new EntityReference("plugintype", sdkMessage.Id);
+            newStepToCreate["sdkmessageid"] = new EntityReference("sdkmessage", sdkMessage.Id);
             newStepToCreate["sdkmessagefilterid"] = new EntityReference("sdkmessagefilter", messageFilter.Id);
             newStepToCreate["name"] = selectedStep.stepName;
-            newStepToCreate["configuration"] = selectedStep.stepConfiguration;
             newStepToCreate["mode"] = selectedStep.stepMode;
             newStepToCreate["rank"] = selectedStep.stepRank;
             newStepToCreate["stage"] = selectedStep.stepStage;
@@ -495,7 +496,7 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
             newStepToCreate["asyncautodelete"] = selectedStep.stepAsyncautodelete;
             newStepToCreate["customizationlevel"] = selectedStep.stepCustomizationlevel;
 
-            return targetService.Create(newStepToCreate);
+            return service.Create(newStepToCreate);
         }
 
         // will save personal settings

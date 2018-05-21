@@ -38,6 +38,7 @@ namespace Carfup.XTBPlugins.AppCode
         public const string SettingsSaved = "SettingsSaved";
         public const string SettingLoaded = "SettingLoaded";
         public const string SolutionsCompared = "SolutionsCompared";
+        public const string AssembliesCompared = "AssembliesCompared";
         public const string PluginOpened = "PluginOpened";
         public const string SolutionsLoaded = "SolutionsLoaded";
         public const string AssembliesLoaded = "AssembliesLoaded";
@@ -82,5 +83,27 @@ namespace Carfup.XTBPlugins.AppCode
             return value;
         }
 
+    }
+
+    // Will be used to implement the step 
+    public class CarfupStep
+    {
+        public string stepName { get; set; }
+        public string entityName { get; set; } //messagefilter.primaryobjecttypecode
+        public string stepMessageName { get; set; } //sdkmessage.name
+        public string plugintypeName { get; set; } // plugintype.name
+        public DateTime createOn { get; set; }
+        public DateTime modifiedOn { get; set; }
+        public string stepConfiguration { get; set; }
+        public OptionSetValue stepMode { get; set; }
+        public int stepRank { get; set; }
+        public OptionSetValue stepStage { get; set; }
+        public OptionSetValue stepSupporteddeployment { get; set; }
+        public OptionSetValue stepInvocationsource { get; set; }
+        public string stepFilteringattributes { get; set; }
+        public string stepDescription { get; set; }
+        public bool stepAsyncautodelete { get; set; }
+        public int stepCustomizationlevel { get; set; }
+        public Entity entity { get; set; }
     }
 }
