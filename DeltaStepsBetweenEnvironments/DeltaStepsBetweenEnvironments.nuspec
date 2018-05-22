@@ -1,7 +1,7 @@
 ﻿<package>
   <metadata>
     <id>Carfup.XTBPlugins.DeltaStepsBetweenEnvironments</id>
-    <version>1.2018.1.8</version>
+    <version>1.2018.5.9</version>
     <title>Delta Plugin Steps between two environments</title>
     <authors>Clement O.</authors>
     <owners>Clement O.</owners>
@@ -12,7 +12,10 @@
     <summary>Really sweet plugin that does awesome things</summary>
     <releaseNotes>
 1.2018.5.9
+Added Help screen to explain how the plugin should be used
 You can now compare steps from a Solution or an Assembly.
+You can now copy a step directly to a solution (if you are in Solution mode)
+Ability to delete a step from an environment (irreversible).
 Improved code in the background.
 
 1.2018.1.7/8
