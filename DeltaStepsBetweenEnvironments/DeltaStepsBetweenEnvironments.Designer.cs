@@ -326,6 +326,7 @@
             this.listViewSourceTarget.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.listViewSourceTarget.CheckBoxes = true;
             this.listViewSourceTarget.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.columnHeaderSTStepName,
             this.columnHeaderSTEntity,
@@ -396,6 +397,7 @@
             this.listViewTargetSource.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.listViewTargetSource.CheckBoxes = true;
             this.listViewTargetSource.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.columnHeaderTSStepName,
             this.columnHeaderTSEntity,
@@ -403,7 +405,6 @@
             this.columnHeaderTSModifiedOn,
             this.columnHeaderTSCreatedOn});
             this.listViewTargetSource.Location = new System.Drawing.Point(6, 19);
-            this.listViewTargetSource.MultiSelect = false;
             this.listViewTargetSource.Name = "listViewTargetSource";
             this.listViewTargetSource.Size = new System.Drawing.Size(460, 413);
             this.listViewTargetSource.Sorting = System.Windows.Forms.SortOrder.Ascending;

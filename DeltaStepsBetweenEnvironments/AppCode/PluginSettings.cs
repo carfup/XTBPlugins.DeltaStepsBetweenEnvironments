@@ -57,7 +57,8 @@ namespace Carfup.XTBPlugins.AppCode
         public const string MessageFilterRetrievedSourceToTarget = "MessageFilterRetrieved (Source To Target)";
         public const string SolutionExistingInTargetEnvChecked = "SolutionExistingInTargetEnvChecked";
         public const string AssemblyExistingInTargetEnvChecked = "AssemblyExistingInTargetEnvChecked";
-        public const string ShowHelp = "ShowHelp";
+        public const string ShowHelpScreen = "ShowHelpScreen";
+        public const string StepsDeleted = "StepsDeleted";
     }
 
     static class Wording

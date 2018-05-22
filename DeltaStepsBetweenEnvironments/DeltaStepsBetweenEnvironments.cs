@@ -12,6 +12,7 @@ using System.Reflection;
 using System.Diagnostics;
 using Carfup.XTBPlugins.Forms;
 using Carfup.XTBPlugins.AppCode;
+using Microsoft.Xrm.Sdk.Messages;
 
 namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
 {
@@ -604,22 +605,86 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
             listView.AutoResizeColumns(ColumnHeaderAutoResizeStyle.HeaderSize);
         }
 
-        private void buttonDeleteStep_Click(object sender, EventArgs e)
+        private void buttonDeleteStep_Click(object sender, EventArgs evt)
         {
-            if (listViewTargetSource.SelectedItems.Count != 1 || listViewSourceTarget.SelectedItems.Count != 1)
+            if (listViewTargetSource.CheckedItems.Count == 0 && listViewSourceTarget.CheckedItems.Count == 0)
             {
-                MessageBox.Show($"Make sure you select a step before trying to delete one.", "Information", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show($"Make sure you checked at least one step before trying to perform a Delete action.", "Information", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
-            var selectedStep = stepsCrmTarget.Where(x => x.stepName == listViewTargetSource.SelectedItems[0].Text).FirstOrDefault();
+            // assuming selection was made on SourceToTarget
+            bool fromSource = true;
+            IOrganizationService service = sourceService;
+            ListView listViewToProceed = listViewSourceTarget;
+            
+
+            if (listViewSourceTarget.CheckedItems.Count == 0)
+            {
+                listViewToProceed = listViewTargetSource;
+                fromSource = false;
+                service = targetService;
+            }
+
+            // Getting list of selected Items
+            ListViewItem[] stepsGuid = new ListViewItem[listViewToProceed.CheckedItems.Count];
+
+
+            var areYouSure = MessageBox.Show($"Do you really want to delete the step(s) ? \rYou won't be able to get it back after that.", "Warning !", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (areYouSure == DialogResult.No)
+                return;
+
+            WorkAsync(new WorkAsyncInfo
+            {
+                Message = "Deleting the step(s) ...",
+                Work = (bw, e) =>
+                {
+                    Invoke(new Action(() =>
+                    {
+                        listViewToProceed.CheckedItems.CopyTo(stepsGuid, 0);
+                    }));
+
+                    if (stepsGuid == null)
+                        return;
+
+                    foreach (ListViewItem itemView in stepsGuid)
+                    {
+                        bw.ReportProgress(0, "Deleting the step(s)...");
+
+                        DeleteRequest dr = new DeleteRequest
+                        { 
+                            Target = new EntityReference("sdkmessageprocessingstep", (Guid)itemView.Tag)
+                        };
+
+                        service.Execute(dr);
+                    }
+                },
+                PostWorkCallBack = e =>
+                {
+                    if (e.Error != null)
+                    {
+                        this.log.LogData(EventType.Exception, LogAction.StepsDeleted, e.Error);
+                        MessageBox.Show(this, e.Error.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return;
+                    }
+                    else
+                    {
+                        foreach (ListViewItem step in stepsGuid.ToList())
+                            listViewToProceed.Items.Remove(step);
+
+                        this.log.LogData(EventType.Event, LogAction.StepsDeleted);
+                        MessageBox.Show("Step(s) are now deleted !");
+                    }
+                },
+                ProgressChanged = e => { SetWorkingMessage(e.UserState.ToString()); }
+            });
         }
 
         private void toolStripButtonHelp_Click(object sender, EventArgs e)
         {
             var helpDlg = new HelpForm();
             helpDlg.ShowDialog(this);
-            this.log.LogData(EventType.Event, LogAction.ShowHelp);
+            this.log.LogData(EventType.Event, LogAction.ShowHelpScreen);
         }
     }
 }

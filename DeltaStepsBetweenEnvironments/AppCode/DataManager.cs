@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Controls;
 
 namespace Carfup.XTBPlugins.AppCode
 {
@@ -333,7 +334,14 @@ namespace Carfup.XTBPlugins.AppCode
                 entity = x
             }).ToList();
         }
+
+        public void deleteSteps(ListView listView)
+        {
+
+        }
         #endregion Methods
     }
+
+    
 
 }
