@@ -192,16 +192,7 @@
     <None Include="Resources\logocarfup.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\move-left.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\move-right.png" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Resources\help.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\icons8-help-filled-20.png" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\delete.png" />
@@ -211,6 +202,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\move_right.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\help-screenshot.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

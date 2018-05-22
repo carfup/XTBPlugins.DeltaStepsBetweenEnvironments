@@ -10,6 +10,7 @@ namespace Carfup.XTBPlugins.AppCode
     public class PluginSettings
     {
         public bool? AllowLogUsage { get; set; }
+        public bool? ShowHelpOnStartUp { get; set; }
         public string CurrentVersion { get; set; } = DeltaStepsBetweenEnvironments.DeltaStepsBetweenEnvironments.CurrentVersion;
     }
 

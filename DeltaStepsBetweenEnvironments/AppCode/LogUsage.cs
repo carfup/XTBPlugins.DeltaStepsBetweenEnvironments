@@ -69,7 +69,8 @@ namespace Carfup.XTBPlugins.AppCode
         {
             Dictionary<string, string> dictionary = new Dictionary<string, string>
             {
-                { "plugin", telemetry.Context.Device.Id }
+                { "plugin", telemetry.Context.Device.Id },
+                { "xtbversion", Assembly.GetEntryAssembly().GetName().Version.ToString() }
             };
 
             if (action != null)

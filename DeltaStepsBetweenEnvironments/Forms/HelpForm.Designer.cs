@@ -28,9 +28,8 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(HelpForm));
             this.buttonCloseHelp = new System.Windows.Forms.Button();
-            this.checkBoxDontShowHelpStartup = new System.Windows.Forms.CheckBox();
+            this.checkBoxShowHelpStartup = new System.Windows.Forms.CheckBox();
             this.pictureBoxHelp = new System.Windows.Forms.PictureBox();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxHelp)).BeginInit();
             this.SuspendLayout();
@@ -44,25 +43,30 @@
             this.buttonCloseHelp.TabIndex = 1;
             this.buttonCloseHelp.Text = "Close";
             this.buttonCloseHelp.UseVisualStyleBackColor = true;
+            this.buttonCloseHelp.Click += new System.EventHandler(this.buttonCloseHelp_Click);
             // 
-            // checkBoxDontShowHelpStartup
+            // checkBoxShowHelpStartup
             // 
-            this.checkBoxDontShowHelpStartup.AutoSize = true;
-            this.checkBoxDontShowHelpStartup.Checked = true;
-            this.checkBoxDontShowHelpStartup.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBoxDontShowHelpStartup.Location = new System.Drawing.Point(15, 453);
-            this.checkBoxDontShowHelpStartup.Name = "checkBoxDontShowHelpStartup";
-            this.checkBoxDontShowHelpStartup.Size = new System.Drawing.Size(197, 17);
-            this.checkBoxDontShowHelpStartup.TabIndex = 2;
-            this.checkBoxDontShowHelpStartup.Text = "Don\'t show this on startup anymore !";
-            this.checkBoxDontShowHelpStartup.UseVisualStyleBackColor = true;
+            this.checkBoxShowHelpStartup.AutoSize = true;
+            this.checkBoxShowHelpStartup.Checked = true;
+            this.checkBoxShowHelpStartup.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBoxShowHelpStartup.Location = new System.Drawing.Point(15, 453);
+            this.checkBoxShowHelpStartup.Name = "checkBoxShowHelpStartup";
+            this.checkBoxShowHelpStartup.Size = new System.Drawing.Size(197, 17);
+            this.checkBoxShowHelpStartup.TabIndex = 2;
+            this.checkBoxShowHelpStartup.Text = "Don\'t show this on startup anymore !";
+            this.checkBoxShowHelpStartup.UseVisualStyleBackColor = true;
             // 
             // pictureBoxHelp
             // 
-            this.pictureBoxHelp.Image = ((System.Drawing.Image)(resources.GetObject("pictureBoxHelp.Image")));
+            this.pictureBoxHelp.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.pictureBoxHelp.Image = global::Carfup.XTBPlugins.Properties.Resources.help_screenshot;
             this.pictureBoxHelp.Location = new System.Drawing.Point(12, 12);
             this.pictureBoxHelp.Name = "pictureBoxHelp";
             this.pictureBoxHelp.Size = new System.Drawing.Size(783, 435);
+            this.pictureBoxHelp.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pictureBoxHelp.TabIndex = 3;
             this.pictureBoxHelp.TabStop = false;
             // 
@@ -73,7 +77,7 @@
             this.CancelButton = this.buttonCloseHelp;
             this.ClientSize = new System.Drawing.Size(807, 480);
             this.Controls.Add(this.pictureBoxHelp);
-            this.Controls.Add(this.checkBoxDontShowHelpStartup);
+            this.Controls.Add(this.checkBoxShowHelpStartup);
             this.Controls.Add(this.buttonCloseHelp);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
@@ -88,7 +92,7 @@
 
         #endregion
         private System.Windows.Forms.Button buttonCloseHelp;
-        private System.Windows.Forms.CheckBox checkBoxDontShowHelpStartup;
+        private System.Windows.Forms.CheckBox checkBoxShowHelpStartup;
         private System.Windows.Forms.PictureBox pictureBoxHelp;
     }
 }

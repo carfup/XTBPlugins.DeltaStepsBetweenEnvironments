@@ -29,7 +29,7 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
         private static string solutionAssemblyPluginStepsName = null;
         public event EventHandler OnRequestConnection;
         internal PluginSettings settings = new PluginSettings();
-        LogUsage log = null;
+        public LogUsage log = null;
         Comparing comparing = Comparing.Solution;
         ControllerManager controller = null;
         
@@ -209,15 +209,20 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
                 {
                     if(comparing == Comparing.Solution)
                     {
+                        bw.ReportProgress(0, "Fetching steps from source environment...");
                         stepsCrmSource = controller.dataManager.querySteps(sourceService, solutionAssemblyPluginStepsName);  //querySteps(sourceService, stepsCrmSource);
+                        bw.ReportProgress(0, "Fetching steps from target environment...");
                         stepsCrmTarget = controller.dataManager.querySteps(targetService, solutionAssemblyPluginStepsName);  //querySteps(targetService, stepsCrmTarget);
                     }
                     else if(comparing == Comparing.Assembly)
                     {
+                        bw.ReportProgress(0, "Fetching steps from source environment...");
                         stepsCrmSource = controller.dataManager.queryStepsAssembly(sourceService, solutionAssemblyPluginStepsName);  //querySteps(sourceService, stepsCrmSource);
+                        bw.ReportProgress(0, "Fetching steps from target environment...");
                         stepsCrmTarget = controller.dataManager.queryStepsAssembly(targetService, solutionAssemblyPluginStepsName);  //querySteps(targetService, stepsCrmTarget);
                     }
 
+                    bw.ReportProgress(0, "Comparing steps...");
                     diffCrmSourceTarget = stepsCrmSource.Select(x => x.stepName).Except(stepsCrmTarget.Select(x => x.stepName)).ToArray();
                     diffCrmTargetSource = stepsCrmTarget.Select(x => x.stepName).Except(stepsCrmSource.Select(x => x.stepName)).ToArray();
                 },
@@ -522,6 +527,11 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
             {
                 if (SettingsManager.Instance.TryLoad<PluginSettings>(typeof(DeltaStepsBetweenEnvironments), out settings))
                 {
+                    if (!settings.ShowHelpOnStartUp.HasValue)
+                    {
+                        var helpDlg = new HelpForm(this);
+                        helpDlg.ShowDialog(this);
+                    }
                     return;
                 }
                 else
@@ -530,7 +540,6 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
             catch (InvalidOperationException ex) {
                 this.log.LogData(EventType.Exception, LogAction.SettingLoaded, ex);
             }
-            
 
             this.log.LogData(EventType.Event, LogAction.SettingLoaded);
 
@@ -538,6 +547,12 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
             {
                 this.log.PromptToLog();
                 this.SaveSettings();
+            }
+
+            if(!settings.ShowHelpOnStartUp.HasValue)
+            {
+                var helpDlg = new HelpForm(this);
+                helpDlg.ShowDialog(this);
             }
         }
 
@@ -614,7 +629,6 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
             }
 
             // assuming selection was made on SourceToTarget
-            bool fromSource = true;
             IOrganizationService service = sourceService;
             ListView listViewToProceed = listViewSourceTarget;
             
@@ -622,7 +636,6 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
             if (listViewSourceTarget.CheckedItems.Count == 0)
             {
                 listViewToProceed = listViewTargetSource;
-                fromSource = false;
                 service = targetService;
             }
 
@@ -682,9 +695,8 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
 
         private void toolStripButtonHelp_Click(object sender, EventArgs e)
         {
-            var helpDlg = new HelpForm();
+            var helpDlg = new HelpForm(this);
             helpDlg.ShowDialog(this);
-            this.log.LogData(EventType.Event, LogAction.ShowHelpScreen);
         }
     }
 }
