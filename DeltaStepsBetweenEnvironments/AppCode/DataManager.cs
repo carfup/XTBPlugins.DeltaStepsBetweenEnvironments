@@ -334,11 +334,6 @@ namespace Carfup.XTBPlugins.AppCode
                 entity = x
             }).ToList();
         }
-
-        public void deleteSteps(ListView listView)
-        {
-
-        }
         #endregion Methods
     }
 

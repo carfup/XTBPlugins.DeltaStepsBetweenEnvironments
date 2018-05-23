@@ -422,8 +422,6 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
                             service.Execute(ascr);
                         }
                     }
-
-                    e.Result = "success";
                 },
                 PostWorkCallBack = e =>
                 {
@@ -433,8 +431,7 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
                         MessageBox.Show(this, e.Error.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         return;
                     }
-
-                    if (e.Result != null)
+                    else
                     {
                         this.log.LogData(EventType.Event, logAction);
                         MessageBox.Show($"Your step(s) were successfully copied to the {((toDefaultSolution) ? "default" : solutionAssemblyPluginStepsName)} solution of {((logAction == LogAction.StepCreeatedSourceToTarget) ? "target" : "source")} environment.");
@@ -659,10 +656,9 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
                     if (stepsGuid == null)
                         return;
 
+                    bw.ReportProgress(0, "Deleting the step(s)...");
                     foreach (ListViewItem itemView in stepsGuid)
                     {
-                        bw.ReportProgress(0, "Deleting the step(s)...");
-
                         DeleteRequest dr = new DeleteRequest
                         { 
                             Target = new EntityReference("sdkmessageprocessingstep", (Guid)itemView.Tag)

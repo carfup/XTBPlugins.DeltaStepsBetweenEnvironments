@@ -204,12 +204,6 @@
     <None Include="Resources\move_right.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\help-screenshot.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\help_screenshot.png" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Resources\helpscreenshot.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
@@ -231,5 +225,5 @@
     <MakeDir Directories="$(OutputPath)Merged" />
     <Message Text="MERGING: @(MergeAssemblies->'%(Filename)') into $(OutputAssembly)" Importance="High" />
     <Exec Command="ilmerge /out:&quot;$(OutputAssembly)&quot; @(MergeAssemblies->'&quot;%(FullPath)&quot;', ' ')" />
-  </Target>   
+  </Target>
 </Project>
