@@ -224,6 +224,6 @@
     </PropertyGroup>
     <MakeDir Directories="$(OutputPath)Merged" />
     <Message Text="MERGING: @(MergeAssemblies->'%(Filename)') into $(OutputAssembly)" Importance="High" />
-    <Exec Command="ilmerge /out:&quot;$(OutputAssembly)&quot; @(MergeAssemblies->'&quot;%(FullPath)&quot;', ' ')" />
+    <Exec Command="..\packages\ILMerge.Tools.2.14.1208\tools\ILMerge.exe /out:&quot;$(OutputAssembly)&quot; @(MergeAssemblies->'&quot;%(FullPath)&quot;', ' ')" />
   </Target>
 </Project>
