@@ -14,7 +14,7 @@
 1.2018.5.9
 Added Help screen to explain how the plugin should be used
 You can now compare steps from a Solution or an Assembly.
-You can now copy a step directly to a solution (if you are in Solution mode)
+You can now copy a step directly to a custom solution (if you are in Solution mode) or to default one.
 Ability to delete a step from an environment (irreversible).
 Improved code in the background.
 
