@@ -13,6 +13,7 @@ using System.Diagnostics;
 using Carfup.XTBPlugins.Forms;
 using Carfup.XTBPlugins.AppCode;
 using Microsoft.Xrm.Sdk.Messages;
+using Microsoft.Crm.Sdk.Messages;
 
 namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
 {
@@ -328,99 +329,14 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
         // Copying a step from the target to source environment
         private void buttonCopyTargetToSource_Click(object sender, EventArgs evt)
         {
-            if (listViewTargetSource.SelectedItems.Count == 0 || listViewTargetSource.SelectedItems.Count > 1)
-                return;
-
-            var selectedStep = stepsCrmTarget.Where(x => x.stepName == listViewTargetSource.SelectedItems[0].Text).FirstOrDefault();
-
-            if (selectedStep == null)
-                return;
-
-            WorkAsync(new WorkAsyncInfo
-            {
-                Message = "Creating the step in the environment...",
-                Work = (bw, e) =>
-                {
-                    Guid? stepCreated = creatingStep(selectedStep, false);
-
-                    if (stepCreated == null)
-                        return;
-
-                    e.Result = stepCreated.Value;
-                },
-                PostWorkCallBack = e =>
-                {
-                    if (e.Error != null)
-                    {
-                        this.log.LogData(EventType.Exception, LogAction.StepCreatedTargetToSource, e.Error);
-                        MessageBox.Show(this, e.Error.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        return;
-                    }
-
-                    if (e.Result != null && (Guid)e.Result != null)
-                    {
-                        this.log.LogData(EventType.Exception, LogAction.StepCreatedTargetToSource, e.Error);
-                        MessageBox.Show($"Your step was successfully copied to the default solution of source environment.");
-                        //listBoxSourceTarget.Items.Add(returnAliasedValue(selectedStep, "step.name"));
-
-                        labelSourceTargetMatch.Visible = false;
-                        labelTargetSourceMatch.Visible = false;
-                    }
-
-
-                },
-                ProgressChanged = e => { SetWorkingMessage(e.UserState.ToString()); }
-            });
+            creatingStepProcess(listViewTargetSource, stepsCrmTarget, sourceService);
         }
 
         // Copying a step from the source to target environment
         private void buttonCopySourceToTarget_Click(object sender, EventArgs evt)
         {
-            if (listViewSourceTarget.SelectedItems.Count == 0 || listViewSourceTarget.SelectedItems.Count > 1)
-                return;
-
-            var selectedStep = stepsCrmSource.Where(x => x.stepName == listViewSourceTarget.SelectedItems[0].Text).FirstOrDefault();
-
-            if (selectedStep == null)
-                return;
-
-            WorkAsync(new WorkAsyncInfo
-            {
-                Message = "Creating the step in the environment...",
-                Work = (bw, e) =>
-                {
-                    Guid? stepCreated = creatingStep(selectedStep);
-
-                    if (stepCreated == null)
-                        return;
-
-                    e.Result = stepCreated.Value;
-                },
-                PostWorkCallBack = e =>
-                {
-                    if (e.Error != null)
-                    {
-                        this.log.LogData(EventType.Exception, LogAction.StepCreeatedSourceToTarget, e.Error);
-                        MessageBox.Show(this, e.Error.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        return;
-                    }
-
-                    if(e.Result != null)
-                    {
-                        this.log.LogData(EventType.Event, LogAction.StepCreeatedSourceToTarget);
-                        MessageBox.Show($"Your step was successfully copied to the default solution of target environment.");
-                        //listBoxTargetSource.Items.Add(returnAliasedValue(selectedStep, "step.name"));
-
-                        labelSourceTargetMatch.Visible = false;
-                        labelTargetSourceMatch.Visible = false;
-                    }
-                        
-
-                },
-                ProgressChanged = e => { SetWorkingMessage(e.UserState.ToString()); }
-            });
+            creatingStepProcess(listViewSourceTarget, stepsCrmSource, targetService);
         }
-
        
         // action when the option form is opened
         private void toolStripButtonOptions_Click(object sender, EventArgs e)
@@ -446,6 +362,89 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
             }
         }
 
+        public void creatingStepProcess(ListView listView, List<CarfupStep> stepsList, IOrganizationService service)
+        {
+            bool toDefaultSolution = true;
+
+            if (listView.CheckedItems.Count < 1)
+            {
+                MessageBox.Show($"Make sure you checked at least one step before trying to perform a Copy action.", "Information", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            if(comparing == Comparing.Solution)
+            {
+                var whichDestination = MessageBox.Show($"Since you are copying a step from a solution, do you want to copy the step to the custom solution ?\r\rYes : Custom Solution.\rNo : Default Solution.\rCancel : Abort operation.", "Which destination you want ?", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+
+                if (whichDestination == DialogResult.Yes)
+                    toDefaultSolution = false;
+                else if (whichDestination == DialogResult.Cancel)
+                    return;
+            }
+
+            // Getting list of selected Items
+            ListViewItem[] stepsGuid = new ListViewItem[listView.CheckedItems.Count];
+
+            string logAction = (stepsList == stepsCrmSource) ? LogAction.StepCreeatedSourceToTarget : LogAction.StepCreatedTargetToSource;
+
+            WorkAsync(new WorkAsyncInfo
+            {
+                Message = "Creating the step in the environment...",
+                Work = (bw, e) =>
+                {
+                    Invoke(new Action(() =>
+                    {
+                        listView.CheckedItems.CopyTo(stepsGuid, 0);
+                    }));
+
+                    if (stepsGuid == null)
+                        return;
+
+                    foreach (ListViewItem itemView in stepsGuid)
+                    {
+                        var selectedStep = stepsList.Where(x => x.stepName == itemView.Text).FirstOrDefault();
+                        Guid? stepCreated = creatingStep(selectedStep, (stepsList == stepsCrmTarget));
+
+                        if (stepCreated == null)
+                            return;
+
+                        if (comparing == Comparing.Solution && !toDefaultSolution)
+                        {
+                            bw.ReportProgress(0, $"Adding the new created step to the {solutionAssemblyPluginStepsName} solution...");
+
+                            AddSolutionComponentRequest ascr = new AddSolutionComponentRequest()
+                            {
+                                ComponentId = stepCreated.Value,
+                                ComponentType = 92,
+                                SolutionUniqueName = solutionAssemblyPluginStepsName
+                            };
+
+                            service.Execute(ascr);
+                        }
+                    }
+
+                    e.Result = "success";
+                },
+                PostWorkCallBack = e =>
+                {
+                    if (e.Error != null)
+                    {
+                        this.log.LogData(EventType.Exception, logAction, e.Error);
+                        MessageBox.Show(this, e.Error.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return;
+                    }
+
+                    if (e.Result != null)
+                    {
+                        this.log.LogData(EventType.Event, logAction);
+                        MessageBox.Show($"Your step(s) were successfully copied to the {((toDefaultSolution) ? "default" : solutionAssemblyPluginStepsName)} solution of {((logAction == LogAction.StepCreeatedSourceToTarget) ? "target" : "source")} environment.");
+                        labelSourceTargetMatch.Visible = false;
+                        labelTargetSourceMatch.Visible = false;
+                    }
+                },
+                ProgressChanged = e => { SetWorkingMessage(e.UserState.ToString()); }
+            });
+        }
 
         public Guid? creatingStep(CarfupStep selectedStep, bool toTarget = true)
         {
@@ -462,7 +461,7 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
             if (pluginType == null)
             {
                 this.log.LogData(EventType.Exception, PluginTypeRetrievedLogAction);
-                MessageBox.Show($"Sorry, but we didn't find the necessary Plugin Type information in the destination system...");
+                MessageBox.Show($"Sorry, but we didn't find the necessary Plugin Type information in the destination system...\r\rThis can occur because you didn't load the same assembly in the destination system.");
                 return null;
             }
 
