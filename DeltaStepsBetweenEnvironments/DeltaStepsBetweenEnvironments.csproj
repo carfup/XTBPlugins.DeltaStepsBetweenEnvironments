@@ -220,4 +220,16 @@
   move /Y Carfup.XTBPlugins.*.pdb Plugins
 )</PostBuildEvent>
   </PropertyGroup>
+  <Target Name="AfterBuild" Condition="'$(Configuration)' == 'Release'">
+    <ItemGroup>
+      <MergeAssemblies Include="$(OutputPath)\Carfup.XTBPlugins.DeltaStepsBetweenEnvironments.dll" />
+      <MergeAssemblies Include="$(OutputPath)\Microsoft.ApplicationInsights.dll" />
+    </ItemGroup>
+    <PropertyGroup>
+      <OutputAssembly>$(OutputPath)Merged\Carfup.XTBPlugins.DeltaStepsBetweenEnvironments.dll</OutputAssembly>
+    </PropertyGroup>
+    <MakeDir Directories="$(OutputPath)Merged" />
+    <Message Text="MERGING: @(MergeAssemblies->'%(Filename)') into $(OutputAssembly)" Importance="High" />
+    <Exec Command="ilmerge /out:&quot;$(OutputAssembly)&quot; @(MergeAssemblies->'&quot;%(FullPath)&quot;', ' ')" />
+  </Target>   
 </Project>
