@@ -206,6 +206,12 @@
   <ItemGroup>
     <None Include="Resources\help-screenshot.png" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\help_screenshot.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\helpscreenshot.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>if $(ConfigurationName) == Debug (

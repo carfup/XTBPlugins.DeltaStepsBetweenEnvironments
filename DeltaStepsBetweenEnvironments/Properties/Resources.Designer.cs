@@ -103,9 +103,9 @@ namespace Carfup.XTBPlugins.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap help_screenshot {
+        internal static System.Drawing.Bitmap helpscreenshot {
             get {
-                object obj = ResourceManager.GetObject("help-screenshot", resourceCulture);
+                object obj = ResourceManager.GetObject("helpscreenshot", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
