@@ -117,32 +117,4 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <metadata name="toolStrip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>17, 17</value>
-  </metadata>
-  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-  <data name="buttonDeleteStep.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-    <value>
-        iVBORw0KGgoAAAANSUhEUgAAABoAAAAaCAYAAACpSkzOAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAO
-        wwAADsMBx2+oZAAAAXFJREFUSEtjIASe+tgaPfe2PvfMx+bXcx+b/8j4mY/1h2fe1vNueXiwQ5WTD4AG
-        PkC3ABNbV0CVEwf+1zMwPfS2EYThJ542aiCDnnnbfHrhbaOELAfCQF8Wgi3yttmGLP7az4oXaiQq+M/A
-        wPjIzUIIaOBtVJeSj4FBWvvc1ZUbagUEvHNx4cemmFIMdPhSqBUQ8MbDjA8Yzu9ogGdBrUAFoDgCxQWl
-        +HmgpRjUSOyAWkGIEWToYMAsAmbI30B8FxjWj8Fi3jY/QXygQU8haqy/g/k+1s9R9JHsI2+bhyDxF552
-        umADfKwvgfhPfaxtoPKHQfznXrbeyPpGLRq1aNQihIZRi2CYDIusXwMNCwXWlsUQvs1DKL8Wyr8O4du0
-        I+sjaNHLUHseZA3kY+vFUCNxA7CrsWomHgMbLdVQ43ADoEURwKD5g80AYjAwHu+CWkJQ4/CDZ55WJkAN
-        rcAgmEk09raZ/tTbugDU/oAagwQYGADo5dlGVnsongAAAABJRU5ErkJggg==
-</value>
-  </data>
-  <data name="buttonCopyTargetToSource.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-    <value>
-        iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAO
-        wwAADsMBx2+oZAAAALRJREFUOE9jGAVDCGitCmVTX5ewUGNdQiVUiHwAMkxtbfxmoIH/1dcmlECFyQNg
-        l61NWA8yDGhoG1SYPGA8M40VaMhaiGEJXVBhMkF9PZPauvjVUG/+U18Xf5covDY+D2oCJgAa1I4wMOEg
-        UMNufBjogF3qaxNDoNqxA6CibqiX14CCACpMGQDa3gd26bqEVQyrQpmhwpQBYORMgLqUwsiBgf8MjECX
-        lqqvjw+GioyCoQkYGADTGGoBJkH12AAAAABJRU5ErkJggg==
-</value>
-  </data>
-  <metadata name="$this.TrayHeight" type="System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>56</value>
-  </metadata>
 </root>

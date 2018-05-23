@@ -11,6 +11,10 @@
     <description>Find out if there is differences about your plugin steps between two of your environments</description>
     <summary>Really sweet plugin that does awesome things</summary>
     <releaseNotes>
+1.2018.5.9
+You can now compare steps from a Solution or an Assembly.
+Improved code in the background.
+
 1.2018.1.7/8
 Functionality to copy a step from one environment to the other.
 Allow the plugin to log anonymous data, in order to improve the most used features and develop the others.

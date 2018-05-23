@@ -1,25 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Drawing;
-using System.Configuration;
 using System.Data;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using XrmToolBox.Extensibility;
-using XrmToolBox.Extensibility.Args;
 using XrmToolBox.Extensibility.Interfaces;
-using Microsoft.Xrm.Sdk.Query;
 using McTools.Xrm.Connection;
 using Microsoft.Xrm.Sdk;
-using Microsoft.ApplicationInsights;
-using Microsoft.ApplicationInsights.Extensibility;
 using System.Reflection;
 using System.Diagnostics;
 using Carfup.XTBPlugins.Forms;
 using Carfup.XTBPlugins.AppCode;
+using Microsoft.Xrm.Sdk.Messages;
 
 namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
 {
@@ -31,12 +24,15 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
         private ConnectionDetail targetDetail = null;
         IOrganizationService sourceService = null;
         IOrganizationService targetService = null;
-        List<Entity> stepsCrmSource = new List<Entity>();
-        List<Entity> stepsCrmTarget = new List<Entity>();
-        private static string solutionPluginStepsName = null;
+        List<CarfupStep> stepsCrmSource = new List<CarfupStep>();
+        List<CarfupStep> stepsCrmTarget = new List<CarfupStep>();
+        private static string solutionAssemblyPluginStepsName = null;
         public event EventHandler OnRequestConnection;
         internal PluginSettings settings = new PluginSettings();
-        LogUsage log = null;
+        public LogUsage log = null;
+        Comparing comparing = Comparing.Solution;
+        ControllerManager controller = null;
+        
         public string RepositoryName
         {
             get
@@ -80,132 +76,39 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
         {
             if (canProceed())
             {
-                solutionPluginStepsName = comboBoxSolutionsList.SelectedItem.ToString();
+                solutionAssemblyPluginStepsName = comboBoxSolutionsAssembliesList.SelectedItem.ToString();
 
-                isSolutionExistingInTargetEnv();
+                isSolutionOrAssemblyExistingInTargetEnv();
             }
         }
 
-        private void isSolutionExistingInTargetEnv()
+        private void isSolutionOrAssemblyExistingInTargetEnv()
         {
+            string whatToCompare = Wording.getComparingInfo(comparing);
+
             WorkAsync(new WorkAsyncInfo
             {
-                Message = "Checking if the solution name exists in the target environment...",
+                Message = $"Checking if the {whatToCompare} name exists in the target environment...",
                 Work = (bw, e) =>
                 {
-                    QueryExpression queryExisting = new QueryExpression()
-                    {
-                        EntityName = "solution",
-                        ColumnSet = new ColumnSet(false),
-                        Criteria =
-                        {
-                            Conditions =
-                            {
-                                new ConditionExpression("uniquename", ConditionOperator.Equal, solutionPluginStepsName)
-                            }
-                        }
-                    };
-
-                    e.Result = targetService.RetrieveMultiple(queryExisting).Entities.Count;
+                    e.Result = (comparing == Comparing.Solution) ? controller.dataManager.isSolutionExistingInTargetEnv(solutionAssemblyPluginStepsName) : controller.dataManager.isAssemblyExistingInTargetEnv(solutionAssemblyPluginStepsName);
                 },
                 PostWorkCallBack = e =>
                 {
                     if (e.Error != null)
                     {
-                        this.log.LogData(EventType.Exception, LogAction.SolutionExistingInTargetEnvChecked, e.Error);
+                        string logAction = (comparing == Comparing.Solution) ? LogAction.SolutionExistingInTargetEnvChecked : LogAction.AssemblyExistingInTargetEnvChecked;
+                        this.log.LogData(EventType.Exception, logAction, e.Error);
+
                         MessageBox.Show(this, e.Error.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         return;
                     }
 
                     if((int)e.Result != 1)
-                        MessageBox.Show("The solution doesn't exist in the Target environment. \rThe compare function will return a \"Perfect match\" in this case.\r\r You will still have the possibility to copy steps from the Source to Target environment.", "Informaton", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        MessageBox.Show($"The {whatToCompare} doesn't exist in the Target environment. \rThe compare function will return a \"Perfect match\" in this case.\r\r You will still have the possibility to copy steps from the Source to Target environment.", "Information", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 },
                 ProgressChanged = e => { SetWorkingMessage(e.UserState.ToString()); }
             });
-        }
-
-        // Query the steps over the environment and return a list
-        public static List<Entity> querySteps(IOrganizationService service, List<Entity> list)
-        {
-            QueryExpression queryExistingSteps = new QueryExpression()
-            {
-
-                EntityName = "solutioncomponent",
-                ColumnSet = new ColumnSet("componenttype"),
-                LinkEntities =
-                {
-                    new LinkEntity()
-                    {
-                        LinkToEntityName = "sdkmessageprocessingstep",
-                        LinkToAttributeName = "sdkmessageprocessingstepid",
-                        LinkFromEntityName = "solutioncomponent",
-                        LinkFromAttributeName = "objectid",
-                        EntityAlias = "step",
-                        Columns = new ColumnSet("name","configuration","mode","rank","stage","supporteddeployment","invocationsource","configuration","plugintypeid","sdkmessageid","sdkmessagefilterid","filteringattributes","description","asyncautodelete","customizationlevel"),
-                        LinkEntities =
-                        {
-                            new LinkEntity()
-                            {
-                                LinkToEntityName = "sdkmessagefilter",
-                                LinkToAttributeName = "sdkmessagefilterid",
-                                LinkFromEntityName = "sdkmessageprocessingstep",
-                                LinkFromAttributeName = "sdkmessagefilterid",
-                                EntityAlias = "messagefilter",
-                                Columns = new ColumnSet("primaryobjecttypecode"),
-                                JoinOperator = JoinOperator.Inner
-                            },
-                            new LinkEntity()
-                            {
-                                LinkToEntityName = "sdkmessage",
-                                LinkToAttributeName = "sdkmessageid",
-                                LinkFromEntityName = "sdkmessageprocessingstep",
-                                LinkFromAttributeName = "sdkmessageid",
-                                EntityAlias = "sdkmessage",
-                                Columns = new ColumnSet("name"),
-                                JoinOperator = JoinOperator.Inner
-                            },
-                            new LinkEntity()
-                            {
-                                LinkToEntityName = "plugintype",
-                                LinkToAttributeName = "plugintypeid",
-                                LinkFromEntityName = "sdkmessageprocessingstep",
-                                LinkFromAttributeName = "plugintypeid",
-                                EntityAlias = "plugintype",
-                                Columns = new ColumnSet("typename"),
-                                JoinOperator = JoinOperator.Inner
-                            }
-                        }
-                    }
-                    ,
-                    new LinkEntity()
-                    {
-                        LinkToEntityName = "solution",
-                        LinkToAttributeName = "solutionid",
-                        LinkFromEntityName = "solutioncomponent",
-                        LinkFromAttributeName = "solutionid",
-                        LinkCriteria =
-                        {
-                            Conditions =
-                            {
-                                new ConditionExpression("uniquename", ConditionOperator.Equal, solutionPluginStepsName)
-                            }
-                        }
-                    }
-                }
-                ,
-                Criteria =
-                {
-                    Conditions =
-                    {
-                        new ConditionExpression("componenttype", ConditionOperator.Equal, 92)
-                    }
-                }
-
-            };
-
-            list = service.RetrieveMultiple(queryExistingSteps).Entities.ToList();
-
-            return list;
         }
 
         private void comboBoxTargetEnvironmentList_Click(object sender, EventArgs e)
@@ -223,17 +126,21 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
 
         public void UpdateConnection(IOrganizationService newService, ConnectionDetail connectionDetail, string actionName = "", object parameter = null)
         {
+            controller = new ControllerManager(sourceService, targetService);
+
             if (actionName == "TargetOrganization")
             {
                 targetService = newService;
                 targetDetail = connectionDetail;
                 SetConnectionLabel(connectionDetail, "Target");
+                controller.targetService = targetService;
             }
             else
             {
                 sourceService = newService;
                 sourceDetail = connectionDetail;
                 SetConnectionLabel(connectionDetail, "Source");
+                controller.sourceService = sourceService;
             }
 
             if (targetService != null && sourceService != null)
@@ -268,25 +175,24 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
                 };
                 OnRequestConnection(this, arg);
             }
+
+
         }
 
         // We compare the same solution name in both environments
         private void buttonCompare_Click(object sender, EventArgs evt)
         {
-            compareBothSolutions();
+            compareBothSolutionsAssemblies();
         }
 
 
-        private void compareBothSolutions()
+        private void compareBothSolutionsAssemblies()
         {
-            if (solutionPluginStepsName == null)
+            if (solutionAssemblyPluginStepsName == null)
             {
                 MessageBox.Show($"Please select a solution first.");
                 return;
             }
-
-            listBoxSourceTarget.Items.Clear();
-            listBoxTargetSource.Items.Clear();
 
             string[] diffCrmSourceTarget = null;
             string[] diffCrmTargetSource = null;
@@ -294,86 +200,100 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
             stepsCrmSource.Clear();
             stepsCrmTarget.Clear();
 
+            string logAction = (comparing == Comparing.Solution) ? LogAction.SolutionsCompared : LogAction.AssembliesCompared;
+
             WorkAsync(new WorkAsyncInfo
             {
                 Message = "Comparing the 2 Solutions...",
                 Work = (bw, e) =>
                 {
-                    stepsCrmSource = querySteps(sourceService, stepsCrmSource);
-                    stepsCrmTarget = querySteps(targetService, stepsCrmTarget);
+                    if(comparing == Comparing.Solution)
+                    {
+                        bw.ReportProgress(0, "Fetching steps from source environment...");
+                        stepsCrmSource = controller.dataManager.querySteps(sourceService, solutionAssemblyPluginStepsName);  //querySteps(sourceService, stepsCrmSource);
+                        bw.ReportProgress(0, "Fetching steps from target environment...");
+                        stepsCrmTarget = controller.dataManager.querySteps(targetService, solutionAssemblyPluginStepsName);  //querySteps(targetService, stepsCrmTarget);
+                    }
+                    else if(comparing == Comparing.Assembly)
+                    {
+                        bw.ReportProgress(0, "Fetching steps from source environment...");
+                        stepsCrmSource = controller.dataManager.queryStepsAssembly(sourceService, solutionAssemblyPluginStepsName);  //querySteps(sourceService, stepsCrmSource);
+                        bw.ReportProgress(0, "Fetching steps from target environment...");
+                        stepsCrmTarget = controller.dataManager.queryStepsAssembly(targetService, solutionAssemblyPluginStepsName);  //querySteps(targetService, stepsCrmTarget);
+                    }
 
-                    diffCrmSourceTarget = stepsCrmSource.Select(x => ((AliasedValue)x["step.name"]).Value.ToString()).Except(stepsCrmTarget.Select(x => ((AliasedValue)x["step.name"]).Value.ToString())).ToArray();
-                    diffCrmTargetSource = stepsCrmTarget.Select(x => ((AliasedValue)x["step.name"]).Value.ToString()).Except(stepsCrmSource.Select(x => ((AliasedValue)x["step.name"]).Value.ToString())).ToArray();
+                    bw.ReportProgress(0, "Comparing steps...");
+                    diffCrmSourceTarget = stepsCrmSource.Select(x => x.stepName).Except(stepsCrmTarget.Select(x => x.stepName)).ToArray();
+                    diffCrmTargetSource = stepsCrmTarget.Select(x => x.stepName).Except(stepsCrmSource.Select(x => x.stepName)).ToArray();
                 },
                 PostWorkCallBack = e =>
                 {
                     if (e.Error != null)
                     {
-                        this.log.LogData(EventType.Exception, LogAction.SolutionsCompared, e.Error);
+                        
+                        this.log.LogData(EventType.Exception, logAction, e.Error);
                         MessageBox.Show(this, e.Error.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         return;
                     }
 
                     if (diffCrmSourceTarget.Count() == 0)
                     {
-                        //listBoxSourceTarget.Visible = false;
+                        listViewSourceTarget.Clear();
                         labelSourceTargetMatch.Visible = true;
+                        
                     }
-                    else
+                    else // there are steps in source but not target
                     {
-                        listBoxSourceTarget.Visible = true;
-                        listBoxSourceTarget.Items.AddRange(diffCrmSourceTarget);
                         labelSourceTargetMatch.Visible = false;
-
+                        fillListViewItems(listViewSourceTarget, stepsCrmSource, diffCrmSourceTarget);
                     }
 
                     if (diffCrmTargetSource.Count() == 0)
                     {
-                        //listBoxTargetSource.Visible = false;
+                        listViewTargetSource.Clear();
                         labelTargetSourceMatch.Visible = true;
                     }
-                    else
+                    else // there are steps in source but not target
                     {
-                        listBoxTargetSource.Items.AddRange(diffCrmTargetSource);
-                        listBoxTargetSource.Visible = true;
                         labelTargetSourceMatch.Visible = false;
+                        fillListViewItems(listViewTargetSource, stepsCrmTarget, diffCrmTargetSource);
                     }
 
-                    this.log.LogData(EventType.Event, LogAction.SolutionsCompared);
+                    this.log.LogData(EventType.Event, logAction);
                 },
                 ProgressChanged = e => { SetWorkingMessage(e.UserState.ToString()); }
             });
         }
         // Loading solutions from the Source environment
-        private void buttonLoadSolutions_Click(object sender, EventArgs evt)
+        private void buttonLoadSolutionsAssemblies_Click(object sender, EventArgs evt)
         {
             if (canProceed())
             {
-                comboBoxSolutionsList.Items.Clear();
+                comboBoxSolutionsAssembliesList.Items.Clear();
+                string logAction = (comparing == Comparing.Solution) ? LogAction.SolutionsLoaded : LogAction.AssembliesLoaded;
+
                 WorkAsync(new WorkAsyncInfo
                 {
-                    Message = "Loading CRM Solutions...",
+                    Message = $"Loading CRM {Wording.getComparingInfo(comparing, true, true)}...",
                     Work = (bw, e) =>
                     {
-                        this.log.LogData(EventType.Event, LogAction.SolutionsLoaded);
-                        solutionsList = sourceService.RetrieveMultiple(new QueryExpression("solution")
-                        {
-                            ColumnSet = new ColumnSet("uniquename"),
-                        }).Entities.Select(p => p.Attributes["uniquename"].ToString()).OrderBy(p => p).ToArray();
+                        solutionsList = (comparing == Comparing.Solution) ? controller.dataManager.loadSolutions() : controller.dataManager.loadAssemblies();
                     },
                     PostWorkCallBack = e =>
                     {
                         if (e.Error != null)
                         {
-                            this.log.LogData(EventType.Exception, LogAction.SolutionsLoaded, e.Error);
+                            
+                            this.log.LogData(EventType.Exception, logAction, e.Error);
                             MessageBox.Show(this, e.Error.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                             return;
                         }
 
-                        this.log.LogData(EventType.Event, "Solutions retrieved");
+                        this.log.LogData(EventType.Event, $"{Wording.getComparingInfo(comparing, true, true)} retrieved");
                         if (solutionsList != null)
-                            comboBoxSolutionsList.Items.AddRange(solutionsList);
+                            comboBoxSolutionsAssembliesList.Items.AddRange(solutionsList);
 
+                        this.log.LogData(EventType.Event, logAction);
                     },
                     ProgressChanged = e => { SetWorkingMessage(e.UserState.ToString()); }
                 });
@@ -408,7 +328,10 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
         // Copying a step from the target to source environment
         private void buttonCopyTargetToSource_Click(object sender, EventArgs evt)
         {
-            var selectedStep = stepsCrmTarget.Where(x => ((AliasedValue)x["step.name"]).Value.ToString() == listBoxTargetSource.SelectedItem.ToString()).FirstOrDefault();
+            if (listViewTargetSource.SelectedItems.Count == 0 || listViewTargetSource.SelectedItems.Count > 1)
+                return;
+
+            var selectedStep = stepsCrmTarget.Where(x => x.stepName == listViewTargetSource.SelectedItems[0].Text).FirstOrDefault();
 
             if (selectedStep == null)
                 return;
@@ -418,55 +341,12 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
                 Message = "Creating the step in the environment...",
                 Work = (bw, e) =>
                 {
-                    // retrieving the 3 data mandatory to have a proper step created
-                    var pluginType = getPluginType(returnAliasedValue(selectedStep, "plugintype.typename").ToString());
-                    var sdkMessage = getSdkMessage(returnAliasedValue(selectedStep, "sdkmessage.name").ToString());
-                    var messageFilter = getMessageFilter(returnAliasedValue(selectedStep, "messagefilter.primaryobjecttypecode").ToString());
+                    Guid? stepCreated = creatingStep(selectedStep, false);
 
-                    if (pluginType == null)
-                    {
-                        this.log.LogData(EventType.Exception, LogAction.PluginTypeRetrievedTargetToSource);
-                        MessageBox.Show($"Sorry, but we didn't find the necessary Plugin Type information in the destination system...");
+                    if (stepCreated == null)
                         return;
-                    }
 
-                    if (sdkMessage == null)
-                    {
-                        this.log.LogData(EventType.Exception, LogAction.SDKMessageRetrievedTargetToSource);
-                        MessageBox.Show($"Sorry, but we didn't find the necessary SDK Message information in the destination system...");
-                        return;
-                    }
-
-                    if (messageFilter == null)
-                    {
-                        this.log.LogData(EventType.Exception, LogAction.MessageFilterRetrievedTargetToSource);
-                        MessageBox.Show($"Sorry, but we didn't find the necessary Message Filter information in the destination system...");
-                        return;
-                    }
-
-                    this.log.LogData(EventType.Event, LogAction.PluginTypeRetrievedTargetToSource);
-                    this.log.LogData(EventType.Event, LogAction.SDKMessageRetrievedTargetToSource);
-                    this.log.LogData(EventType.Event, LogAction.MessageFilterRetrievedTargetToSource);
-
-                    // Preparing the object step
-                    Entity newStepToCreate = new Entity("sdkmessageprocessingstep");
-                    newStepToCreate["plugintypeid"] = new EntityReference("plugintype", pluginType.Id);
-                    newStepToCreate["sdkmessageid"] = new EntityReference("plugintype", sdkMessage.Id);
-                    newStepToCreate["sdkmessagefilterid"] = new EntityReference("sdkmessagefilter", messageFilter.Id);
-                    newStepToCreate["name"] = returnAliasedValue(selectedStep, "step.name");
-                    newStepToCreate["configuration"] = returnAliasedValue(selectedStep, "step.configuration");
-                    newStepToCreate["mode"] = returnAliasedValue(selectedStep, "step.mode");
-                    newStepToCreate["rank"] = returnAliasedValue(selectedStep, "step.rank");
-                    newStepToCreate["stage"] = returnAliasedValue(selectedStep, "step.stage");
-                    newStepToCreate["supporteddeployment"] = returnAliasedValue(selectedStep, "step.supporteddeployment");
-                    newStepToCreate["invocationsource"] = returnAliasedValue(selectedStep, "step.invocationsource");
-                    newStepToCreate["configuration"] = returnAliasedValue(selectedStep, "step.configuration");
-                    newStepToCreate["filteringattributes"] = returnAliasedValue(selectedStep, "step.filteringattributes");
-                    newStepToCreate["description"] = returnAliasedValue(selectedStep, "step.description");
-                    newStepToCreate["asyncautodelete"] = returnAliasedValue(selectedStep, "step.asyncautodelete");
-                    newStepToCreate["customizationlevel"] = returnAliasedValue(selectedStep, "step.customizationlevel");
-
-                    e.Result = targetService.Create(newStepToCreate);
+                    e.Result = stepCreated.Value;
                 },
                 PostWorkCallBack = e =>
                 {
@@ -477,7 +357,7 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
                         return;
                     }
 
-                    if ((Guid)e.Result != null)
+                    if (e.Result != null && (Guid)e.Result != null)
                     {
                         this.log.LogData(EventType.Exception, LogAction.StepCreatedTargetToSource, e.Error);
                         MessageBox.Show($"Your step was successfully copied to the default solution of source environment.");
@@ -496,7 +376,10 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
         // Copying a step from the source to target environment
         private void buttonCopySourceToTarget_Click(object sender, EventArgs evt)
         {
-            var selectedStep = stepsCrmSource.Where(x => ((AliasedValue)x["step.name"]).Value.ToString() == listBoxSourceTarget.SelectedItem.ToString()).FirstOrDefault();
+            if (listViewSourceTarget.SelectedItems.Count == 0 || listViewSourceTarget.SelectedItems.Count > 1)
+                return;
+
+            var selectedStep = stepsCrmSource.Where(x => x.stepName == listViewSourceTarget.SelectedItems[0].Text).FirstOrDefault();
 
             if (selectedStep == null)
                 return;
@@ -506,56 +389,12 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
                 Message = "Creating the step in the environment...",
                 Work = (bw, e) =>
                 {
-                    // retrieving the 3 data mandatory to have a proper step created
-                    var pluginType = getPluginType(returnAliasedValue(selectedStep, "plugintype.typename").ToString());
-                    var sdkMessage = getSdkMessage(returnAliasedValue(selectedStep, "sdkmessage.name").ToString());
-                    var messageFilter = getMessageFilter(returnAliasedValue(selectedStep, "messagefilter.primaryobjecttypecode").ToString());
+                    Guid? stepCreated = creatingStep(selectedStep);
 
-                    if (pluginType == null)
-                    {
-                        this.log.LogData(EventType.Exception, LogAction.PluginTypeRetrievedSourceToTarget);
-                        MessageBox.Show($"Sorry, but we didn't find the necessary Plugin Type information in the destination system...");
+                    if (stepCreated == null)
                         return;
-                    }
 
-                    if (sdkMessage == null)
-                    {
-                        this.log.LogData(EventType.Exception, LogAction.SDKMessageRetrievedSourceToTarget);
-                        MessageBox.Show($"Sorry, but we didn't find the necessary SDK Message information in the destination system...");
-                        return;
-                    }
-
-                    if (messageFilter == null)
-                    {
-                        this.log.LogData(EventType.Exception, LogAction.MessageFilterRetrievedSourceToTarget);
-                        MessageBox.Show($"Sorry, but we didn't find the necessary Message Filter information in the destination system...");
-                        return;
-                    }
-
-
-                    this.log.LogData(EventType.Event, LogAction.PluginTypeRetrievedSourceToTarget);
-                    this.log.LogData(EventType.Event, LogAction.SDKMessageRetrievedSourceToTarget);
-                    this.log.LogData(EventType.Event, LogAction.MessageFilterRetrievedSourceToTarget);
-
-                    // Preparing the object step
-                    Entity newStepToCreate = new Entity("sdkmessageprocessingstep");
-                    newStepToCreate["plugintypeid"] = new EntityReference("plugintype", pluginType.Id);
-                    newStepToCreate["sdkmessageid"] = new EntityReference("plugintype", sdkMessage.Id);
-                    newStepToCreate["sdkmessagefilterid"] = new EntityReference("sdkmessagefilter", messageFilter.Id);
-                    newStepToCreate["name"] = returnAliasedValue(selectedStep, "step.name");
-                    newStepToCreate["configuration"] = returnAliasedValue(selectedStep, "step.configuration");
-                    newStepToCreate["mode"] = returnAliasedValue(selectedStep, "step.mode");
-                    newStepToCreate["rank"] = returnAliasedValue(selectedStep, "step.rank");
-                    newStepToCreate["stage"] = returnAliasedValue(selectedStep, "step.stage");
-                    newStepToCreate["supporteddeployment"] = returnAliasedValue(selectedStep, "step.supporteddeployment");
-                    newStepToCreate["invocationsource"] = returnAliasedValue(selectedStep, "step.invocationsource");
-                    newStepToCreate["configuration"] = returnAliasedValue(selectedStep, "step.configuration");
-                    newStepToCreate["filteringattributes"] = returnAliasedValue(selectedStep, "step.filteringattributes");
-                    newStepToCreate["description"] = returnAliasedValue(selectedStep, "step.description");
-                    newStepToCreate["asyncautodelete"] = returnAliasedValue(selectedStep, "step.asyncautodelete");
-                    newStepToCreate["customizationlevel"] = returnAliasedValue(selectedStep, "step.customizationlevel");
-
-                    e.Result = targetService.Create(newStepToCreate);
+                    e.Result = stepCreated.Value;
                 },
                 PostWorkCallBack = e =>
                 {
@@ -582,75 +421,7 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
             });
         }
 
-        // Return the value from an aliasedvalue
-        public object returnAliasedValue(Entity entity, string varName)
-        {
-            return entity.GetAttributeValue<AliasedValue>(varName) == null ? "" : entity.GetAttributeValue<AliasedValue>(varName).Value;
-        }
-
-        // return the plugintype
-        public Entity getPluginType(string plugintype)
-        {
-            QueryExpression queryRetrievePluginType = new QueryExpression
-            {
-                EntityName = "plugintype",
-                ColumnSet = new ColumnSet(),
-                Criteria =
-                {
-                    Conditions =
-                    {
-                        new ConditionExpression("typename", ConditionOperator.Equal, plugintype)
-                    }
-                }
-            };
-
-            var pluginType = targetService.RetrieveMultiple(queryRetrievePluginType).Entities;
-
-            return pluginType.FirstOrDefault();
-        }
-        
-        //return the sdk message
-        public Entity getSdkMessage(string name)
-        {
-            QueryExpression queryRetrieveSdkMessage = new QueryExpression
-            {
-                EntityName = "sdkmessage",
-                ColumnSet = new ColumnSet(),
-                Criteria =
-                {
-                    Conditions =
-                    {
-                        new ConditionExpression("name", ConditionOperator.Equal, name)
-                    }
-                }
-            };
-
-            var sdkMessage = targetService.RetrieveMultiple(queryRetrieveSdkMessage).Entities;
-
-            return sdkMessage.FirstOrDefault();
-        }
-
-        // return the message filter
-        public Entity getMessageFilter(string primaryobjecttypecode)
-        {
-            QueryExpression queryRetrieveMessageFilter = new QueryExpression
-            {
-                EntityName = "sdkmessagefilter",
-                ColumnSet = new ColumnSet(),
-                Criteria =
-                {
-                    Conditions =
-                    {
-                        new ConditionExpression("primaryobjecttypecode", ConditionOperator.Equal, primaryobjecttypecode)
-                    }
-                }
-            };
-
-            var messageFilter = targetService.RetrieveMultiple(queryRetrieveMessageFilter).Entities;
-
-            return messageFilter.FirstOrDefault();
-        }
-
+       
         // action when the option form is opened
         private void toolStripButtonOptions_Click(object sender, EventArgs e)
         {
@@ -675,6 +446,65 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
             }
         }
 
+
+        public Guid? creatingStep(CarfupStep selectedStep, bool toTarget = true)
+        {
+            string PluginTypeRetrievedLogAction = (toTarget) ? LogAction.PluginTypeRetrievedSourceToTarget : LogAction.PluginTypeRetrievedTargetToSource;
+            string SDKMessageRetrievedLogAction = (toTarget) ? LogAction.SDKMessageRetrievedSourceToTarget : LogAction.SDKMessageRetrievedTargetToSource;
+            string MessageFilterRetrievedLogAction = (toTarget) ? LogAction.MessageFilterRetrievedSourceToTarget : LogAction.MessageFilterRetrievedTargetToSource;
+            IOrganizationService service = (toTarget) ? targetService : sourceService;
+
+            // retrieving the 3 data mandatory to have a proper step created
+            var pluginType = controller.dataManager.getPluginType(selectedStep.plugintypeName, service);
+            var sdkMessage = controller.dataManager.getSdkMessage(selectedStep.stepMessageName, service);
+            var messageFilter = controller.dataManager.getMessageFilter(selectedStep.entityName, service);
+
+            if (pluginType == null)
+            {
+                this.log.LogData(EventType.Exception, PluginTypeRetrievedLogAction);
+                MessageBox.Show($"Sorry, but we didn't find the necessary Plugin Type information in the destination system...");
+                return null;
+            }
+
+            if (sdkMessage == null)
+            {
+                this.log.LogData(EventType.Exception, SDKMessageRetrievedLogAction);
+                MessageBox.Show($"Sorry, but we didn't find the necessary SDK Message information in the destination system...");
+                return null;
+            }
+
+            if (messageFilter == null)
+            {
+                this.log.LogData(EventType.Exception, MessageFilterRetrievedLogAction);
+                MessageBox.Show($"Sorry, but we didn't find the necessary Message Filter information in the destination system...");
+                return null;
+            }
+
+
+            this.log.LogData(EventType.Event, PluginTypeRetrievedLogAction);
+            this.log.LogData(EventType.Event, SDKMessageRetrievedLogAction);
+            this.log.LogData(EventType.Event, MessageFilterRetrievedLogAction);
+
+            // Preparing the object step
+            Entity newStepToCreate = new Entity("sdkmessageprocessingstep");
+            newStepToCreate["plugintypeid"] = new EntityReference("plugintype", pluginType.Id);
+            newStepToCreate["sdkmessageid"] = new EntityReference("sdkmessage", sdkMessage.Id);
+            newStepToCreate["sdkmessagefilterid"] = new EntityReference("sdkmessagefilter", messageFilter.Id);
+            newStepToCreate["name"] = selectedStep.stepName;
+            newStepToCreate["mode"] = selectedStep.stepMode;
+            newStepToCreate["rank"] = selectedStep.stepRank;
+            newStepToCreate["stage"] = selectedStep.stepStage;
+            newStepToCreate["supporteddeployment"] = selectedStep.stepSupporteddeployment;
+            newStepToCreate["invocationsource"] = selectedStep.stepInvocationsource;
+            newStepToCreate["configuration"] = selectedStep.stepConfiguration;
+            newStepToCreate["filteringattributes"] = selectedStep.stepFilteringattributes;
+            newStepToCreate["description"] = selectedStep.stepDescription;
+            newStepToCreate["asyncautodelete"] = selectedStep.stepAsyncautodelete;
+            newStepToCreate["customizationlevel"] = selectedStep.stepCustomizationlevel;
+
+            return service.Create(newStepToCreate);
+        }
+
         // will save personal settings
         public void SaveSettings()
         {
@@ -697,6 +527,11 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
             {
                 if (SettingsManager.Instance.TryLoad<PluginSettings>(typeof(DeltaStepsBetweenEnvironments), out settings))
                 {
+                    if (!settings.ShowHelpOnStartUp.HasValue)
+                    {
+                        var helpDlg = new HelpForm(this);
+                        helpDlg.ShowDialog(this);
+                    }
                     return;
                 }
                 else
@@ -705,7 +540,6 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
             catch (InvalidOperationException ex) {
                 this.log.LogData(EventType.Exception, LogAction.SettingLoaded, ex);
             }
-            
 
             this.log.LogData(EventType.Event, LogAction.SettingLoaded);
 
@@ -713,6 +547,12 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
             {
                 this.log.PromptToLog();
                 this.SaveSettings();
+            }
+
+            if(!settings.ShowHelpOnStartUp.HasValue)
+            {
+                var helpDlg = new HelpForm(this);
+                helpDlg.ShowDialog(this);
             }
         }
 
@@ -725,6 +565,138 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
                 FileVersionInfo fileVersionInfo = FileVersionInfo.GetVersionInfo(assembly.Location);
                 return fileVersionInfo.ProductVersion;
             }
+        }
+
+        private void radioButtonCompareSolution_Click(object sender, EventArgs e)
+        {
+            comparing = Comparing.Solution;
+            manageRadioButtonsAssemblySolution();
+        }
+
+        private void radioButtonCompareAssembly_Click(object sender, EventArgs e)
+        {
+            comparing = Comparing.Assembly;
+            manageRadioButtonsAssemblySolution();
+        }
+
+        private void manageRadioButtonsAssemblySolution()
+        {
+            
+            if(comparing == Comparing.Solution)
+            {
+                buttonLoadSolutionsAssemblies.Text = "Load Solutions";
+                labelComparing.Text = "Select the solution to compare :";
+            }
+            else if(comparing == Comparing.Assembly)
+            {
+                buttonLoadSolutionsAssemblies.Text = "Load Assemblies";
+                labelComparing.Text = "Select the assembly to compare :";
+            }
+
+            comboBoxSolutionsAssembliesList.SelectedIndex = -1;
+            comboBoxSolutionsAssembliesList.Items.Clear();
+        }
+
+        private void fillListViewItems(ListView listView, List<CarfupStep> stepsList, string[] diff)
+        {
+            listView.Items.Clear();
+
+            foreach (var step in stepsList.Where(x => diff.Contains(x.stepName)))
+            {
+                string createon = step.createOn.ToLocalTime().ToString("dd-MMM-yyyy HH:mm");
+                string modifiedon = step.modifiedOn.ToLocalTime().ToString("dd-MMM-yyyy HH:mm");
+
+                var item = new ListViewItem();
+                item.Text = step.stepName;
+                item.SubItems.Add(step.entityName);
+                item.SubItems.Add(step.stepMessageName);
+                item.SubItems.Add(createon);
+                item.SubItems.Add(modifiedon);
+                item.Tag = step.entity.Id;
+
+                listView.Items.Add((ListViewItem)item.Clone());
+            }
+            listView.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
+            listView.AutoResizeColumns(ColumnHeaderAutoResizeStyle.HeaderSize);
+        }
+
+        private void buttonDeleteStep_Click(object sender, EventArgs evt)
+        {
+            if (listViewTargetSource.CheckedItems.Count == 0 && listViewSourceTarget.CheckedItems.Count == 0)
+            {
+                MessageBox.Show($"Make sure you checked at least one step before trying to perform a Delete action.", "Information", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            // assuming selection was made on SourceToTarget
+            IOrganizationService service = sourceService;
+            ListView listViewToProceed = listViewSourceTarget;
+            
+
+            if (listViewSourceTarget.CheckedItems.Count == 0)
+            {
+                listViewToProceed = listViewTargetSource;
+                service = targetService;
+            }
+
+            // Getting list of selected Items
+            ListViewItem[] stepsGuid = new ListViewItem[listViewToProceed.CheckedItems.Count];
+
+
+            var areYouSure = MessageBox.Show($"Do you really want to delete the step(s) ? \rYou won't be able to get it back after that.", "Warning !", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (areYouSure == DialogResult.No)
+                return;
+
+            WorkAsync(new WorkAsyncInfo
+            {
+                Message = "Deleting the step(s) ...",
+                Work = (bw, e) =>
+                {
+                    Invoke(new Action(() =>
+                    {
+                        listViewToProceed.CheckedItems.CopyTo(stepsGuid, 0);
+                    }));
+
+                    if (stepsGuid == null)
+                        return;
+
+                    foreach (ListViewItem itemView in stepsGuid)
+                    {
+                        bw.ReportProgress(0, "Deleting the step(s)...");
+
+                        DeleteRequest dr = new DeleteRequest
+                        { 
+                            Target = new EntityReference("sdkmessageprocessingstep", (Guid)itemView.Tag)
+                        };
+
+                        service.Execute(dr);
+                    }
+                },
+                PostWorkCallBack = e =>
+                {
+                    if (e.Error != null)
+                    {
+                        this.log.LogData(EventType.Exception, LogAction.StepsDeleted, e.Error);
+                        MessageBox.Show(this, e.Error.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return;
+                    }
+                    else
+                    {
+                        foreach (ListViewItem step in stepsGuid.ToList())
+                            listViewToProceed.Items.Remove(step);
+
+                        this.log.LogData(EventType.Event, LogAction.StepsDeleted);
+                        MessageBox.Show("Step(s) are now deleted !");
+                    }
+                },
+                ProgressChanged = e => { SetWorkingMessage(e.UserState.ToString()); }
+            });
+        }
+
+        private void toolStripButtonHelp_Click(object sender, EventArgs e)
+        {
+            var helpDlg = new HelpForm(this);
+            helpDlg.ShowDialog(this);
         }
     }
 }
