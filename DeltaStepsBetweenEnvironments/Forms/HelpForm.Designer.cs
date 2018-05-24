@@ -56,6 +56,7 @@
             this.checkBoxShowHelpStartup.TabIndex = 2;
             this.checkBoxShowHelpStartup.Text = "Don\'t show this on startup anymore !";
             this.checkBoxShowHelpStartup.UseVisualStyleBackColor = true;
+            this.checkBoxShowHelpStartup.Visible = false;
             // 
             // pictureBoxHelp
             // 
