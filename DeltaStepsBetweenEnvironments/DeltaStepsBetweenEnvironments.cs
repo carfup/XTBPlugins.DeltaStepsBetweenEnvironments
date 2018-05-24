@@ -33,7 +33,8 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
         public LogUsage log = null;
         Comparing comparing = Comparing.Solution;
         ControllerManager controller = null;
-        
+        private int currentColumnOrder;
+
         public string RepositoryName
         {
             get
@@ -692,6 +693,31 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
         {
             var helpDlg = new HelpForm(this);
             helpDlg.ShowDialog(this);
+        }
+
+        private void listViewSourceTarget_ColumnClick(object sender, ColumnClickEventArgs e)
+        {
+            sortListView(listViewSourceTarget, e);
+        }
+
+        private void listViewTargetSource_ColumnClick(object sender, ColumnClickEventArgs e)
+        {
+            sortListView(listViewTargetSource, e);
+        }
+
+        public void sortListView(ListView listView, ColumnClickEventArgs e)
+        {
+            if (e.Column == currentColumnOrder)
+            {
+                listView.Sorting = listView.Sorting == SortOrder.Ascending ? SortOrder.Descending : SortOrder.Ascending;
+
+                listView.ListViewItemSorter = new ListViewItemComparer(e.Column, listView.Sorting);
+            }
+            else
+            {
+                currentColumnOrder = e.Column;
+                listView.ListViewItemSorter = new ListViewItemComparer(e.Column, SortOrder.Ascending);
+            }
         }
     }
 }

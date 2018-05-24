@@ -30,6 +30,9 @@
 		{
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DeltaStepsBetweenEnvironments));
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
+            this.toolStripButtonClose = new System.Windows.Forms.ToolStripButton();
+            this.toolStripButtonOptions = new System.Windows.Forms.ToolStripButton();
+            this.toolStripButtonHelp = new System.Windows.Forms.ToolStripButton();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.buttonChangeSource = new System.Windows.Forms.Button();
@@ -67,9 +70,6 @@
             this.buttonDeleteStep = new System.Windows.Forms.Button();
             this.buttonCopySourceToTarget = new System.Windows.Forms.Button();
             this.buttonCopyTargetToSource = new System.Windows.Forms.Button();
-            this.toolStripButtonClose = new System.Windows.Forms.ToolStripButton();
-            this.toolStripButtonOptions = new System.Windows.Forms.ToolStripButton();
-            this.toolStripButtonHelp = new System.Windows.Forms.ToolStripButton();
             this.toolStrip1.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -91,6 +91,33 @@
             this.toolStrip1.Size = new System.Drawing.Size(1038, 25);
             this.toolStrip1.TabIndex = 0;
             this.toolStrip1.Text = "toolStrip1";
+            // 
+            // toolStripButtonClose
+            // 
+            this.toolStripButtonClose.Image = global::Carfup.XTBPlugins.Properties.Resources.close;
+            this.toolStripButtonClose.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonClose.Name = "toolStripButtonClose";
+            this.toolStripButtonClose.Size = new System.Drawing.Size(56, 22);
+            this.toolStripButtonClose.Text = "Close";
+            this.toolStripButtonClose.Click += new System.EventHandler(this.toolStripButtonClose_Click);
+            // 
+            // toolStripButtonOptions
+            // 
+            this.toolStripButtonOptions.Image = global::Carfup.XTBPlugins.Properties.Resources.gear;
+            this.toolStripButtonOptions.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonOptions.Name = "toolStripButtonOptions";
+            this.toolStripButtonOptions.Size = new System.Drawing.Size(69, 22);
+            this.toolStripButtonOptions.Text = "Options";
+            this.toolStripButtonOptions.Click += new System.EventHandler(this.toolStripButtonOptions_Click);
+            // 
+            // toolStripButtonHelp
+            // 
+            this.toolStripButtonHelp.Image = global::Carfup.XTBPlugins.Properties.Resources.help;
+            this.toolStripButtonHelp.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonHelp.Name = "toolStripButtonHelp";
+            this.toolStripButtonHelp.Size = new System.Drawing.Size(52, 22);
+            this.toolStripButtonHelp.Text = "Help";
+            this.toolStripButtonHelp.Click += new System.EventHandler(this.toolStripButtonHelp_Click);
             // 
             // tableLayoutPanel1
             // 
@@ -340,6 +367,7 @@
             this.listViewSourceTarget.TabIndex = 26;
             this.listViewSourceTarget.UseCompatibleStateImageBehavior = false;
             this.listViewSourceTarget.View = System.Windows.Forms.View.Details;
+            this.listViewSourceTarget.ColumnClick += new System.Windows.Forms.ColumnClickEventHandler(this.listViewSourceTarget_ColumnClick);
             // 
             // columnHeaderSTStepName
             // 
@@ -411,6 +439,7 @@
             this.listViewTargetSource.TabIndex = 27;
             this.listViewTargetSource.UseCompatibleStateImageBehavior = false;
             this.listViewTargetSource.View = System.Windows.Forms.View.Details;
+            this.listViewTargetSource.ColumnClick += new System.Windows.Forms.ColumnClickEventHandler(this.listViewTargetSource_ColumnClick);
             // 
             // columnHeaderTSStepName
             // 
@@ -481,33 +510,6 @@
             this.buttonCopyTargetToSource.TabIndex = 0;
             this.buttonCopyTargetToSource.UseVisualStyleBackColor = true;
             this.buttonCopyTargetToSource.Click += new System.EventHandler(this.buttonCopyTargetToSource_Click);
-            // 
-            // toolStripButtonClose
-            // 
-            this.toolStripButtonClose.Image = global::Carfup.XTBPlugins.Properties.Resources.close;
-            this.toolStripButtonClose.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButtonClose.Name = "toolStripButtonClose";
-            this.toolStripButtonClose.Size = new System.Drawing.Size(56, 22);
-            this.toolStripButtonClose.Text = "Close";
-            this.toolStripButtonClose.Click += new System.EventHandler(this.toolStripButtonClose_Click);
-            // 
-            // toolStripButtonOptions
-            // 
-            this.toolStripButtonOptions.Image = global::Carfup.XTBPlugins.Properties.Resources.gear;
-            this.toolStripButtonOptions.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButtonOptions.Name = "toolStripButtonOptions";
-            this.toolStripButtonOptions.Size = new System.Drawing.Size(69, 22);
-            this.toolStripButtonOptions.Text = "Options";
-            this.toolStripButtonOptions.Click += new System.EventHandler(this.toolStripButtonOptions_Click);
-            // 
-            // toolStripButtonHelp
-            // 
-            this.toolStripButtonHelp.Image = global::Carfup.XTBPlugins.Properties.Resources.help;
-            this.toolStripButtonHelp.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButtonHelp.Name = "toolStripButtonHelp";
-            this.toolStripButtonHelp.Size = new System.Drawing.Size(52, 22);
-            this.toolStripButtonHelp.Text = "Help";
-            this.toolStripButtonHelp.Click += new System.EventHandler(this.toolStripButtonHelp_Click);
             // 
             // DeltaStepsBetweenEnvironments
             // 
