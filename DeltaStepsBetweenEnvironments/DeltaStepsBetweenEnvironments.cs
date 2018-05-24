@@ -14,10 +14,11 @@ using Carfup.XTBPlugins.Forms;
 using Carfup.XTBPlugins.AppCode;
 using Microsoft.Xrm.Sdk.Messages;
 using Microsoft.Crm.Sdk.Messages;
+using XrmToolBox.Extensibility.Args;
 
 namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
 {
-    public partial class DeltaStepsBetweenEnvironments : PluginControlBase, IXrmToolBoxPluginControl, IGitHubPlugin
+    public partial class DeltaStepsBetweenEnvironments : PluginControlBase, IXrmToolBoxPluginControl, IGitHubPlugin, IStatusBarMessager
     {
         #region varibables
         private string[] solutionsList = null;
@@ -33,7 +34,9 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
         public LogUsage log = null;
         Comparing comparing = Comparing.Solution;
         ControllerManager controller = null;
-        
+        private int currentColumnOrder;
+        public event EventHandler<StatusBarMessageEventArgs> SendMessageToStatusBar;
+
         public string RepositoryName
         {
             get
@@ -75,7 +78,7 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
         //Select the solution from where we will query the steps
         private void comboBoxSolutionsList_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (canProceed())
+            if (canProceed() && comboBoxSolutionsAssembliesList.SelectedItem != null)
             {
                 solutionAssemblyPluginStepsName = comboBoxSolutionsAssembliesList.SelectedItem.ToString();
 
@@ -191,7 +194,7 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
         {
             if (solutionAssemblyPluginStepsName == null)
             {
-                MessageBox.Show($"Please select a solution first.");
+                MessageBox.Show($"Please select a {Wording.getComparingInfo(comparing)} first.");
                 return;
             }
 
@@ -205,27 +208,28 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
 
             WorkAsync(new WorkAsyncInfo
             {
-                Message = "Comparing the 2 Solutions...",
+                Message = $"Comparing the 2 {Wording.getComparingInfo(comparing, true, true)}...",
                 Work = (bw, e) =>
                 {
                     if(comparing == Comparing.Solution)
                     {
-                        bw.ReportProgress(0, "Fetching steps from source environment...");
+                        SendMessageToStatusBar?.Invoke(this, new StatusBarMessageEventArgs(0, "Fetching steps from source environment..."));
                         stepsCrmSource = controller.dataManager.querySteps(sourceService, solutionAssemblyPluginStepsName);  //querySteps(sourceService, stepsCrmSource);
-                        bw.ReportProgress(0, "Fetching steps from target environment...");
+                        SendMessageToStatusBar?.Invoke(this, new StatusBarMessageEventArgs(30, "Fetching steps from source environment..."));
                         stepsCrmTarget = controller.dataManager.querySteps(targetService, solutionAssemblyPluginStepsName);  //querySteps(targetService, stepsCrmTarget);
                     }
                     else if(comparing == Comparing.Assembly)
                     {
-                        bw.ReportProgress(0, "Fetching steps from source environment...");
+                        SendMessageToStatusBar?.Invoke(this, new StatusBarMessageEventArgs(0, "Fetching steps from source environment..."));
                         stepsCrmSource = controller.dataManager.queryStepsAssembly(sourceService, solutionAssemblyPluginStepsName);  //querySteps(sourceService, stepsCrmSource);
-                        bw.ReportProgress(0, "Fetching steps from target environment...");
+                        SendMessageToStatusBar?.Invoke(this, new StatusBarMessageEventArgs(30, "Fetching steps from source environment..."));
                         stepsCrmTarget = controller.dataManager.queryStepsAssembly(targetService, solutionAssemblyPluginStepsName);  //querySteps(targetService, stepsCrmTarget);
                     }
 
-                    bw.ReportProgress(0, "Comparing steps...");
+                    SendMessageToStatusBar?.Invoke(this, new StatusBarMessageEventArgs(60, "Comparing steps..."));
                     diffCrmSourceTarget = stepsCrmSource.Select(x => x.stepName).Except(stepsCrmTarget.Select(x => x.stepName)).ToArray();
                     diffCrmTargetSource = stepsCrmTarget.Select(x => x.stepName).Except(stepsCrmSource.Select(x => x.stepName)).ToArray();
+                    SendMessageToStatusBar?.Invoke(this, new StatusBarMessageEventArgs(100, "Comparing steps..."));
                 },
                 PostWorkCallBack = e =>
                 {
@@ -239,24 +243,26 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
 
                     if (diffCrmSourceTarget.Count() == 0)
                     {
-                        listViewSourceTarget.Clear();
+                        listViewSourceTarget.Items.Clear();
                         labelSourceTargetMatch.Visible = true;
                         
                     }
                     else // there are steps in source but not target
                     {
                         labelSourceTargetMatch.Visible = false;
+                        listViewSourceTarget.Visible = true;
                         fillListViewItems(listViewSourceTarget, stepsCrmSource, diffCrmSourceTarget);
                     }
 
                     if (diffCrmTargetSource.Count() == 0)
                     {
-                        listViewTargetSource.Clear();
+                        listViewTargetSource.Items.Clear();
                         labelTargetSourceMatch.Visible = true;
                     }
                     else // there are steps in source but not target
                     {
                         labelTargetSourceMatch.Visible = false;
+                        listViewTargetSource.Visible = true;
                         fillListViewItems(listViewTargetSource, stepsCrmTarget, diffCrmTargetSource);
                     }
 
@@ -323,6 +329,7 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
                 MessageBox.Show("Make sure you are connected to a Source AND Target environments first.");
                 return false;
             }
+
             return true;
         }
 
@@ -365,8 +372,9 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
         public void creatingStepProcess(ListView listView, List<CarfupStep> stepsList, IOrganizationService service)
         {
             bool toDefaultSolution = true;
+            int itemCount = listView.CheckedItems.Count;
 
-            if (listView.CheckedItems.Count < 1)
+            if (itemCount < 1)
             {
                 MessageBox.Show($"Make sure you checked at least one step before trying to perform a Copy action.", "Information", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
@@ -383,13 +391,13 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
             }
 
             // Getting list of selected Items
-            ListViewItem[] stepsGuid = new ListViewItem[listView.CheckedItems.Count];
+            ListViewItem[] stepsGuid = new ListViewItem[itemCount];
 
             string logAction = (stepsList == stepsCrmSource) ? LogAction.StepCreeatedSourceToTarget : LogAction.StepCreatedTargetToSource;
 
             WorkAsync(new WorkAsyncInfo
             {
-                Message = "Creating the step in the environment...",
+                Message = "Creating the step(s) in the environment...",
                 Work = (bw, e) =>
                 {
                     Invoke(new Action(() =>
@@ -400,17 +408,21 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
                     if (stepsGuid == null)
                         return;
 
+                    int i = 1;
+
                     foreach (ListViewItem itemView in stepsGuid)
                     {
+                        int percentage = (i * 100) / itemCount;
+                        SendMessageToStatusBar?.Invoke(this, new StatusBarMessageEventArgs(percentage, $"Creating the step(s) in the environment : {i}/{itemCount}"));
                         var selectedStep = stepsList.Where(x => x.stepName == itemView.Text).FirstOrDefault();
-                        Guid? stepCreated = creatingStep(selectedStep, (stepsList == stepsCrmTarget));
+                        Guid? stepCreated = creatingStep(selectedStep, (stepsList == stepsCrmSource));
 
                         if (stepCreated == null)
                             return;
 
                         if (comparing == Comparing.Solution && !toDefaultSolution)
                         {
-                            bw.ReportProgress(0, $"Adding the new created step to the {solutionAssemblyPluginStepsName} solution...");
+                            bw.ReportProgress(percentage, $"Adding the new created step to the {solutionAssemblyPluginStepsName} solution...");
 
                             AddSolutionComponentRequest ascr = new AddSolutionComponentRequest()
                             {
@@ -421,6 +433,7 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
 
                             service.Execute(ascr);
                         }
+                        i++;
                     }
                 },
                 PostWorkCallBack = e =>
@@ -506,6 +519,10 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
         {
             this.log.LogData(EventType.Event, LogAction.SettingsSaved);
             SettingsManager.Instance.Save(typeof(DeltaStepsBetweenEnvironments), settings);
+
+            //reordering columns if necessary
+            sortListView(listViewSourceTarget, 0, settings.SortOrderPref);
+            sortListView(listViewTargetSource, 0, settings.SortOrderPref);
         }
 
         private void DeltaStepsBetweenEnvironments_Load(object sender, EventArgs e)
@@ -523,12 +540,12 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
             {
                 if (SettingsManager.Instance.TryLoad<PluginSettings>(typeof(DeltaStepsBetweenEnvironments), out settings))
                 {
-                    if (!settings.ShowHelpOnStartUp.HasValue)
-                    {
-                        var helpDlg = new HelpForm(this);
-                        helpDlg.ShowDialog(this);
-                    }
-                    return;
+                    //if (!settings.ShowHelpOnStartUp.HasValue)
+                    //{
+                    //    var helpDlg = new HelpForm(this);
+                    //    helpDlg.ShowDialog(this);
+                    //}
+                    //return;
                 }
                 else
                     settings = new PluginSettings();
@@ -545,11 +562,12 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
                 this.SaveSettings();
             }
 
-            if(!settings.ShowHelpOnStartUp.HasValue)
-            {
-                var helpDlg = new HelpForm(this);
-                helpDlg.ShowDialog(this);
-            }
+            // display showhelp or not
+            //if(!settings.ShowHelpOnStartUp.HasValue)
+            //{
+            //    var helpDlg = new HelpForm(this);
+            //    helpDlg.ShowDialog(this);
+            //}
         }
 
         // return the current version of the plugin
@@ -692,6 +710,35 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
         {
             var helpDlg = new HelpForm(this);
             helpDlg.ShowDialog(this);
+        }
+
+        private void listViewSourceTarget_ColumnClick(object sender, ColumnClickEventArgs e)
+        {
+            sortListView(listViewSourceTarget, e.Column);
+        }
+
+        private void listViewTargetSource_ColumnClick(object sender, ColumnClickEventArgs e)
+        {
+            sortListView(listViewTargetSource, e.Column);
+        }
+
+        public void sortListView(ListView listView, int columnIndex, SortOrder? sort = null)
+        {
+            if(sort != null)
+            {
+                listView.ListViewItemSorter = new ListViewItemComparer(columnIndex, sort.Value);
+            }
+            else if (columnIndex == currentColumnOrder)
+            {
+                listView.Sorting = listView.Sorting == SortOrder.Ascending ? SortOrder.Descending : SortOrder.Ascending;
+
+                listView.ListViewItemSorter = new ListViewItemComparer(columnIndex, listView.Sorting);
+            }
+            else
+            {
+                currentColumnOrder = columnIndex;
+                listView.ListViewItemSorter = new ListViewItemComparer(columnIndex, SortOrder.Ascending);
+            }
         }
     }
 }

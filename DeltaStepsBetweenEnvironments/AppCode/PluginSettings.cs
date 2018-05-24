@@ -1,16 +1,15 @@
 ﻿using Microsoft.Xrm.Sdk;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace Carfup.XTBPlugins.AppCode
 {
     public class PluginSettings
     {
         public bool? AllowLogUsage { get; set; }
-        public bool? ShowHelpOnStartUp { get; set; }
+        //public bool? ShowHelpOnStartUp { get; set; }
+        public SortOrder? SortOrderPref { get; set; } = SortOrder.Ascending;
         public string CurrentVersion { get; set; } = DeltaStepsBetweenEnvironments.DeltaStepsBetweenEnvironments.CurrentVersion;
     }
 
