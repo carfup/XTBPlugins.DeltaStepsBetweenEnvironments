@@ -12,7 +12,7 @@
     <summary>Really sweet plugin that does awesome things</summary>
     <releaseNotes>
 1.2018.5.9
-Added Help screen to explain how the plugin should be used
+Added Help screen to explain how the plugin should be used.
 Sorting of the results is now possible.
 You can now compare steps from a Solution or an Assembly.
 You can now copy a step directly to a custom solution (if you are in Solution mode) or to default one.
@@ -22,19 +22,19 @@ Improved code in the background.
 1.2018.1.7/8
 Functionality to copy a step from one environment to the other.
 Allow the plugin to log anonymous data, in order to improve the most used features and develop the others.
-Various bug fix and improvements
+Various bug fix and improvements.
 
 1.2017.12.5
 Fixed unexpected error while clicking on compare button but not having selected a solution.
 
 1.2017.11.3
-Fix resizing of the components
-Improved background processes
-Fix unwanted behaviors on the form
-Improved visibility and error messages
+Fix resizing of the components.
+Improved background processes.
+Fix unwanted behaviors on the form.
+Improved visibility and error messages.
 
 1.2017.6.1
-Find out if there is differences about your plugin steps between two of your environments
+Find out if there is differences about your plugin steps between two of your environments.
 	</releaseNotes>
     <copyright>Copyright 2017</copyright>
     <tags>XrmToolBox Plugin DeltaStepsBetweenEnvironments</tags>
