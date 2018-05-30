@@ -22,12 +22,15 @@ namespace Carfup.XTBPlugins.Forms
             }
 
             checkboxAllowStats.Checked = settings.AllowLogUsage != false;
+            radioButtonSortingOrderAsc.Checked = (settings.SortOrderPref == SortOrder.Ascending || settings.SortOrderPref == null) ? true : false;
+            radioButtoradioButtonSortingOrderDesc.Checked = !radioButtonSortingOrderAsc.Checked;
         }
 
         internal PluginSettings GetSettings()
         {
             var settings = dbe.settings;
             settings.AllowLogUsage = checkboxAllowStats.Checked;
+            settings.SortOrderPref = (radioButtonSortingOrderAsc.Checked || settings.SortOrderPref == null) ? SortOrder.Ascending : SortOrder.Descending;
             settings.CurrentVersion = DeltaStepsBetweenEnvironments.DeltaStepsBetweenEnvironments.CurrentVersion;
 
             return settings;

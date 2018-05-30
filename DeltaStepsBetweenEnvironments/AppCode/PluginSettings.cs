@@ -1,14 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Microsoft.Xrm.Sdk;
+using System;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace Carfup.XTBPlugins.AppCode
 {
     public class PluginSettings
     {
         public bool? AllowLogUsage { get; set; }
+        //public bool? ShowHelpOnStartUp { get; set; }
+        public SortOrder? SortOrderPref { get; set; } = SortOrder.Ascending;
         public string CurrentVersion { get; set; } = DeltaStepsBetweenEnvironments.DeltaStepsBetweenEnvironments.CurrentVersion;
     }
 
@@ -19,6 +20,10 @@ namespace Carfup.XTBPlugins.AppCode
         public const string Dependency = "dependency";
         public const string Exception = "exception";
     }
+
+    enum Comparing {
+        Solution, Assembly
+    };
 
     public static class CustomParameter
     {
@@ -33,8 +38,10 @@ namespace Carfup.XTBPlugins.AppCode
         public const string SettingsSaved = "SettingsSaved";
         public const string SettingLoaded = "SettingLoaded";
         public const string SolutionsCompared = "SolutionsCompared";
+        public const string AssembliesCompared = "AssembliesCompared";
         public const string PluginOpened = "PluginOpened";
         public const string SolutionsLoaded = "SolutionsLoaded";
+        public const string AssembliesLoaded = "AssembliesLoaded";
         public const string CRMAssembliesLoaded = "CRMAssembliesLoaded";
         public const string AssemblyLoaded = "AssemblyLoaded";
         public const string PluginsLoaded = "PluginsLoaded";
@@ -49,6 +56,56 @@ namespace Carfup.XTBPlugins.AppCode
         public const string SDKMessageRetrievedSourceToTarget = "SDKMessageRetrieved (Source To Target)";
         public const string MessageFilterRetrievedSourceToTarget = "MessageFilterRetrieved (Source To Target)";
         public const string SolutionExistingInTargetEnvChecked = "SolutionExistingInTargetEnvChecked";
+        public const string AssemblyExistingInTargetEnvChecked = "AssemblyExistingInTargetEnvChecked";
+        public const string ShowHelpScreen = "ShowHelpScreen";
+        public const string StepsDeleted = "StepsDeleted";
     }
 
+    static class Wording
+    {
+        public static string getComparingInfo(Comparing comparing, bool plural = false, bool uppercase = false)
+        {
+            string value = "solution";
+            if(comparing == Comparing.Assembly)
+            {
+                value = "assembly";
+            }
+
+            if(plural)
+            {
+                if (value == "solution")
+                    value = "solutions";
+                else
+                    value = "assemblies";
+            }
+
+            if (uppercase)
+                value = value.First().ToString().ToUpper() + value.Substring(1);
+
+            return value;
+        }
+
+    }
+
+    // Will be used to implement the step 
+    public class CarfupStep
+    {
+        public string stepName { get; set; }
+        public string entityName { get; set; } //messagefilter.primaryobjecttypecode
+        public string stepMessageName { get; set; } //sdkmessage.name
+        public string plugintypeName { get; set; } // plugintype.name
+        public DateTime createOn { get; set; }
+        public DateTime modifiedOn { get; set; }
+        public string stepConfiguration { get; set; }
+        public OptionSetValue stepMode { get; set; }
+        public int stepRank { get; set; }
+        public OptionSetValue stepStage { get; set; }
+        public OptionSetValue stepSupporteddeployment { get; set; }
+        public OptionSetValue stepInvocationsource { get; set; }
+        public string stepFilteringattributes { get; set; }
+        public string stepDescription { get; set; }
+        public bool stepAsyncautodelete { get; set; }
+        public int stepCustomizationlevel { get; set; }
+        public Entity entity { get; set; }
+    }
 }
