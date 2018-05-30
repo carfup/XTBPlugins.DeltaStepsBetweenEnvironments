@@ -28,10 +28,13 @@
 		/// </summary>
 		private void InitializeComponent()
 		{
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DeltaStepsBetweenEnvironments));
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.toolStripButtonClose = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripButtonOptions = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripButtonHelp = new System.Windows.Forms.ToolStripButton();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
@@ -70,8 +73,8 @@
             this.buttonDeleteStep = new System.Windows.Forms.Button();
             this.buttonCopySourceToTarget = new System.Windows.Forms.Button();
             this.buttonCopyTargetToSource = new System.Windows.Forms.Button();
-            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
-            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolTipInfo = new System.Windows.Forms.ToolTip(this.components);
+            this.toolTipWarning = new System.Windows.Forms.ToolTip(this.components);
             this.toolStrip1.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -105,6 +108,11 @@
             this.toolStripButtonClose.Text = "Close";
             this.toolStripButtonClose.Click += new System.EventHandler(this.toolStripButtonClose_Click);
             // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(6, 25);
+            // 
             // toolStripButtonOptions
             // 
             this.toolStripButtonOptions.Image = global::Carfup.XTBPlugins.Properties.Resources.gear;
@@ -113,6 +121,11 @@
             this.toolStripButtonOptions.Size = new System.Drawing.Size(69, 22);
             this.toolStripButtonOptions.Text = "Options";
             this.toolStripButtonOptions.Click += new System.EventHandler(this.toolStripButtonOptions_Click);
+            // 
+            // toolStripSeparator2
+            // 
+            this.toolStripSeparator2.Name = "toolStripSeparator2";
+            this.toolStripSeparator2.Size = new System.Drawing.Size(6, 25);
             // 
             // toolStripButtonHelp
             // 
@@ -274,6 +287,7 @@
             this.buttonLoadSolutionsAssemblies.Size = new System.Drawing.Size(125, 23);
             this.buttonLoadSolutionsAssemblies.TabIndex = 29;
             this.buttonLoadSolutionsAssemblies.Text = "Load Solutions";
+            this.toolTipInfo.SetToolTip(this.buttonLoadSolutionsAssemblies, "Load the solutions/assemblies from the source environment.");
             this.buttonLoadSolutionsAssemblies.UseVisualStyleBackColor = true;
             this.buttonLoadSolutionsAssemblies.Click += new System.EventHandler(this.buttonLoadSolutionsAssemblies_Click);
             // 
@@ -284,6 +298,7 @@
             this.buttonCompare.Size = new System.Drawing.Size(525, 23);
             this.buttonCompare.TabIndex = 28;
             this.buttonCompare.Text = "Compare the two environments";
+            this.toolTipInfo.SetToolTip(this.buttonCompare, "Comparing the solution/assembly in order to find out the differences.");
             this.buttonCompare.UseVisualStyleBackColor = true;
             this.buttonCompare.Click += new System.EventHandler(this.buttonCompare_Click);
             // 
@@ -491,6 +506,7 @@
             this.buttonDeleteStep.Name = "buttonDeleteStep";
             this.buttonDeleteStep.Size = new System.Drawing.Size(42, 36);
             this.buttonDeleteStep.TabIndex = 2;
+            this.toolTipWarning.SetToolTip(this.buttonDeleteStep, "Delete the selected step(s), it\'s permanent !");
             this.buttonDeleteStep.UseVisualStyleBackColor = true;
             this.buttonDeleteStep.Click += new System.EventHandler(this.buttonDeleteStep_Click);
             // 
@@ -501,6 +517,7 @@
             this.buttonCopySourceToTarget.Name = "buttonCopySourceToTarget";
             this.buttonCopySourceToTarget.Size = new System.Drawing.Size(43, 37);
             this.buttonCopySourceToTarget.TabIndex = 1;
+            this.toolTipInfo.SetToolTip(this.buttonCopySourceToTarget, "Copy your step from Source to Target environment.");
             this.buttonCopySourceToTarget.UseVisualStyleBackColor = true;
             this.buttonCopySourceToTarget.Click += new System.EventHandler(this.buttonCopySourceToTarget_Click);
             // 
@@ -512,18 +529,19 @@
             this.buttonCopyTargetToSource.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.buttonCopyTargetToSource.Size = new System.Drawing.Size(43, 37);
             this.buttonCopyTargetToSource.TabIndex = 0;
+            this.toolTipInfo.SetToolTip(this.buttonCopyTargetToSource, "Copy your step from Target to Source environment.");
             this.buttonCopyTargetToSource.UseVisualStyleBackColor = true;
             this.buttonCopyTargetToSource.Click += new System.EventHandler(this.buttonCopyTargetToSource_Click);
             // 
-            // toolStripSeparator1
+            // toolTipInfo
             // 
-            this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(6, 25);
+            this.toolTipInfo.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
+            this.toolTipInfo.ToolTipTitle = "Information";
             // 
-            // toolStripSeparator2
+            // toolTipWarning
             // 
-            this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(6, 25);
+            this.toolTipWarning.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Warning;
+            this.toolTipWarning.ToolTipTitle = "Warning";
             // 
             // DeltaStepsBetweenEnvironments
             // 
@@ -599,5 +617,7 @@
         private System.Windows.Forms.ToolStripButton toolStripButtonHelp;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
+        private System.Windows.Forms.ToolTip toolTipInfo;
+        private System.Windows.Forms.ToolTip toolTipWarning;
     }
 }
