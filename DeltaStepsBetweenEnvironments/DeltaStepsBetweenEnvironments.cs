@@ -37,21 +37,8 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
         private int currentColumnOrder;
         public event EventHandler<StatusBarMessageEventArgs> SendMessageToStatusBar;
 
-        public string RepositoryName
-        {
-            get
-            {
-                return "XTBPlugins.DeltaStepsBetweenEnvironments";
-            }
-        }
-
-        public string UserName
-        {
-            get
-            {
-                return "carfup";
-            }
-        }
+        public string RepositoryName { get; } =  "XTBPlugins.DeltaStepsBetweenEnvironments";
+        public string UserName { get; } = "carfup";
 
         #endregion
 
@@ -179,8 +166,6 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
                 };
                 OnRequestConnection(this, arg);
             }
-
-
         }
 
         // We compare the same solution name in both environments
@@ -235,7 +220,6 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
                 {
                     if (e.Error != null)
                     {
-                        
                         this.log.LogData(EventType.Exception, logAction, e.Error);
                         MessageBox.Show(this, e.Error.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         return;
@@ -284,7 +268,21 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
                     Message = $"Loading CRM {Wording.getComparingInfo(comparing, true, true)}...",
                     Work = (bw, e) =>
                     {
-                        solutionsList = (comparing == Comparing.Solution) ? controller.dataManager.loadSolutions() : controller.dataManager.loadAssemblies();
+                        if (comparing == Comparing.Solution && controller.dataManager.UserHasPrivilege("prvReadSolution", controller.dataManager.WhoAmI()))
+                            solutionsList = controller.dataManager.loadSolutions();
+                        else
+                        {
+                            MessageBox.Show($"Make sure your user has the 'prvReadSolution' privilege to load the Solutions. {Environment.NewLine}Aborting action.");
+                            return;
+                        }
+
+                        if (comparing == Comparing.Solution && controller.dataManager.UserHasPrivilege("prvReadPluginAssembly", controller.dataManager.WhoAmI()))
+                            solutionsList = controller.dataManager.loadAssemblies();
+                        else
+                        {
+                            MessageBox.Show($"Make sure your user has the 'prvReadPluginAssembly' privilege to load the Assemblies. {Environment.NewLine}Aborting action.");
+                            return;
+                        }
                     },
                     PostWorkCallBack = e =>
                     {
@@ -561,13 +559,6 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
                 this.log.PromptToLog();
                 this.SaveSettings();
             }
-
-            // display showhelp or not
-            //if(!settings.ShowHelpOnStartUp.HasValue)
-            //{
-            //    var helpDlg = new HelpForm(this);
-            //    helpDlg.ShowDialog(this);
-            //}
         }
 
         // return the current version of the plugin
@@ -657,7 +648,7 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
             ListViewItem[] stepsGuid = new ListViewItem[listViewToProceed.CheckedItems.Count];
 
 
-            var areYouSure = MessageBox.Show($"Do you really want to delete the step(s) ? \rYou won't be able to get it back after that.", "Warning !", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            var areYouSure = MessageBox.Show($"Do you really want to delete the step(s) ? {Environment.NewLine} You won't be able to get it back after that.", "Warning !", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
             if (areYouSure == DialogResult.No)
                 return;
 
