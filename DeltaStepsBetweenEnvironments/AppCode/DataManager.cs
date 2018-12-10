@@ -1,4 +1,5 @@
-﻿using Microsoft.Xrm.Sdk;
+﻿using Microsoft.Crm.Sdk.Messages;
+using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Query;
 using System;
 using System.Collections.Generic;
@@ -334,6 +335,47 @@ namespace Carfup.XTBPlugins.AppCode
                 entity = x
             }).ToList();
         }
+
+        public bool UserHasPrivilege(string priv, Guid userId)
+        {
+            bool userHasPrivilege = false;
+
+            ConditionExpression privilegeCondition =
+                new ConditionExpression("name", ConditionOperator.Equal, priv); // name of the privilege
+            FilterExpression privilegeFilter = new FilterExpression(LogicalOperator.And);
+            privilegeFilter.Conditions.Add(privilegeCondition);
+
+            QueryExpression privilegeQuery = new QueryExpression
+            {
+                EntityName = "privilege",
+                ColumnSet = new ColumnSet(true),
+                Criteria = privilegeFilter
+            };
+
+            EntityCollection retrievedPrivileges = this.connection.sourceService.RetrieveMultiple(privilegeQuery);
+            if (retrievedPrivileges.Entities.Count == 1)
+            {
+                RetrieveUserPrivilegesRequest request = new RetrieveUserPrivilegesRequest();
+                request.UserId = userId; // Id of the User
+                RetrieveUserPrivilegesResponse response = (RetrieveUserPrivilegesResponse)this.connection.sourceService.Execute(request);
+                foreach (RolePrivilege rolePrivilege in response.RolePrivileges)
+                {
+                    if (rolePrivilege.PrivilegeId == retrievedPrivileges.Entities[0].Id)
+                    {
+                        userHasPrivilege = true;
+                        break;
+                    }
+                }
+            }
+
+            return userHasPrivilege;
+        }
+
+        public Guid WhoAmI()
+        {
+            return ((WhoAmIResponse)this.connection.sourceService.Execute(new WhoAmIRequest())).UserId;
+        }
+
         #endregion Methods
     }
 
