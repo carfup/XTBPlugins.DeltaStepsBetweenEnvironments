@@ -268,20 +268,29 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
                     Message = $"Loading CRM {Wording.getComparingInfo(comparing, true, true)}...",
                     Work = (bw, e) =>
                     {
-                        if (comparing == Comparing.Solution && controller.dataManager.UserHasPrivilege("prvReadSolution", controller.dataManager.WhoAmI()))
-                            solutionsList = controller.dataManager.loadSolutions();
-                        else
+                        switch (comparing)
                         {
-                            MessageBox.Show($"Make sure your user has the 'prvReadSolution' privilege to load the Solutions. {Environment.NewLine}Aborting action.");
-                            return;
-                        }
+                            case Comparing.Solution:
+                                if (!controller.dataManager.UserHasPrivilege("prvReadSolution", controller.dataManager.WhoAmI()))
+                                {
+                                    MessageBox.Show($"Make sure your user has the 'prvReadSolution' privilege to load the Solutions. {Environment.NewLine}Aborting action.");
+                                    return;
+                                }
+                                solutionsList = controller.dataManager.loadSolutions();
+                                break;
+                            case Comparing.Assembly:
+                                if (!controller.dataManager.UserHasPrivilege("prvReadPluginAssembly", controller.dataManager.WhoAmI()))
+                                {
+                                    MessageBox.Show($"Make sure your user has the 'prvReadPluginAssembly' privilege to load the Assemblies. {Environment.NewLine}Aborting action.");
+                                    return;
+                                }
+                                
+                                solutionsList = controller.dataManager.loadAssemblies();
 
-                        if (comparing == Comparing.Solution && controller.dataManager.UserHasPrivilege("prvReadPluginAssembly", controller.dataManager.WhoAmI()))
-                            solutionsList = controller.dataManager.loadAssemblies();
-                        else
-                        {
-                            MessageBox.Show($"Make sure your user has the 'prvReadPluginAssembly' privilege to load the Assemblies. {Environment.NewLine}Aborting action.");
-                            return;
+                                break;
+                            default:
+                                MessageBox.Show($"Unknown Comparing {comparing}! {Environment.NewLine}Aborting action.");
+                                return;
                         }
                     },
                     PostWorkCallBack = e =>
