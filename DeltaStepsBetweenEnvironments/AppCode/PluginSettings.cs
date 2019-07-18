@@ -2,6 +2,7 @@
 using System;
 using System.Linq;
 using System.Windows.Forms;
+using Carfup.XTBPlugins.DeltaStepsBetweenEnvironments.AppCode;
 
 namespace Carfup.XTBPlugins.AppCode
 {
@@ -21,10 +22,6 @@ namespace Carfup.XTBPlugins.AppCode
         public const string Exception = "exception";
     }
 
-    enum Comparing {
-        Solution, Assembly
-    };
-
     public static class CustomParameter
     {
         public static string INSIGHTS_INTRUMENTATIONKEY = "INSIGHTS_INTRUMENTATIONKEY_TOREPLACE";
@@ -42,49 +39,23 @@ namespace Carfup.XTBPlugins.AppCode
         public const string PluginOpened = "PluginOpened";
         public const string SolutionsLoaded = "SolutionsLoaded";
         public const string AssembliesLoaded = "AssembliesLoaded";
-        public const string CRMAssembliesLoaded = "CRMAssembliesLoaded";
+        public const string CrmAssembliesLoaded = "CRMAssembliesLoaded";
         public const string AssemblyLoaded = "AssemblyLoaded";
         public const string PluginsLoaded = "PluginsLoaded";
         public const string PluginsCompared = "PluginsCompared";
         public const string CanProceed = "CanProceed";
         public const string StepCreatedTargetToSource = "StepCreated (Target To Source)";
-        public const string StepCreeatedSourceToTarget = "StepCreated (Source To Target)";
+        public const string StepCreatedSourceToTarget = "StepCreated (Source To Target)";
         public const string PluginTypeRetrievedTargetToSource = "PluginTypeRetrieved (Target To Source)";
-        public const string SDKMessageRetrievedTargetToSource = "SDKMessageRetrieved (Target To Source)";
+        public const string SdkMessageRetrievedTargetToSource = "SDKMessageRetrieved (Target To Source)";
         public const string MessageFilterRetrievedTargetToSource = "MessageFilterRetrieved (Target To Source)";
         public const string PluginTypeRetrievedSourceToTarget = "PluginTypeRetrieved (Source To Target)";
-        public const string SDKMessageRetrievedSourceToTarget = "SDKMessageRetrieved (Source To Target)";
+        public const string SdkMessageRetrievedSourceToTarget = "SDKMessageRetrieved (Source To Target)";
         public const string MessageFilterRetrievedSourceToTarget = "MessageFilterRetrieved (Source To Target)";
         public const string SolutionExistingInTargetEnvChecked = "SolutionExistingInTargetEnvChecked";
         public const string AssemblyExistingInTargetEnvChecked = "AssemblyExistingInTargetEnvChecked";
         public const string ShowHelpScreen = "ShowHelpScreen";
         public const string StepsDeleted = "StepsDeleted";
-    }
-
-    static class Wording
-    {
-        public static string getComparingInfo(Comparing comparing, bool plural = false, bool uppercase = false)
-        {
-            string value = "solution";
-            if(comparing == Comparing.Assembly)
-            {
-                value = "assembly";
-            }
-
-            if(plural)
-            {
-                if (value == "solution")
-                    value = "solutions";
-                else
-                    value = "assemblies";
-            }
-
-            if (uppercase)
-                value = value.First().ToString().ToUpper() + value.Substring(1);
-
-            return value;
-        }
-
     }
 
     // Will be used to implement the step 

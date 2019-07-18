@@ -101,7 +101,7 @@
             // 
             // toolStripButtonClose
             // 
-            this.toolStripButtonClose.Image = global::Carfup.XTBPlugins.Properties.Resources.close;
+            this.toolStripButtonClose.Image = global::Carfup.XTBPlugins.DeltaStepsBetweenEnvironments.Properties.Resources.close;
             this.toolStripButtonClose.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButtonClose.Name = "toolStripButtonClose";
             this.toolStripButtonClose.Size = new System.Drawing.Size(56, 22);
@@ -115,7 +115,7 @@
             // 
             // toolStripButtonOptions
             // 
-            this.toolStripButtonOptions.Image = global::Carfup.XTBPlugins.Properties.Resources.gear;
+            this.toolStripButtonOptions.Image = global::Carfup.XTBPlugins.DeltaStepsBetweenEnvironments.Properties.Resources.gear;
             this.toolStripButtonOptions.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButtonOptions.Name = "toolStripButtonOptions";
             this.toolStripButtonOptions.Size = new System.Drawing.Size(69, 22);
@@ -129,7 +129,7 @@
             // 
             // toolStripButtonHelp
             // 
-            this.toolStripButtonHelp.Image = global::Carfup.XTBPlugins.Properties.Resources.help;
+            this.toolStripButtonHelp.Image = global::Carfup.XTBPlugins.DeltaStepsBetweenEnvironments.Properties.Resources.help;
             this.toolStripButtonHelp.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButtonHelp.Name = "toolStripButtonHelp";
             this.toolStripButtonHelp.Size = new System.Drawing.Size(52, 22);
@@ -512,7 +512,7 @@
             // 
             // buttonCopySourceToTarget
             // 
-            this.buttonCopySourceToTarget.Image = global::Carfup.XTBPlugins.Properties.Resources.move_right;
+            this.buttonCopySourceToTarget.Image = global::Carfup.XTBPlugins.DeltaStepsBetweenEnvironments.Properties.Resources.move_right;
             this.buttonCopySourceToTarget.Location = new System.Drawing.Point(11, 64);
             this.buttonCopySourceToTarget.Name = "buttonCopySourceToTarget";
             this.buttonCopySourceToTarget.Size = new System.Drawing.Size(43, 37);

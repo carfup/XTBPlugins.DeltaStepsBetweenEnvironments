@@ -7,7 +7,7 @@
     <ProjectGuid>{00B6C210-3A3E-41EF-AAA1-361566435E93}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Carfup.XTBPlugins</RootNamespace>
+    <RootNamespace>Carfup.XTBPlugins.DeltaStepsBetweenEnvironments</RootNamespace>
     <AssemblyName>Carfup.XTBPlugins.DeltaStepsBetweenEnvironments</AssemblyName>
     <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -123,15 +123,19 @@
   <ItemGroup>
     <Compile Include="AppCode\ControllerManager.cs" />
     <Compile Include="AppCode\DataManager.cs" />
+    <Compile Include="AppCode\IComparisonMethod.cs" />
     <Compile Include="AppCode\ListViewItemComparer.cs" />
     <Compile Include="AppCode\LogUsage.cs" />
     <Compile Include="AppCode\PluginSettings.cs" />
+    <Compile Include="AppCode\SolutionComparisonMethod.cs" />
     <Compile Include="DeltaStepsBetweenEnvironments.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="DeltaStepsBetweenEnvironments.Designer.cs">
       <DependentUpon>DeltaStepsBetweenEnvironments.cs</DependentUpon>
     </Compile>
+    <Compile Include="Differences.cs" />
+    <Compile Include="Extensions.cs" />
     <Compile Include="Forms\HelpForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -151,6 +155,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="AppCode\AssemblyComparisonMethod.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config">

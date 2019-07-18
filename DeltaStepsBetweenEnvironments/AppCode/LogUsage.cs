@@ -37,7 +37,7 @@ namespace Carfup.XTBPlugins.AppCode
 
         public void LogData(string type, string action, Exception exception = null)
         {
-            if (this.dbe.settings.AllowLogUsage == true || this.forceLog)
+            if (this.dbe.Settings.AllowLogUsage == true || this.forceLog)
             {
                 switch (type)
                 {
@@ -87,7 +87,7 @@ namespace Carfup.XTBPlugins.AppCode
                       "You can change this setting in plugin's options anytime.\n\n" +
                       "Thanks!";
 
-            this.dbe.settings.AllowLogUsage = true;
+            this.dbe.Settings.AllowLogUsage = true;
             MessageBox.Show(msg, "Information");
         }
     }
