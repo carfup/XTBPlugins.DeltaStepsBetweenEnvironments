@@ -180,6 +180,23 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
 
                     SendMessageToStatusBar?.Invoke(this, new StatusBarMessageEventArgs(60, "Comparing steps..."));
 
+                    var sourcePlugins = StepsCrmSource.ToDictionary(x => x.plugintypeName);
+                    var targetPlugins = StepsCrmTarget.ToDictionary(x => x.plugintypeName);
+                    var differences = new Differences();
+                    var aPlugins = sourcePlugins;
+                    var bPlugins = targetPlugins;
+                    foreach (var aPlugin in aPlugins)
+                    {
+                        if (bPlugins.TryGetValue(aPlugin.Key, out var bPlugin))
+                        {
+                            //foreach(var aStep in aPlugin.Value.stepName)
+                        }
+                        else
+                        {
+                            differences.Assemblies.Add(aPlugin.Key);
+                        }
+                    }
+
                     diffCrmSourceTarget = StepsCrmSource.Select(x => x.stepName).Except(StepsCrmTarget.Select(x => x.stepName)).ToArray();
                     diffCrmTargetSource = StepsCrmTarget.Select(x => x.stepName).Except(StepsCrmSource.Select(x => x.stepName)).ToArray();
                     SendMessageToStatusBar?.Invoke(this, new StatusBarMessageEventArgs(100, "Comparing steps..."));
@@ -246,7 +263,7 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
                         MessageBox.Show($@"Make sure your user has the '{ComparisonMethod.RequiredPrivilege}' privilege to load the {ComparisonMethod.PluralName}.{Environment.NewLine}Aborting action.");
                         return;
                     }
-                    e.Result = Controller.DataManager.loadSolutions();
+                    e.Result = ComparisonMethod.GetNames(Controller.DataManager);
                 },
 
                 PostWorkCallBack = e =>
