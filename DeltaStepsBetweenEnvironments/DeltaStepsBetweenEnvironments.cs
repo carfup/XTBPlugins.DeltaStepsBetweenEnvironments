@@ -355,8 +355,8 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
 
             // retrieving the 3 data mandatory to have a proper step created
             var pluginType = Controller.DataManager.GetPluginType(service, selectedStep.PluginTypeName);
-            var sdkMessage = Controller.DataManager.GetSdkMessage(selectedStep.StepMessageName, service);
-            var messageFilter = Controller.DataManager.GetMessageFilter(selectedStep.EntityName, service);
+            var sdkMessage = Controller.DataManager.GetSdkMessage(service, selectedStep.StepMessageName);
+            var messageFilter = Controller.DataManager.GetMessageFilter(service, selectedStep.EntityName);
 
             if (pluginType == null)
             {

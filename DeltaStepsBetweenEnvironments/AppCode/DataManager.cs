@@ -45,129 +45,58 @@ namespace Carfup.XTBPlugins.AppCode
         }
 
         //return the sdk message
-        public Entity GetSdkMessage(string name, IOrganizationService service)
+        public SdkMessage GetSdkMessage(IOrganizationService service, string name)
         {
-            QueryExpression queryRetrieveSdkMessage = new QueryExpression
-            {
-                EntityName = "sdkmessage",
-                ColumnSet = new ColumnSet(false),
-                Criteria =
-                {
-                    Conditions =
-                    {
-                        new ConditionExpression("name", ConditionOperator.Equal, name)
-                    }
-                }
-            };
-
-            return service.RetrieveMultiple(queryRetrieveSdkMessage).Entities.FirstOrDefault();
+            return service.GetFirstOrDefault<SdkMessage>(new ColumnSet(false),
+                    SdkMessage.Fields.Name, name);
         }
 
         // return the message filter
-        public Entity GetMessageFilter(string primaryobjecttypecode, IOrganizationService service)
+        public SdkMessageFilter GetMessageFilter(IOrganizationService service, string primaryObjectTypeCode)
         {
-            QueryExpression queryRetrieveMessageFilter = new QueryExpression
-            {
-                EntityName = "sdkmessagefilter",
-                ColumnSet = new ColumnSet(false),
-                Criteria =
-                {
-                    Conditions =
-                    {
-                        new ConditionExpression("primaryobjecttypecode", ConditionOperator.Equal, primaryobjecttypecode)
-                    }
-                }
-            };
-
-            return service.RetrieveMultiple(queryRetrieveMessageFilter).Entities.FirstOrDefault();
+            return service.GetFirstOrDefault<SdkMessageFilter>(new ColumnSet(false),
+                                                               SdkMessageFilter.Fields.PrimaryObjectTypeCode, primaryObjectTypeCode);
         }
 
         public string[] LoadSolutions()
         {
-            return Connection.SourceService.RetrieveMultiple(new QueryExpression("solution")
-            {
-                ColumnSet = new ColumnSet("uniquename"),
-            }).Entities.Select(p => p.Attributes["uniquename"].ToString()).OrderBy(p => p).ToArray();
+            return Connection.SourceService.GetEntities<Solution>(s => new { s.UniqueName })
+                             .Select(p => p.UniqueName)
+                             .OrderBy(p => p)
+                             .ToArray();
         }
 
         public string[] LoadAssemblies()
         {
-            return Connection.SourceService.RetrieveMultiple(new QueryExpression("pluginassembly")
-            {
-                ColumnSet = new ColumnSet("name"),
-            }).Entities.Select(p => p.Attributes["name"].ToString()).OrderBy(p => p).ToArray();
+            return Connection.SourceService.GetEntities<PluginAssembly>(s => new { s.Name })
+                             .Select(p => p.Name)
+                             .OrderBy(p => p)
+                             .ToArray();
         }
 
-        public int IsSolutionExistingInTargetEnv(string solutionPluginStepsName)
+        public bool SolutionExistsInTargetEnv(string solutionPluginStepsName)
         {
-            var queryExisting = new QueryExpression()
-            {
-                TopCount = 1,
-                EntityName = "solution",
-                ColumnSet = new ColumnSet(false),
-                Criteria =
-                        {
-                            Conditions =
-                            {
-                                new ConditionExpression("uniquename", ConditionOperator.Equal, solutionPluginStepsName)
-                            }
-                        }
-            };
-
-            return Connection.TargetService.RetrieveMultiple(queryExisting).Entities.Count;
+            return Connection.TargetService.GetFirstOrDefault<Solution>(new ColumnSet(false), Solution.Fields.UniqueName, solutionPluginStepsName) != null;
         }
 
-        public int IsAssemblyExistingInTargetEnv(string assemblyStepsName)
+        public bool AssemblyExistsInTargetEnv(string assemblyStepsName)
         {
-            QueryExpression queryExisting = new QueryExpression()
-            {
-                EntityName = "pluginassembly",
-                ColumnSet = new ColumnSet(false),
-                Criteria =
-                        {
-                            Conditions =
-                            {
-                                new ConditionExpression("name", ConditionOperator.Equal, assemblyStepsName)
-                            }
-                        }
-            };
-
-            return Connection.TargetService.RetrieveMultiple(queryExisting).Entities.Count;
+            return Connection.TargetService.GetFirstOrDefault<PluginAssembly>(new ColumnSet(false), PluginAssembly.Fields.Name, assemblyStepsName) != null;
         }
 
         public bool UserHasPrivilege(string priv, Guid userId)
         {
-            bool userHasPrivilege = false;
-
-            ConditionExpression privilegeCondition =
-                new ConditionExpression("name", ConditionOperator.Equal, priv); // name of the privilege
-            FilterExpression privilegeFilter = new FilterExpression(LogicalOperator.And);
-            privilegeFilter.Conditions.Add(privilegeCondition);
-
-            QueryExpression privilegeQuery = new QueryExpression
+            var privilege = Connection.SourceService.GetFirstOrDefault<Privilege>(Privilege.Fields.Name, priv);
+            if (privilege == null)
             {
-                EntityName = "privilege",
-                ColumnSet = new ColumnSet(true),
-                Criteria = privilegeFilter
-            };
-
-            EntityCollection retrievedPrivileges = Connection.SourceService.RetrieveMultiple(privilegeQuery);
-            if (retrievedPrivileges.Entities.Count == 1)
-            {
-                RetrieveUserPrivilegesRequest request = new RetrieveUserPrivilegesRequest();
-                request.UserId = userId; // Id of the User
-                RetrieveUserPrivilegesResponse response = (RetrieveUserPrivilegesResponse)Connection.SourceService.Execute(request);
-                foreach (RolePrivilege rolePrivilege in response.RolePrivileges)
-                {
-                    if (rolePrivilege.PrivilegeId == retrievedPrivileges.Entities[0].Id)
-                    {
-                        userHasPrivilege = true;
-                        break;
-                    }
-                }
+                return false;
             }
-
-            return userHasPrivilege;
+            var request = new RetrieveUserPrivilegesRequest
+            {
+                UserId = userId
+            };
+            var response = (RetrieveUserPrivilegesResponse)Connection.SourceService.Execute(request);
+            return response.RolePrivileges.Any(p => p.PrivilegeId == privilege.Id);
         }
 
         public Guid WhoAmI()

@@ -27,7 +27,7 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments.AppCode
 
         public bool ExistsInTarget(DataManager manager, string solutionAssemblyPluginStepsName)
         {
-            return manager.IsSolutionExistingInTargetEnv(solutionAssemblyPluginStepsName) >= 0;
+            return manager.SolutionExistsInTargetEnv(solutionAssemblyPluginStepsName);
         }
 
         public List<CarfupStep> GetSteps(IOrganizationService service, PluginSettings settings, string filterName)
