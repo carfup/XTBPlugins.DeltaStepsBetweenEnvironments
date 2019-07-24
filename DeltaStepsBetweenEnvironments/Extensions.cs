@@ -1,7 +1,16 @@
-﻿namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
+﻿using Microsoft.Xrm.Sdk;
+
+namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
 {
     public static class Extensions
     {
+        public static T GetAliasedValue<T>(this Entity entity, string varName)
+        {
+            return (T)(entity.GetAttributeValue<AliasedValue>(varName) == null 
+                ? default(T) 
+                : entity.GetAttributeValue<AliasedValue>(varName).Value);
+        }
+
         public static string Capitalize(this string value)
         {
             if (value == null)
@@ -20,6 +29,15 @@
                 return firstLetter;
             } 
             return firstLetter + value.Substring(1);
+        }
+
+        public static string FormatForCsv(this string value)
+        {
+            if (string.IsNullOrWhiteSpace(value))
+            {
+                return string.Empty;
+            }
+            return "\"" + value.Replace("\"", "\"\"") + "\"";
         }
     }
 }

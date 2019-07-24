@@ -15,22 +15,23 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments.AppCode
         public string LogActionOnLoadItems => LogAction.AssembliesLoaded;
         public string RequiredPrivilege => "prvReadPluginAssembly";
         public bool SolutionSpecified => false;
+        public bool RequiresItemSelection => true;
 
         private AssemblyComparisonMethod(){ }
 
         public bool ExistsInTarget(DataManager manager, string solutionAssemblyPluginStepsName)
         {
-            return manager.isAssemblyExistingInTargetEnv(solutionAssemblyPluginStepsName) >= 0;
+            return manager.IsAssemblyExistingInTargetEnv(solutionAssemblyPluginStepsName) >= 0;
         }
 
-        public List<CarfupStep> GetSteps(IOrganizationService service, DataManager manager, string filterName)
+        public List<CarfupStep> GetSteps(IOrganizationService service, PluginSettings settings, string filterName)
         {
-            return manager.GetSteps(service, filterName, null);
+            return CarfupStep.GetSteps(service, settings, filterName, null);
         }
 
         public string[] GetNames(DataManager manager)
         {
-            return manager.loadAssemblies();
+            return manager.LoadAssemblies();
         }
     }
 }

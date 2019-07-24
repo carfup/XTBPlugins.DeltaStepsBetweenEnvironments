@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using Carfup.XTBPlugins.AppCode;
 using Microsoft.Xrm.Sdk;
 
@@ -17,9 +13,10 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments.AppCode
         string LogActionOnLoadItems { get; }
         string RequiredPrivilege { get; }
         bool SolutionSpecified { get; }
+        bool RequiresItemSelection { get; }
 
         bool ExistsInTarget(DataManager manager, string solutionAssemblyPluginStepsName);
-        List<CarfupStep> GetSteps( IOrganizationService service, DataManager manager, string filterName);
+        List<CarfupStep> GetSteps(IOrganizationService service, PluginSettings settings, string filterName);
         string[] GetNames(DataManager manager);
     }
 }

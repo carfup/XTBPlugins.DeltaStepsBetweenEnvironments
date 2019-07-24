@@ -23,7 +23,7 @@ namespace Carfup.XTBPlugins.AppCode
         {
             this.dbe = dbe;
 
-            TelemetryConfiguration.Active.InstrumentationKey = CustomParameter.INSIGHTS_INTRUMENTATIONKEY;
+            TelemetryConfiguration.Active.InstrumentationKey = CustomParameter.InsightsInstrumentationKey;
             this.telemetry = new TelemetryClient();
             this.telemetry.Context.Component.Version = DeltaStepsBetweenEnvironments.DeltaStepsBetweenEnvironments.CurrentVersion;
             this.telemetry.Context.Device.Id = this.dbe.GetType().Name;

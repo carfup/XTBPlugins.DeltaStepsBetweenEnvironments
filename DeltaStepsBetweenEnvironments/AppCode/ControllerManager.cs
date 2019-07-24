@@ -1,4 +1,5 @@
-﻿using Microsoft.Xrm.Sdk;
+﻿using McTools.Xrm.Connection;
+using Microsoft.Xrm.Sdk;
 
 namespace Carfup.XTBPlugins.AppCode
 {
@@ -6,6 +7,8 @@ namespace Carfup.XTBPlugins.AppCode
     {
         public IOrganizationService SourceService { get; set; }
         public IOrganizationService TargetService { get; set; }
+        public ConnectionDetail Source { get; set; }
+        public ConnectionDetail Target { get; set; }
         public DataManager DataManager { get; set; }
 
         public ControllerManager(IOrganizationService sourceService, IOrganizationService targetService)

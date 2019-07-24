@@ -22,7 +22,8 @@ namespace Carfup.XTBPlugins.Forms
             }
 
             checkboxAllowStats.Checked = settings.AllowLogUsage != false;
-            radioButtonSortingOrderAsc.Checked = (settings.SortOrderPref == SortOrder.Ascending || settings.SortOrderPref == null) ? true : false;
+            checkBoxSkipHidden.Checked = settings.SkipHiddenSteps;
+            radioButtonSortingOrderAsc.Checked = settings.SortOrderPref == SortOrder.Ascending || settings.SortOrderPref == null;
             radioButtoradioButtonSortingOrderDesc.Checked = !radioButtonSortingOrderAsc.Checked;
         }
 
@@ -30,6 +31,7 @@ namespace Carfup.XTBPlugins.Forms
         {
             var settings = dbe.Settings;
             settings.AllowLogUsage = checkboxAllowStats.Checked;
+            settings.SkipHiddenSteps = checkBoxSkipHidden.Checked;
             settings.SortOrderPref = (radioButtonSortingOrderAsc.Checked || settings.SortOrderPref == null) ? SortOrder.Ascending : SortOrder.Descending;
             settings.CurrentVersion = DeltaStepsBetweenEnvironments.DeltaStepsBetweenEnvironments.CurrentVersion;
 

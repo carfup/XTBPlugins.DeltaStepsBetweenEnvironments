@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Carfup.XTBPlugins.AppCode;
 using Microsoft.Xrm.Sdk;
+using Source.DLaB.Common;
+using Source.DLaB.Xrm;
 
 namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments.AppCode
 {
@@ -18,6 +21,7 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments.AppCode
         public string LogActionOnLoadItems => LogAction.SolutionsLoaded;
         public string RequiredPrivilege => "prvReadSolution";
         public bool SolutionSpecified => true;
+        public bool RequiresItemSelection => true;
 
         private SolutionComparisonMethod(){}
 
@@ -26,14 +30,14 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments.AppCode
             return manager.IsSolutionExistingInTargetEnv(solutionAssemblyPluginStepsName) >= 0;
         }
 
-        public List<CarfupStep> GetSteps(IOrganizationService service, DataManager manager, string filterName)
+        public List<CarfupStep> GetSteps(IOrganizationService service, PluginSettings settings, string filterName)
         {
-            return manager.GetSteps(service, null, filterName);
+            return CarfupStep.GetSteps(service, settings, null, filterName);
         }
 
         public string[] GetNames(DataManager manager)
         {
-            return manager.loadSolutions();
+            return manager.LoadSolutions();
         }
     }
 }
