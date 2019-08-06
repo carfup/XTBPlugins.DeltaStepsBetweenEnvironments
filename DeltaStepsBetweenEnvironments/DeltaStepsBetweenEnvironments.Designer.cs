@@ -91,6 +91,7 @@
             // 
             // toolStrip1
             // 
+            this.toolStrip1.ImageScalingSize = new System.Drawing.Size(28, 28);
             this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripButtonClose,
             this.toolStripSeparator1,
@@ -101,36 +102,38 @@
             this.toolStripButtonHelp});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Size = new System.Drawing.Size(1038, 25);
+            this.toolStrip1.Padding = new System.Windows.Forms.Padding(0, 0, 2, 0);
+            this.toolStrip1.Size = new System.Drawing.Size(1903, 37);
             this.toolStrip1.TabIndex = 0;
             this.toolStrip1.Text = "toolStrip1";
             // 
             // toolStripButtonClose
             // 
+            this.toolStripButtonClose.Image = global::Carfup.XTBPlugins.DeltaStepsBetweenEnvironments.Properties.Resources.close;
             this.toolStripButtonClose.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButtonClose.Name = "toolStripButtonClose";
-            this.toolStripButtonClose.Size = new System.Drawing.Size(40, 22);
+            this.toolStripButtonClose.Size = new System.Drawing.Size(95, 34);
             this.toolStripButtonClose.Text = "Close";
             this.toolStripButtonClose.Click += new System.EventHandler(this.toolStripButtonClose_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(6, 25);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(6, 37);
             // 
             // toolStripButtonOptions
             // 
             this.toolStripButtonOptions.Image = global::Carfup.XTBPlugins.DeltaStepsBetweenEnvironments.Properties.Resources.gear;
             this.toolStripButtonOptions.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButtonOptions.Name = "toolStripButtonOptions";
-            this.toolStripButtonOptions.Size = new System.Drawing.Size(69, 22);
+            this.toolStripButtonOptions.Size = new System.Drawing.Size(118, 34);
             this.toolStripButtonOptions.Text = "Options";
             this.toolStripButtonOptions.Click += new System.EventHandler(this.toolStripButtonOptions_Click);
             // 
             // toolStripSeparator3
             // 
             this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(6, 25);
+            this.toolStripSeparator3.Size = new System.Drawing.Size(6, 37);
             // 
             // toolStripButtonExport
             // 
@@ -138,20 +141,21 @@
             this.toolStripButtonExport.Image = global::Carfup.XTBPlugins.DeltaStepsBetweenEnvironments.Properties.Resources.Export;
             this.toolStripButtonExport.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButtonExport.Name = "toolStripButtonExport";
-            this.toolStripButtonExport.Size = new System.Drawing.Size(61, 22);
+            this.toolStripButtonExport.Size = new System.Drawing.Size(104, 34);
             this.toolStripButtonExport.Text = "Export";
             this.toolStripButtonExport.Click += new System.EventHandler(this.ToolStripButtonExport_Click);
             // 
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(6, 25);
+            this.toolStripSeparator2.Size = new System.Drawing.Size(6, 37);
             // 
             // toolStripButtonHelp
             // 
+            this.toolStripButtonHelp.Image = global::Carfup.XTBPlugins.DeltaStepsBetweenEnvironments.Properties.Resources.help;
             this.toolStripButtonHelp.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButtonHelp.Name = "toolStripButtonHelp";
-            this.toolStripButtonHelp.Size = new System.Drawing.Size(36, 22);
+            this.toolStripButtonHelp.Size = new System.Drawing.Size(88, 34);
             this.toolStripButtonHelp.Text = "Help";
             this.toolStripButtonHelp.Click += new System.EventHandler(this.toolStripButtonHelp_Click);
             // 
@@ -164,11 +168,12 @@
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 63.21951F));
             this.tableLayoutPanel1.Controls.Add(this.groupBox3, 0, 0);
             this.tableLayoutPanel1.Controls.Add(this.groupBoxSolutionComparing, 1, 0);
-            this.tableLayoutPanel1.Location = new System.Drawing.Point(3, 37);
+            this.tableLayoutPanel1.Location = new System.Drawing.Point(6, 68);
+            this.tableLayoutPanel1.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
             this.tableLayoutPanel1.RowCount = 1;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(1025, 115);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(1879, 212);
             this.tableLayoutPanel1.TabIndex = 29;
             // 
             // groupBox3
@@ -182,18 +187,21 @@
             this.groupBox3.Controls.Add(this.labelSourceEnvironment);
             this.groupBox3.Controls.Add(this.label2);
             this.groupBox3.Controls.Add(this.label1);
-            this.groupBox3.Location = new System.Drawing.Point(3, 3);
+            this.groupBox3.Location = new System.Drawing.Point(6, 6);
+            this.groupBox3.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(371, 109);
+            this.groupBox3.Padding = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.groupBox3.Size = new System.Drawing.Size(679, 200);
             this.groupBox3.TabIndex = 0;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Environments configuration";
             // 
             // buttonChangeSource
             // 
-            this.buttonChangeSource.Location = new System.Drawing.Point(254, 27);
+            this.buttonChangeSource.Location = new System.Drawing.Point(466, 50);
+            this.buttonChangeSource.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.buttonChangeSource.Name = "buttonChangeSource";
-            this.buttonChangeSource.Size = new System.Drawing.Size(104, 23);
+            this.buttonChangeSource.Size = new System.Drawing.Size(191, 42);
             this.buttonChangeSource.TabIndex = 32;
             this.buttonChangeSource.Text = "Change Source";
             this.buttonChangeSource.UseVisualStyleBackColor = true;
@@ -201,9 +209,10 @@
             // 
             // btnChangeTargetEnvironment
             // 
-            this.btnChangeTargetEnvironment.Location = new System.Drawing.Point(254, 54);
+            this.btnChangeTargetEnvironment.Location = new System.Drawing.Point(466, 100);
+            this.btnChangeTargetEnvironment.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.btnChangeTargetEnvironment.Name = "btnChangeTargetEnvironment";
-            this.btnChangeTargetEnvironment.Size = new System.Drawing.Size(104, 23);
+            this.btnChangeTargetEnvironment.Size = new System.Drawing.Size(191, 42);
             this.btnChangeTargetEnvironment.TabIndex = 31;
             this.btnChangeTargetEnvironment.Text = "Change Target";
             this.btnChangeTargetEnvironment.UseVisualStyleBackColor = true;
@@ -214,36 +223,40 @@
             this.labelTargetEnvironment.AutoSize = true;
             this.labelTargetEnvironment.BackColor = System.Drawing.SystemColors.Control;
             this.labelTargetEnvironment.ForeColor = System.Drawing.Color.Red;
-            this.labelTargetEnvironment.Location = new System.Drawing.Point(122, 59);
+            this.labelTargetEnvironment.Location = new System.Drawing.Point(224, 109);
+            this.labelTargetEnvironment.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.labelTargetEnvironment.Name = "labelTargetEnvironment";
-            this.labelTargetEnvironment.Size = new System.Drawing.Size(33, 13);
+            this.labelTargetEnvironment.Size = new System.Drawing.Size(59, 25);
             this.labelTargetEnvironment.TabIndex = 30;
             this.labelTargetEnvironment.Text = "None";
             // 
             // labelSourceEnvironment
             // 
             this.labelSourceEnvironment.AutoSize = true;
-            this.labelSourceEnvironment.Location = new System.Drawing.Point(122, 32);
+            this.labelSourceEnvironment.Location = new System.Drawing.Point(224, 59);
+            this.labelSourceEnvironment.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.labelSourceEnvironment.Name = "labelSourceEnvironment";
-            this.labelSourceEnvironment.Size = new System.Drawing.Size(33, 13);
+            this.labelSourceEnvironment.Size = new System.Drawing.Size(59, 25);
             this.labelSourceEnvironment.TabIndex = 29;
             this.labelSourceEnvironment.Text = "None";
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(4, 59);
+            this.label2.Location = new System.Drawing.Point(7, 109);
+            this.label2.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(109, 13);
+            this.label2.Size = new System.Drawing.Size(199, 25);
             this.label2.TabIndex = 28;
             this.label2.Text = "Target Environment : ";
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(4, 32);
+            this.label1.Location = new System.Drawing.Point(7, 59);
+            this.label1.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(112, 13);
+            this.label1.Size = new System.Drawing.Size(205, 25);
             this.label1.TabIndex = 27;
             this.label1.Text = "Source Environment : ";
             // 
@@ -260,9 +273,11 @@
             this.groupBoxSolutionComparing.Controls.Add(this.buttonCompare);
             this.groupBoxSolutionComparing.Controls.Add(this.labelComparing);
             this.groupBoxSolutionComparing.Controls.Add(this.comboBoxSolutionsAssembliesList);
-            this.groupBoxSolutionComparing.Location = new System.Drawing.Point(380, 3);
+            this.groupBoxSolutionComparing.Location = new System.Drawing.Point(697, 6);
+            this.groupBoxSolutionComparing.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.groupBoxSolutionComparing.Name = "groupBoxSolutionComparing";
-            this.groupBoxSolutionComparing.Size = new System.Drawing.Size(642, 109);
+            this.groupBoxSolutionComparing.Padding = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.groupBoxSolutionComparing.Size = new System.Drawing.Size(1176, 200);
             this.groupBoxSolutionComparing.TabIndex = 1;
             this.groupBoxSolutionComparing.TabStop = false;
             this.groupBoxSolutionComparing.Text = "Details selection";
@@ -271,9 +286,10 @@
             // 
             this.radioButtonCompareOrg.AutoSize = true;
             this.radioButtonCompareOrg.Checked = true;
-            this.radioButtonCompareOrg.Location = new System.Drawing.Point(6, 40);
+            this.radioButtonCompareOrg.Location = new System.Drawing.Point(11, 74);
+            this.radioButtonCompareOrg.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.radioButtonCompareOrg.Name = "radioButtonCompareOrg";
-            this.radioButtonCompareOrg.Size = new System.Drawing.Size(72, 17);
+            this.radioButtonCompareOrg.Size = new System.Drawing.Size(125, 29);
             this.radioButtonCompareOrg.TabIndex = 33;
             this.radioButtonCompareOrg.TabStop = true;
             this.radioButtonCompareOrg.Text = "Entire Org";
@@ -283,9 +299,10 @@
             // radioButtonCompareAssembly
             // 
             this.radioButtonCompareAssembly.AutoSize = true;
-            this.radioButtonCompareAssembly.Location = new System.Drawing.Point(6, 86);
+            this.radioButtonCompareAssembly.Location = new System.Drawing.Point(11, 159);
+            this.radioButtonCompareAssembly.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.radioButtonCompareAssembly.Name = "radioButtonCompareAssembly";
-            this.radioButtonCompareAssembly.Size = new System.Drawing.Size(69, 17);
+            this.radioButtonCompareAssembly.Size = new System.Drawing.Size(123, 29);
             this.radioButtonCompareAssembly.TabIndex = 32;
             this.radioButtonCompareAssembly.Text = "Assembly";
             this.radioButtonCompareAssembly.UseVisualStyleBackColor = true;
@@ -294,9 +311,10 @@
             // radioButtonCompareSolution
             // 
             this.radioButtonCompareSolution.AutoSize = true;
-            this.radioButtonCompareSolution.Location = new System.Drawing.Point(6, 63);
+            this.radioButtonCompareSolution.Location = new System.Drawing.Point(11, 116);
+            this.radioButtonCompareSolution.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.radioButtonCompareSolution.Name = "radioButtonCompareSolution";
-            this.radioButtonCompareSolution.Size = new System.Drawing.Size(63, 17);
+            this.radioButtonCompareSolution.Size = new System.Drawing.Size(108, 29);
             this.radioButtonCompareSolution.TabIndex = 31;
             this.radioButtonCompareSolution.Text = "Solution";
             this.radioButtonCompareSolution.UseVisualStyleBackColor = true;
@@ -305,17 +323,19 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(9, 21);
+            this.label3.Location = new System.Drawing.Point(17, 39);
+            this.label3.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(81, 13);
+            this.label3.Size = new System.Drawing.Size(152, 25);
             this.label3.TabIndex = 30;
             this.label3.Text = "Compare from : ";
             // 
             // buttonLoadSolutionsAssemblies
             // 
-            this.buttonLoadSolutionsAssemblies.Location = new System.Drawing.Point(511, 26);
+            this.buttonLoadSolutionsAssemblies.Location = new System.Drawing.Point(937, 48);
+            this.buttonLoadSolutionsAssemblies.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.buttonLoadSolutionsAssemblies.Name = "buttonLoadSolutionsAssemblies";
-            this.buttonLoadSolutionsAssemblies.Size = new System.Drawing.Size(125, 23);
+            this.buttonLoadSolutionsAssemblies.Size = new System.Drawing.Size(229, 42);
             this.buttonLoadSolutionsAssemblies.TabIndex = 29;
             this.buttonLoadSolutionsAssemblies.Text = "Load Solutions";
             this.toolTipInfo.SetToolTip(this.buttonLoadSolutionsAssemblies, "Load the solutions/assemblies from the source environment.");
@@ -324,9 +344,10 @@
             // 
             // buttonCompare
             // 
-            this.buttonCompare.Location = new System.Drawing.Point(111, 57);
+            this.buttonCompare.Location = new System.Drawing.Point(204, 105);
+            this.buttonCompare.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.buttonCompare.Name = "buttonCompare";
-            this.buttonCompare.Size = new System.Drawing.Size(525, 23);
+            this.buttonCompare.Size = new System.Drawing.Size(963, 42);
             this.buttonCompare.TabIndex = 28;
             this.buttonCompare.Text = "Compare the two environments";
             this.toolTipInfo.SetToolTip(this.buttonCompare, "Comparing the solution/assembly in order to find out the differences.");
@@ -336,18 +357,21 @@
             // labelComparing
             // 
             this.labelComparing.AutoSize = true;
-            this.labelComparing.Location = new System.Drawing.Point(108, 32);
+            this.labelComparing.Location = new System.Drawing.Point(198, 59);
+            this.labelComparing.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.labelComparing.Name = "labelComparing";
-            this.labelComparing.Size = new System.Drawing.Size(156, 13);
+            this.labelComparing.Size = new System.Drawing.Size(284, 25);
             this.labelComparing.TabIndex = 27;
             this.labelComparing.Text = "Select the solution to compare :";
             // 
             // comboBoxSolutionsAssembliesList
             // 
             this.comboBoxSolutionsAssembliesList.FormattingEnabled = true;
-            this.comboBoxSolutionsAssembliesList.Location = new System.Drawing.Point(283, 27);
+            this.comboBoxSolutionsAssembliesList.ItemHeight = 24;
+            this.comboBoxSolutionsAssembliesList.Location = new System.Drawing.Point(507, 50);
+            this.comboBoxSolutionsAssembliesList.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.comboBoxSolutionsAssembliesList.Name = "comboBoxSolutionsAssembliesList";
-            this.comboBoxSolutionsAssembliesList.Size = new System.Drawing.Size(227, 21);
+            this.comboBoxSolutionsAssembliesList.Size = new System.Drawing.Size(425, 32);
             this.comboBoxSolutionsAssembliesList.TabIndex = 26;
             this.comboBoxSolutionsAssembliesList.SelectedIndexChanged += new System.EventHandler(this.comboBoxSolutionsList_SelectedIndexChanged);
             // 
@@ -359,16 +383,17 @@
             this.tableLayoutPanel2.AutoSize = true;
             this.tableLayoutPanel2.ColumnCount = 3;
             this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 70F));
+            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 128F));
             this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tableLayoutPanel2.Controls.Add(this.groupBox1, 0, 0);
             this.tableLayoutPanel2.Controls.Add(this.groupBox2, 2, 0);
             this.tableLayoutPanel2.Controls.Add(this.groupBox4, 1, 0);
-            this.tableLayoutPanel2.Location = new System.Drawing.Point(3, 158);
+            this.tableLayoutPanel2.Location = new System.Drawing.Point(6, 292);
+            this.tableLayoutPanel2.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.tableLayoutPanel2.Name = "tableLayoutPanel2";
             this.tableLayoutPanel2.RowCount = 1;
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel2.Size = new System.Drawing.Size(1025, 444);
+            this.tableLayoutPanel2.Size = new System.Drawing.Size(1879, 820);
             this.tableLayoutPanel2.TabIndex = 30;
             // 
             // groupBox1
@@ -378,9 +403,11 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox1.Controls.Add(this.labelSourceTargetMatch);
             this.groupBox1.Controls.Add(this.listViewSourceTarget);
-            this.groupBox1.Location = new System.Drawing.Point(3, 3);
+            this.groupBox1.Location = new System.Drawing.Point(6, 6);
+            this.groupBox1.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(471, 438);
+            this.groupBox1.Padding = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.groupBox1.Size = new System.Drawing.Size(863, 808);
             this.groupBox1.TabIndex = 28;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Steps which are on Source but not on Target environment";
@@ -391,9 +418,10 @@
             this.labelSourceTargetMatch.BackColor = System.Drawing.Color.White;
             this.labelSourceTargetMatch.Font = new System.Drawing.Font("Microsoft Sans Serif", 20F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelSourceTargetMatch.ForeColor = System.Drawing.Color.Green;
-            this.labelSourceTargetMatch.Location = new System.Drawing.Point(78, 204);
+            this.labelSourceTargetMatch.Location = new System.Drawing.Point(143, 377);
+            this.labelSourceTargetMatch.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.labelSourceTargetMatch.Name = "labelSourceTargetMatch";
-            this.labelSourceTargetMatch.Size = new System.Drawing.Size(302, 31);
+            this.labelSourceTargetMatch.Size = new System.Drawing.Size(517, 54);
             this.labelSourceTargetMatch.TabIndex = 27;
             this.labelSourceTargetMatch.Text = "This is a perfect match !";
             this.labelSourceTargetMatch.Visible = false;
@@ -411,9 +439,10 @@
             this.columnHeaderSTModifiedOn,
             this.columnHeaderSTCreatedOn});
             this.listViewSourceTarget.HideSelection = false;
-            this.listViewSourceTarget.Location = new System.Drawing.Point(9, 19);
+            this.listViewSourceTarget.Location = new System.Drawing.Point(17, 35);
+            this.listViewSourceTarget.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.listViewSourceTarget.Name = "listViewSourceTarget";
-            this.listViewSourceTarget.Size = new System.Drawing.Size(456, 413);
+            this.listViewSourceTarget.Size = new System.Drawing.Size(832, 758);
             this.listViewSourceTarget.Sorting = System.Windows.Forms.SortOrder.Ascending;
             this.listViewSourceTarget.TabIndex = 26;
             this.listViewSourceTarget.UseCompatibleStateImageBehavior = false;
@@ -451,9 +480,11 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox2.Controls.Add(this.labelTargetSourceMatch);
             this.groupBox2.Controls.Add(this.listViewTargetSource);
-            this.groupBox2.Location = new System.Drawing.Point(550, 3);
+            this.groupBox2.Location = new System.Drawing.Point(1009, 6);
+            this.groupBox2.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(472, 438);
+            this.groupBox2.Padding = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.groupBox2.Size = new System.Drawing.Size(864, 808);
             this.groupBox2.TabIndex = 29;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Steps which are on Target but not on Source environment";
@@ -464,9 +495,10 @@
             this.labelTargetSourceMatch.BackColor = System.Drawing.Color.White;
             this.labelTargetSourceMatch.Font = new System.Drawing.Font("Microsoft Sans Serif", 20F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelTargetSourceMatch.ForeColor = System.Drawing.Color.Green;
-            this.labelTargetSourceMatch.Location = new System.Drawing.Point(85, 204);
+            this.labelTargetSourceMatch.Location = new System.Drawing.Point(156, 377);
+            this.labelTargetSourceMatch.Margin = new System.Windows.Forms.Padding(6, 0, 6, 0);
             this.labelTargetSourceMatch.Name = "labelTargetSourceMatch";
-            this.labelTargetSourceMatch.Size = new System.Drawing.Size(302, 31);
+            this.labelTargetSourceMatch.Size = new System.Drawing.Size(517, 54);
             this.labelTargetSourceMatch.TabIndex = 28;
             this.labelTargetSourceMatch.Text = "This is a perfect match !";
             this.labelTargetSourceMatch.Visible = false;
@@ -484,9 +516,10 @@
             this.columnHeaderTSModifiedOn,
             this.columnHeaderTSCreatedOn});
             this.listViewTargetSource.HideSelection = false;
-            this.listViewTargetSource.Location = new System.Drawing.Point(6, 19);
+            this.listViewTargetSource.Location = new System.Drawing.Point(11, 35);
+            this.listViewTargetSource.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.listViewTargetSource.Name = "listViewTargetSource";
-            this.listViewTargetSource.Size = new System.Drawing.Size(460, 413);
+            this.listViewTargetSource.Size = new System.Drawing.Size(839, 758);
             this.listViewTargetSource.Sorting = System.Windows.Forms.SortOrder.Ascending;
             this.listViewTargetSource.TabIndex = 27;
             this.listViewTargetSource.UseCompatibleStateImageBehavior = false;
@@ -525,9 +558,11 @@
             this.groupBox4.Controls.Add(this.buttonDeleteStep);
             this.groupBox4.Controls.Add(this.buttonCopySourceToTarget);
             this.groupBox4.Controls.Add(this.buttonCopyTargetToSource);
-            this.groupBox4.Location = new System.Drawing.Point(480, 3);
+            this.groupBox4.Location = new System.Drawing.Point(881, 6);
+            this.groupBox4.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Size = new System.Drawing.Size(64, 438);
+            this.groupBox4.Padding = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.groupBox4.Size = new System.Drawing.Size(116, 808);
             this.groupBox4.TabIndex = 30;
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "Actions";
@@ -535,9 +570,10 @@
             // buttonDeleteStep
             // 
             this.buttonDeleteStep.Image = ((System.Drawing.Image)(resources.GetObject("buttonDeleteStep.Image")));
-            this.buttonDeleteStep.Location = new System.Drawing.Point(12, 107);
+            this.buttonDeleteStep.Location = new System.Drawing.Point(22, 198);
+            this.buttonDeleteStep.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.buttonDeleteStep.Name = "buttonDeleteStep";
-            this.buttonDeleteStep.Size = new System.Drawing.Size(42, 36);
+            this.buttonDeleteStep.Size = new System.Drawing.Size(77, 66);
             this.buttonDeleteStep.TabIndex = 2;
             this.toolTipWarning.SetToolTip(this.buttonDeleteStep, "Delete the selected step(s), it\'s permanent !");
             this.buttonDeleteStep.UseVisualStyleBackColor = true;
@@ -545,9 +581,11 @@
             // 
             // buttonCopySourceToTarget
             // 
-            this.buttonCopySourceToTarget.Location = new System.Drawing.Point(11, 64);
+            this.buttonCopySourceToTarget.Image = global::Carfup.XTBPlugins.DeltaStepsBetweenEnvironments.Properties.Resources.move_right;
+            this.buttonCopySourceToTarget.Location = new System.Drawing.Point(20, 118);
+            this.buttonCopySourceToTarget.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.buttonCopySourceToTarget.Name = "buttonCopySourceToTarget";
-            this.buttonCopySourceToTarget.Size = new System.Drawing.Size(43, 37);
+            this.buttonCopySourceToTarget.Size = new System.Drawing.Size(79, 68);
             this.buttonCopySourceToTarget.TabIndex = 1;
             this.toolTipInfo.SetToolTip(this.buttonCopySourceToTarget, "Copy your step from Source to Target environment.");
             this.buttonCopySourceToTarget.UseVisualStyleBackColor = true;
@@ -556,10 +594,11 @@
             // buttonCopyTargetToSource
             // 
             this.buttonCopyTargetToSource.Image = ((System.Drawing.Image)(resources.GetObject("buttonCopyTargetToSource.Image")));
-            this.buttonCopyTargetToSource.Location = new System.Drawing.Point(12, 21);
+            this.buttonCopyTargetToSource.Location = new System.Drawing.Point(22, 39);
+            this.buttonCopyTargetToSource.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.buttonCopyTargetToSource.Name = "buttonCopyTargetToSource";
             this.buttonCopyTargetToSource.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.buttonCopyTargetToSource.Size = new System.Drawing.Size(43, 37);
+            this.buttonCopyTargetToSource.Size = new System.Drawing.Size(79, 68);
             this.buttonCopyTargetToSource.TabIndex = 0;
             this.toolTipInfo.SetToolTip(this.buttonCopyTargetToSource, "Copy your step from Target to Source environment.");
             this.buttonCopyTargetToSource.UseVisualStyleBackColor = true;
@@ -583,14 +622,15 @@
             // 
             // DeltaStepsBetweenEnvironments
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
             this.Controls.Add(this.tableLayoutPanel2);
             this.Controls.Add(this.tableLayoutPanel1);
             this.Controls.Add(this.toolStrip1);
+            this.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
             this.Name = "DeltaStepsBetweenEnvironments";
-            this.Size = new System.Drawing.Size(1038, 613);
+            this.Size = new System.Drawing.Size(1903, 1132);
             this.Load += new System.EventHandler(this.DeltaStepsBetweenEnvironments_Load);
             this.toolStrip1.ResumeLayout(false);
             this.toolStrip1.PerformLayout();

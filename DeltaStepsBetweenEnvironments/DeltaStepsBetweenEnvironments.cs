@@ -96,6 +96,11 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
                                 .Select(s => s.ToCsv()).ToList();
             csv.Insert(0, CarfupStep.GetCsvColumns());
             File.WriteAllText(file, string.Join(Environment.NewLine, csv));
+
+            if (DialogResult.Yes == MessageBox.Show("Do you want to open the generated document?", "Question", MessageBoxButtons.YesNo, MessageBoxIcon.Question))
+            {
+                Process.Start(file);
+            }
         }
 
         // We compare the same solution name in both environments
