@@ -63,7 +63,7 @@
             this.pictureBoxHelp.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.pictureBoxHelp.Image = global::Carfup.XTBPlugins.Properties.Resources.helpscreenshot;
+            this.pictureBoxHelp.Image = global::Carfup.XTBPlugins.DeltaStepsBetweenEnvironments.Properties.Resources.helpscreenshot;
             this.pictureBoxHelp.Location = new System.Drawing.Point(12, 12);
             this.pictureBoxHelp.Name = "pictureBoxHelp";
             this.pictureBoxHelp.Size = new System.Drawing.Size(783, 435);

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Data;
 using System.Linq;
 using System.Windows.Forms;
 using XrmToolBox.Extensibility;
@@ -10,149 +9,215 @@ using McTools.Xrm.Connection;
 using Microsoft.Xrm.Sdk;
 using System.Reflection;
 using System.Diagnostics;
+using System.IO;
 using Carfup.XTBPlugins.Forms;
 using Carfup.XTBPlugins.AppCode;
+using Carfup.XTBPlugins.DeltaStepsBetweenEnvironments.AppCode;
 using Microsoft.Xrm.Sdk.Messages;
 using Microsoft.Crm.Sdk.Messages;
 using XrmToolBox.Extensibility.Args;
+using Label = Microsoft.Xrm.Sdk.Label;
 
 namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
 {
-    public partial class DeltaStepsBetweenEnvironments : PluginControlBase, IXrmToolBoxPluginControl, IGitHubPlugin, IStatusBarMessager
+    public partial class DeltaStepsBetweenEnvironments : PluginControlBase, IXrmToolBoxPluginControl, IGitHubPlugin, IStatusBarMessenger
     {
-        #region varibables
-        private string[] solutionsList = null;
-        private ConnectionDetail sourceDetail = null;
-        private ConnectionDetail targetDetail = null;
-        IOrganizationService sourceService = null;
-        IOrganizationService targetService = null;
-        List<CarfupStep> stepsCrmSource = new List<CarfupStep>();
-        List<CarfupStep> stepsCrmTarget = new List<CarfupStep>();
-        private static string solutionAssemblyPluginStepsName = null;
-        public event EventHandler OnRequestConnection;
-        internal PluginSettings settings = new PluginSettings();
-        public LogUsage log = null;
-        Comparing comparing = Comparing.Solution;
-        ControllerManager controller = null;
-        private int currentColumnOrder;
+        #region Properties
+
+        private IOrganizationService SourceService { get; set; }
+        private IOrganizationService TargetService { get; set; }
+        private List<CarfupStep> StepsCrmSource { get; set; }
+        private List<CarfupStep> StepsCrmTarget { get; set; }
+        private static string SolutionAssemblyPluginStepsName { get; set; }
+        public PluginSettings Settings {get; set; } = new PluginSettings();
+        public LogUsage Log { get;set; }
+        private IComparisonMethod ComparisonMethod { get; set; }
+        private ControllerManager Controller { get; set; }
+        private int CurrentColumnOrder { get; set; }
+        public event EventHandler OnRequestConnection; // Should this be an override?  Is this even needed?
         public event EventHandler<StatusBarMessageEventArgs> SendMessageToStatusBar;
 
-        public string RepositoryName { get; } =  "XTBPlugins.DeltaStepsBetweenEnvironments";
-        public string UserName { get; } = "carfup";
+        public string RepositoryName =>  "XTBPlugins.DeltaStepsBetweenEnvironments";
+        public string UserName => "carfup";
 
-        #endregion
+        #endregion Properties
 
         public DeltaStepsBetweenEnvironments()
         {
             InitializeComponent();
-            sourceDetail = this.ConnectionDetail;
-            sourceService = this.Service;
+            SourceService = Service;
+            Controller = new ControllerManager(Service, Service)
+            {
+                Source = ConnectionDetail,
+                Target = ConnectionDetail
+            };
+            ComparisonMethod = OrgComparisonMethod.Instance;
+            StepsCrmSource = new List<CarfupStep>();
+            StepsCrmTarget = new List<CarfupStep>();
             buttonCompare.Visible = false;
+            ManageRadioButtonsAssemblySolution();
         }
 
         private void toolStripButtonClose_Click(object sender, EventArgs e)
         {
-            this.log.LogData(EventType.Event, LogAction.PluginClosed);
+            Log.LogData(EventType.Event, LogAction.PluginClosed);
 
             // Saving settings for the next usage of plugin
             SaveSettings();
 
             // Making sure that all message are sent if stats are enabled
-            this.log.Flush();
+            Log.Flush();
             CloseTool();
         }
-
-        //Select the solution from where we will query the steps
-        private void comboBoxSolutionsList_SelectedIndexChanged(object sender, EventArgs e)
+        private void ToolStripButtonExport_Click(object sender, EventArgs e)
         {
-            if (canProceed() && comboBoxSolutionsAssembliesList.SelectedItem != null)
+            var fileName = (Controller?.Source?.ConnectionName ?? string.Empty).Replace(" ", "") + "To" + (Controller?.Target?.ConnectionName ?? string.Empty).Replace(" ", "") + ".csv";
+            if (!string.IsNullOrWhiteSpace(saveFileDialog1.FileName))
             {
-                solutionAssemblyPluginStepsName = comboBoxSolutionsAssembliesList.SelectedItem.ToString();
+                var directory = Path.GetDirectoryName(saveFileDialog1.FileName);
+                fileName = Path.Combine(directory, fileName);
+            }
 
-                isSolutionOrAssemblyExistingInTargetEnv();
+            saveFileDialog1.FileName = fileName;
+
+            if (saveFileDialog1.ShowDialog() != DialogResult.OK)
+            {
+                return;
+            }
+
+            var file = saveFileDialog1.FileName;
+            var export = new List<CarfupStep>();
+            export.AddRange(StepsCrmSource);
+            export.AddRange(StepsCrmTarget);
+
+            var csv = export.OrderBy(s => s.AssemblyName)
+                                .ThenBy(s => s.PluginTypeName)
+                                .ThenBy(s => s.StepName)
+                                .Select(s => s.ToCsv()).ToList();
+            csv.Insert(0, CarfupStep.GetCsvColumns());
+            File.WriteAllText(file, string.Join(Environment.NewLine, csv));
+
+            if (DialogResult.Yes == MessageBox.Show("Do you want to open the generated document?", "Question", MessageBoxButtons.YesNo, MessageBoxIcon.Question))
+            {
+                Process.Start(file);
             }
         }
 
-        private void isSolutionOrAssemblyExistingInTargetEnv()
+        // We compare the same solution name in both environments
+        private void buttonCompare_Click(object sender, EventArgs evt)
         {
-            string whatToCompare = Wording.getComparingInfo(comparing);
+            Compare();
+        }
+
+        private void Compare()
+        {
+            if (ComparisonMethod.RequiresItemSelection 
+                && SolutionAssemblyPluginStepsName == null)
+            {
+                MessageBox.Show($@"Please select a {ComparisonMethod.Name} first.");
+                return;
+            }
+
+            Guid[] diffCrmSourceTarget = null;
+            Guid[] diffCrmTargetSource = null;
+
+            StepsCrmSource.Clear();
+            StepsCrmTarget.Clear();
 
             WorkAsync(new WorkAsyncInfo
             {
-                Message = $"Checking if the {whatToCompare} name exists in the target environment...",
+                Message = $"Comparing the 2 {ComparisonMethod.PluralName.Capitalize()}...",
                 Work = (bw, e) =>
                 {
-                    e.Result = (comparing == Comparing.Solution) ? controller.dataManager.isSolutionExistingInTargetEnv(solutionAssemblyPluginStepsName) : controller.dataManager.isAssemblyExistingInTargetEnv(solutionAssemblyPluginStepsName);
+                    SendMessageToStatusBar?.Invoke(this, new StatusBarMessageEventArgs(0, "Fetching steps from source environment..."));
+                    StepsCrmSource = ComparisonMethod.GetSteps(SourceService, Settings, SolutionAssemblyPluginStepsName);
+                    SendMessageToStatusBar?.Invoke(this, new StatusBarMessageEventArgs(30, "Fetching steps from target environment..."));
+                    StepsCrmTarget = ComparisonMethod.GetSteps(TargetService, Settings, SolutionAssemblyPluginStepsName);
+                    foreach(var step in StepsCrmTarget)
+                    {
+                        step.Environment = "Target";
+                    }
+
+                    SendMessageToStatusBar?.Invoke(this, new StatusBarMessageEventArgs(60, "Comparing steps..."));
+
+                    Comparer.Compare(StepsCrmSource, StepsCrmTarget);
+                    SendMessageToStatusBar?.Invoke(this, new StatusBarMessageEventArgs(90, "Finding Differences..."));
+                    diffCrmSourceTarget = StepsCrmSource.Select(x => x.StepId).Except(StepsCrmTarget.Select(x => x.StepId)).ToArray();
+                    diffCrmTargetSource = StepsCrmTarget.Select(x => x.StepId).Except(StepsCrmSource.Select(x => x.StepId)).ToArray();
+                    SendMessageToStatusBar?.Invoke(this, new StatusBarMessageEventArgs(100, "Done!"));
                 },
                 PostWorkCallBack = e =>
                 {
                     if (e.Error != null)
                     {
-                        string logAction = (comparing == Comparing.Solution) ? LogAction.SolutionExistingInTargetEnvChecked : LogAction.AssemblyExistingInTargetEnvChecked;
-                        this.log.LogData(EventType.Exception, logAction, e.Error);
-
-                        MessageBox.Show(this, e.Error.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        Log.LogData(EventType.Exception, ComparisonMethod.LogActionOnCompare, e.Error);
+                        MessageBox.Show(this, e.Error.Message, @"Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        toolStripButtonExport.Enabled = false;
                         return;
                     }
 
-                    if((int)e.Result != 1)
-                        MessageBox.Show($"The {whatToCompare} doesn't exist in the Target environment. \rThe compare function will return a \"Perfect match\" in this case.\r\r You will still have the possibility to copy steps from the Source to Target environment.", "Information", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    toolStripButtonExport.Enabled = true;
+
+                    if (diffCrmSourceTarget.Length == 0)
+                    {
+                        listViewSourceTarget.Items.Clear();
+                        labelSourceTargetMatch.Visible = true;
+
+                    }
+                    else // there are steps in source but not target
+                    {
+                        labelSourceTargetMatch.Visible = false;
+                        listViewSourceTarget.Visible = true;
+                        FillListViewItems(listViewSourceTarget, StepsCrmSource, diffCrmSourceTarget);
+                    }
+
+                    if (diffCrmTargetSource.Count() == 0)
+                    {
+                        listViewTargetSource.Items.Clear();
+                        labelTargetSourceMatch.Visible = true;
+                    }
+                    else // there are steps in source but not target
+                    {
+                        labelTargetSourceMatch.Visible = false;
+                        listViewTargetSource.Visible = true;
+                        FillListViewItems(listViewTargetSource, StepsCrmTarget, diffCrmTargetSource);
+                    }
+
+                    Log.LogData(EventType.Event, ComparisonMethod.LogActionOnCompare);
                 },
-                ProgressChanged = e => { SetWorkingMessage(e.UserState.ToString()); }
+                ProgressChanged = e =>
+                {
+                    SetWorkingMessage(e.UserState.ToString());
+                }
             });
         }
 
-        private void comboBoxTargetEnvironmentList_Click(object sender, EventArgs e)
-        {
-            if (OnRequestConnection != null)
-            {
-                var aaa = new RequestConnectionEventArgs
-                {
-                    ActionName = "TargetOrganization",
-                    Control = this
-                };
-                OnRequestConnection(this, aaa);
-            }
-        }
+        #region Source/Target Selection
 
-        public void UpdateConnection(IOrganizationService newService, ConnectionDetail connectionDetail, string actionName = "", object parameter = null)
+        public override void UpdateConnection(IOrganizationService newService, ConnectionDetail connectionDetail, string actionName, object parameter)
         {
-            controller = new ControllerManager(sourceService, targetService);
-
+            toolStripButtonExport.Enabled = false;
             if (actionName == "TargetOrganization")
             {
-                targetService = newService;
-                targetDetail = connectionDetail;
-                SetConnectionLabel(connectionDetail, "Target");
-                controller.targetService = targetService;
+                TargetService = newService;
+                SetConnectionLabel(connectionDetail, labelTargetEnvironment);
+                Controller.TargetService = TargetService;
+                Controller.Target = connectionDetail;
             }
             else
             {
-                sourceService = newService;
-                sourceDetail = connectionDetail;
-                SetConnectionLabel(connectionDetail, "Source");
-                controller.sourceService = sourceService;
+                SourceService = newService;
+                SetConnectionLabel(connectionDetail, labelSourceEnvironment);
+                Controller.SourceService = SourceService;
+                Controller.Source = connectionDetail;
             }
 
-            if (targetService != null && sourceService != null)
-                buttonCompare.Visible = true;
-            else
-                buttonCompare.Visible = false;
+            buttonCompare.Visible = TargetService != null && SourceService != null;
         }
-        private void SetConnectionLabel(ConnectionDetail detail, string serviceType)
+        private void SetConnectionLabel(ConnectionDetail detail, System.Windows.Forms.Label label)
         {
-            switch (serviceType)
-            {
-                case "Source":
-                    labelSourceEnvironment.Text = detail.ConnectionName;
-                    labelSourceEnvironment.ForeColor = Color.Green;
-                    break;
-
-                case "Target":
-                    labelTargetEnvironment.Text = detail.ConnectionName;
-                    labelTargetEnvironment.ForeColor = Color.Green;
-                    break;
-            }
+            label.Text = detail.ConnectionName;
+            label.ForeColor = Color.Green;
         }
 
         private void btnChangeTargetEnvironment_Click(object sender, EventArgs e)
@@ -165,143 +230,6 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
                     Control = this
                 };
                 OnRequestConnection(this, arg);
-            }
-        }
-
-        // We compare the same solution name in both environments
-        private void buttonCompare_Click(object sender, EventArgs evt)
-        {
-            compareBothSolutionsAssemblies();
-        }
-
-
-        private void compareBothSolutionsAssemblies()
-        {
-            if (solutionAssemblyPluginStepsName == null)
-            {
-                MessageBox.Show($"Please select a {Wording.getComparingInfo(comparing)} first.");
-                return;
-            }
-
-            string[] diffCrmSourceTarget = null;
-            string[] diffCrmTargetSource = null;
-
-            stepsCrmSource.Clear();
-            stepsCrmTarget.Clear();
-
-            string logAction = (comparing == Comparing.Solution) ? LogAction.SolutionsCompared : LogAction.AssembliesCompared;
-
-            WorkAsync(new WorkAsyncInfo
-            {
-                Message = $"Comparing the 2 {Wording.getComparingInfo(comparing, true, true)}...",
-                Work = (bw, e) =>
-                {
-                    if(comparing == Comparing.Solution)
-                    {
-                        SendMessageToStatusBar?.Invoke(this, new StatusBarMessageEventArgs(0, "Fetching steps from source environment..."));
-                        stepsCrmSource = controller.dataManager.querySteps(sourceService, solutionAssemblyPluginStepsName);  //querySteps(sourceService, stepsCrmSource);
-                        SendMessageToStatusBar?.Invoke(this, new StatusBarMessageEventArgs(30, "Fetching steps from source environment..."));
-                        stepsCrmTarget = controller.dataManager.querySteps(targetService, solutionAssemblyPluginStepsName);  //querySteps(targetService, stepsCrmTarget);
-                    }
-                    else if(comparing == Comparing.Assembly)
-                    {
-                        SendMessageToStatusBar?.Invoke(this, new StatusBarMessageEventArgs(0, "Fetching steps from source environment..."));
-                        stepsCrmSource = controller.dataManager.queryStepsAssembly(sourceService, solutionAssemblyPluginStepsName);  //querySteps(sourceService, stepsCrmSource);
-                        SendMessageToStatusBar?.Invoke(this, new StatusBarMessageEventArgs(30, "Fetching steps from source environment..."));
-                        stepsCrmTarget = controller.dataManager.queryStepsAssembly(targetService, solutionAssemblyPluginStepsName);  //querySteps(targetService, stepsCrmTarget);
-                    }
-
-                    SendMessageToStatusBar?.Invoke(this, new StatusBarMessageEventArgs(60, "Comparing steps..."));
-                    diffCrmSourceTarget = stepsCrmSource.Select(x => x.stepName).Except(stepsCrmTarget.Select(x => x.stepName)).ToArray();
-                    diffCrmTargetSource = stepsCrmTarget.Select(x => x.stepName).Except(stepsCrmSource.Select(x => x.stepName)).ToArray();
-                    SendMessageToStatusBar?.Invoke(this, new StatusBarMessageEventArgs(100, "Comparing steps..."));
-                },
-                PostWorkCallBack = e =>
-                {
-                    if (e.Error != null)
-                    {
-                        this.log.LogData(EventType.Exception, logAction, e.Error);
-                        MessageBox.Show(this, e.Error.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        return;
-                    }
-
-                    if (diffCrmSourceTarget.Count() == 0)
-                    {
-                        listViewSourceTarget.Items.Clear();
-                        labelSourceTargetMatch.Visible = true;
-                        
-                    }
-                    else // there are steps in source but not target
-                    {
-                        labelSourceTargetMatch.Visible = false;
-                        listViewSourceTarget.Visible = true;
-                        fillListViewItems(listViewSourceTarget, stepsCrmSource, diffCrmSourceTarget);
-                    }
-
-                    if (diffCrmTargetSource.Count() == 0)
-                    {
-                        listViewTargetSource.Items.Clear();
-                        labelTargetSourceMatch.Visible = true;
-                    }
-                    else // there are steps in source but not target
-                    {
-                        labelTargetSourceMatch.Visible = false;
-                        listViewTargetSource.Visible = true;
-                        fillListViewItems(listViewTargetSource, stepsCrmTarget, diffCrmTargetSource);
-                    }
-
-                    this.log.LogData(EventType.Event, logAction);
-                },
-                ProgressChanged = e => { SetWorkingMessage(e.UserState.ToString()); }
-            });
-        }
-        // Loading solutions from the Source environment
-        private void buttonLoadSolutionsAssemblies_Click(object sender, EventArgs evt)
-        {
-            if (canProceed())
-            {
-                comboBoxSolutionsAssembliesList.Items.Clear();
-                string logAction = (comparing == Comparing.Solution) ? LogAction.SolutionsLoaded : LogAction.AssembliesLoaded;
-
-                WorkAsync(new WorkAsyncInfo
-                {
-                    Message = $"Loading CRM {Wording.getComparingInfo(comparing, true, true)}...",
-                    Work = (bw, e) =>
-                    {
-                        if (comparing == Comparing.Solution && controller.dataManager.UserHasPrivilege("prvReadSolution", controller.dataManager.WhoAmI()))
-                            solutionsList = controller.dataManager.loadSolutions();
-                        else
-                        {
-                            MessageBox.Show($"Make sure your user has the 'prvReadSolution' privilege to load the Solutions. {Environment.NewLine}Aborting action.");
-                            return;
-                        }
-
-                        if (comparing == Comparing.Solution && controller.dataManager.UserHasPrivilege("prvReadPluginAssembly", controller.dataManager.WhoAmI()))
-                            solutionsList = controller.dataManager.loadAssemblies();
-                        else
-                        {
-                            MessageBox.Show($"Make sure your user has the 'prvReadPluginAssembly' privilege to load the Assemblies. {Environment.NewLine}Aborting action.");
-                            return;
-                        }
-                    },
-                    PostWorkCallBack = e =>
-                    {
-                        if (e.Error != null)
-                        {
-                            
-                            this.log.LogData(EventType.Exception, logAction, e.Error);
-                            MessageBox.Show(this, e.Error.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                            return;
-                        }
-
-                        this.log.LogData(EventType.Event, $"{Wording.getComparingInfo(comparing, true, true)} retrieved");
-                        if (solutionsList != null)
-                            comboBoxSolutionsAssembliesList.Items.AddRange(solutionsList);
-
-                        this.log.LogData(EventType.Event, logAction);
-                    },
-                    ProgressChanged = e => { SetWorkingMessage(e.UserState.ToString()); }
-                });
             }
         }
 
@@ -319,79 +247,56 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
         }
 
         // We check if both environments are selected otherwise : error message
-        public bool canProceed()
+        public bool CanProceed()
         {
-            if (sourceService == null || targetService == null)
+            if (SourceService == null || TargetService == null)
             {
-                this.log.LogData(EventType.Event, LogAction.CanProceed);
-                MessageBox.Show("Make sure you are connected to a Source AND Target environments first.");
+                Log.LogData(EventType.Event, LogAction.CanProceed);
+                MessageBox.Show(@"Make sure you are connected to a Source AND Target environments first.");
                 return false;
             }
 
             return true;
         }
 
+        #endregion Source/Target Selection
+
         // Copying a step from the target to source environment
         private void buttonCopyTargetToSource_Click(object sender, EventArgs evt)
         {
-            creatingStepProcess(listViewTargetSource, stepsCrmTarget, sourceService);
+            CreateStepProcess(listViewTargetSource, StepsCrmTarget, SourceService);
         }
 
         // Copying a step from the source to target environment
         private void buttonCopySourceToTarget_Click(object sender, EventArgs evt)
         {
-            creatingStepProcess(listViewSourceTarget, stepsCrmSource, targetService);
+            CreateStepProcess(listViewSourceTarget, StepsCrmSource, TargetService);
         }
-       
-        // action when the option form is opened
-        private void toolStripButtonOptions_Click(object sender, EventArgs e)
+        
+        public void CreateStepProcess(ListView listView, List<CarfupStep> stepsList, IOrganizationService service)
         {
-            var allowLogUsage = settings.AllowLogUsage;            
-            var optionDlg = new Options(this);
-            if (optionDlg.ShowDialog(this) == DialogResult.OK)
-            {
-                settings = optionDlg.GetSettings();
-                if (allowLogUsage != settings.AllowLogUsage)
-                {
-                    if (settings.AllowLogUsage == true)
-                    {
-                        this.log.updateForceLog();
-                        this.log.LogData(EventType.Event, LogAction.StatsAccepted);
-                    }
-                    else if (!settings.AllowLogUsage == true)
-                    {
-                        this.log.updateForceLog();
-                        this.log.LogData(EventType.Event, LogAction.StatsDenied);
-                    }
-                }
-            }
-        }
-
-        public void creatingStepProcess(ListView listView, List<CarfupStep> stepsList, IOrganizationService service)
-        {
-            bool toDefaultSolution = true;
-            int itemCount = listView.CheckedItems.Count;
+            var addToSolution = false;
+            var itemCount = listView.CheckedItems.Count;
 
             if (itemCount < 1)
             {
-                MessageBox.Show($"Make sure you checked at least one step before trying to perform a Copy action.", "Information", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show(@"Make sure you checked at least one step before trying to perform a Copy action.", @"Information", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
-            if(comparing == Comparing.Solution)
+            if(ComparisonMethod.SolutionSpecified)
             {
-                var whichDestination = MessageBox.Show($"Since you are copying a step from a solution, do you want to copy the step to the custom solution ?\r\rYes : Custom Solution.\rNo : Default Solution.\rCancel : Abort operation.", "Which destination you want ?", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+                var whichDestination = MessageBox.Show(@"Since you have specified a solution, do you want to copy the step to the specified solution?\r\rYes : Custom Solution.\rNo : Default Solution.\rCancel : Abort operation.", @"Which destination do you want?", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
 
                 if (whichDestination == DialogResult.Yes)
-                    toDefaultSolution = false;
+                    addToSolution = true;
                 else if (whichDestination == DialogResult.Cancel)
                     return;
             }
 
             // Getting list of selected Items
-            ListViewItem[] stepsGuid = new ListViewItem[itemCount];
-
-            string logAction = (stepsList == stepsCrmSource) ? LogAction.StepCreeatedSourceToTarget : LogAction.StepCreatedTargetToSource;
+            var stepsGuid = new ListViewItem[itemCount];
+            var logAction = (stepsList == StepsCrmSource) ? LogAction.StepCreatedSourceToTarget : LogAction.StepCreatedTargetToSource;
 
             WorkAsync(new WorkAsyncInfo
             {
@@ -403,33 +308,27 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
                         listView.CheckedItems.CopyTo(stepsGuid, 0);
                     }));
 
-                    if (stepsGuid == null)
-                        return;
-
-                    int i = 1;
-
-                    foreach (ListViewItem itemView in stepsGuid)
+                    var i = 1;
+                    foreach (var itemView in stepsGuid)
                     {
-                        int percentage = (i * 100) / itemCount;
+                        var percentage = (i * 100) / itemCount;
                         SendMessageToStatusBar?.Invoke(this, new StatusBarMessageEventArgs(percentage, $"Creating the step(s) in the environment : {i}/{itemCount}"));
-                        var selectedStep = stepsList.Where(x => x.stepName == itemView.Text).FirstOrDefault();
-                        Guid? stepCreated = creatingStep(selectedStep, (stepsList == stepsCrmSource));
+                        var selectedStep = stepsList.FirstOrDefault(x => x.StepName == itemView.Text);
+                        var stepCreated = CreateStep(selectedStep, (stepsList == StepsCrmSource));
 
                         if (stepCreated == null)
                             return;
 
-                        if (comparing == Comparing.Solution && !toDefaultSolution)
+                        if (addToSolution)
                         {
-                            bw.ReportProgress(percentage, $"Adding the new created step to the {solutionAssemblyPluginStepsName} solution...");
+                            bw.ReportProgress(percentage, $"Adding the new created step to the {SolutionAssemblyPluginStepsName} solution...");
 
-                            AddSolutionComponentRequest ascr = new AddSolutionComponentRequest()
+                            service.Execute(new AddSolutionComponentRequest
                             {
                                 ComponentId = stepCreated.Value,
                                 ComponentType = 92,
-                                SolutionUniqueName = solutionAssemblyPluginStepsName
-                            };
-
-                            service.Execute(ascr);
+                                SolutionUniqueName = SolutionAssemblyPluginStepsName
+                            });
                         }
                         i++;
                     }
@@ -438,96 +337,126 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
                 {
                     if (e.Error != null)
                     {
-                        this.log.LogData(EventType.Exception, logAction, e.Error);
-                        MessageBox.Show(this, e.Error.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        Log.LogData(EventType.Exception, logAction, e.Error);
+                        MessageBox.Show(this, e.Error.Message, @"Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         return;
                     }
-                    else
-                    {
-                        this.log.LogData(EventType.Event, logAction);
-                        MessageBox.Show($"Your step(s) were successfully copied to the {((toDefaultSolution) ? "default" : solutionAssemblyPluginStepsName)} solution of {((logAction == LogAction.StepCreeatedSourceToTarget) ? "target" : "source")} environment.");
-                        labelSourceTargetMatch.Visible = false;
-                        labelTargetSourceMatch.Visible = false;
-                    }
+
+                    Log.LogData(EventType.Event, logAction);
+                    MessageBox.Show($@"Your step(s) were successfully copied to the {(addToSolution ? SolutionAssemblyPluginStepsName : "default")} solution in the {((logAction == LogAction.StepCreatedSourceToTarget) ? "target" : "source")} environment.");
+                    labelSourceTargetMatch.Visible = false;
+                    labelTargetSourceMatch.Visible = false;
                 },
                 ProgressChanged = e => { SetWorkingMessage(e.UserState.ToString()); }
             });
         }
 
-        public Guid? creatingStep(CarfupStep selectedStep, bool toTarget = true)
+        public Guid? CreateStep(CarfupStep selectedStep, bool toTarget = true)
         {
-            string PluginTypeRetrievedLogAction = (toTarget) ? LogAction.PluginTypeRetrievedSourceToTarget : LogAction.PluginTypeRetrievedTargetToSource;
-            string SDKMessageRetrievedLogAction = (toTarget) ? LogAction.SDKMessageRetrievedSourceToTarget : LogAction.SDKMessageRetrievedTargetToSource;
-            string MessageFilterRetrievedLogAction = (toTarget) ? LogAction.MessageFilterRetrievedSourceToTarget : LogAction.MessageFilterRetrievedTargetToSource;
-            IOrganizationService service = (toTarget) ? targetService : sourceService;
+            var pluginTypeRetrievedLogAction = (toTarget) ? LogAction.PluginTypeRetrievedSourceToTarget : LogAction.PluginTypeRetrievedTargetToSource;
+            var sdkMessageRetrievedLogAction = (toTarget) ? LogAction.SdkMessageRetrievedSourceToTarget : LogAction.SdkMessageRetrievedTargetToSource;
+            var messageFilterRetrievedLogAction = (toTarget) ? LogAction.MessageFilterRetrievedSourceToTarget : LogAction.MessageFilterRetrievedTargetToSource;
+            var service = (toTarget) ? TargetService : SourceService;
 
             // retrieving the 3 data mandatory to have a proper step created
-            var pluginType = controller.dataManager.getPluginType(selectedStep.plugintypeName, service);
-            var sdkMessage = controller.dataManager.getSdkMessage(selectedStep.stepMessageName, service);
-            var messageFilter = controller.dataManager.getMessageFilter(selectedStep.entityName, service);
+            var pluginType = Controller.DataManager.GetPluginType(service, selectedStep.PluginTypeName);
+            var sdkMessage = Controller.DataManager.GetSdkMessage(service, selectedStep.StepMessageName);
+            var messageFilter = Controller.DataManager.GetMessageFilter(service, selectedStep.EntityName);
 
             if (pluginType == null)
             {
-                this.log.LogData(EventType.Exception, PluginTypeRetrievedLogAction);
-                MessageBox.Show($"Sorry, but we didn't find the necessary Plugin Type information in the destination system...\r\rThis can occur because you didn't load the same assembly in the destination system.");
+                Log.LogData(EventType.Exception, pluginTypeRetrievedLogAction);
+                MessageBox.Show(@"Sorry, but we didn't find the necessary Plugin Type information in the destination system...\r\rThis can occur because you didn't load the same assembly in the destination system.");
                 return null;
             }
 
             if (sdkMessage == null)
             {
-                this.log.LogData(EventType.Exception, SDKMessageRetrievedLogAction);
-                MessageBox.Show($"Sorry, but we didn't find the necessary SDK Message information in the destination system...");
+                Log.LogData(EventType.Exception, sdkMessageRetrievedLogAction);
+                MessageBox.Show(@"Sorry, but we didn't find the necessary SDK Message information in the destination system...");
                 return null;
             }
 
             if (messageFilter == null)
             {
-                this.log.LogData(EventType.Exception, MessageFilterRetrievedLogAction);
-                MessageBox.Show($"Sorry, but we didn't find the necessary Message Filter information in the destination system...");
+                Log.LogData(EventType.Exception, messageFilterRetrievedLogAction);
+                MessageBox.Show(@"Sorry, but we didn't find the necessary Message Filter information in the destination system...");
                 return null;
             }
 
 
-            this.log.LogData(EventType.Event, PluginTypeRetrievedLogAction);
-            this.log.LogData(EventType.Event, SDKMessageRetrievedLogAction);
-            this.log.LogData(EventType.Event, MessageFilterRetrievedLogAction);
+            Log.LogData(EventType.Event, pluginTypeRetrievedLogAction);
+            Log.LogData(EventType.Event, sdkMessageRetrievedLogAction);
+            Log.LogData(EventType.Event, messageFilterRetrievedLogAction);
 
             // Preparing the object step
             Entity newStepToCreate = new Entity("sdkmessageprocessingstep");
             newStepToCreate["plugintypeid"] = new EntityReference("plugintype", pluginType.Id);
             newStepToCreate["sdkmessageid"] = new EntityReference("sdkmessage", sdkMessage.Id);
             newStepToCreate["sdkmessagefilterid"] = new EntityReference("sdkmessagefilter", messageFilter.Id);
-            newStepToCreate["name"] = selectedStep.stepName;
-            newStepToCreate["mode"] = selectedStep.stepMode;
-            newStepToCreate["rank"] = selectedStep.stepRank;
-            newStepToCreate["stage"] = selectedStep.stepStage;
-            newStepToCreate["supporteddeployment"] = selectedStep.stepSupporteddeployment;
-            newStepToCreate["invocationsource"] = selectedStep.stepInvocationsource;
-            newStepToCreate["configuration"] = selectedStep.stepConfiguration;
-            newStepToCreate["filteringattributes"] = selectedStep.stepFilteringattributes;
-            newStepToCreate["description"] = selectedStep.stepDescription;
-            newStepToCreate["asyncautodelete"] = selectedStep.stepAsyncautodelete;
-            newStepToCreate["customizationlevel"] = selectedStep.stepCustomizationlevel;
+            newStepToCreate["name"] = selectedStep.StepName;
+            newStepToCreate["mode"] = selectedStep.StepMode;
+            newStepToCreate["rank"] = selectedStep.StepRank;
+            newStepToCreate["stage"] = selectedStep.StepStage;
+            newStepToCreate["supporteddeployment"] = selectedStep.StepSupportedDeployment;
+            newStepToCreate["invocationsource"] = selectedStep.StepInvocationSource;
+            newStepToCreate["configuration"] = selectedStep.StepConfiguration;
+            newStepToCreate["filteringattributes"] = selectedStep.StepFilteringAttributes;
+            newStepToCreate["description"] = selectedStep.StepDescription;
+            newStepToCreate["asyncautodelete"] = selectedStep.StepAsyncAutoDelete;
+            newStepToCreate["customizationlevel"] = selectedStep.StepCustomizationLevel;
 
             return service.Create(newStepToCreate);
         }
 
-        // will save personal settings
+        #region Log/Settings
+
+        /// <summary>
+        /// Action when the option form is opened
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void toolStripButtonOptions_Click(object sender, EventArgs e)
+        {
+            var allowLogUsage = Settings.AllowLogUsage;            
+            var optionDlg = new Options(this);
+            if (optionDlg.ShowDialog(this) == DialogResult.OK)
+            {
+                Settings = optionDlg.GetSettings();
+                if (allowLogUsage != Settings.AllowLogUsage)
+                {
+                    if (Settings.AllowLogUsage == true)
+                    {
+                        Log.updateForceLog();
+                        Log.LogData(EventType.Event, LogAction.StatsAccepted);
+                    }
+                    else if (!Settings.AllowLogUsage == true)
+                    {
+                        Log.updateForceLog();
+                        Log.LogData(EventType.Event, LogAction.StatsDenied);
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Saves personal settings
+        /// </summary>
         public void SaveSettings()
         {
-            this.log.LogData(EventType.Event, LogAction.SettingsSaved);
-            SettingsManager.Instance.Save(typeof(DeltaStepsBetweenEnvironments), settings);
+            Log.LogData(EventType.Event, LogAction.SettingsSaved);
+            SettingsManager.Instance.Save(typeof(DeltaStepsBetweenEnvironments), Settings);
 
             //reordering columns if necessary
-            sortListView(listViewSourceTarget, 0, settings.SortOrderPref);
-            sortListView(listViewTargetSource, 0, settings.SortOrderPref);
+            SortListView(listViewSourceTarget, 0, Settings.SortOrderPref);
+            SortListView(listViewTargetSource, 0, Settings.SortOrderPref);
         }
 
         private void DeltaStepsBetweenEnvironments_Load(object sender, EventArgs e)
         {
             // initializing log class
-            log = new LogUsage(this);
-            this.log.LogData(EventType.Event, LogAction.PluginOpened);
+            Log = new LogUsage(this);
+            Log.LogData(EventType.Event, LogAction.PluginOpened);
             LoadSetting();
         }
 
@@ -536,28 +465,20 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
         {
             try
             {
-                if (SettingsManager.Instance.TryLoad<PluginSettings>(typeof(DeltaStepsBetweenEnvironments), out settings))
-                {
-                    //if (!settings.ShowHelpOnStartUp.HasValue)
-                    //{
-                    //    var helpDlg = new HelpForm(this);
-                    //    helpDlg.ShowDialog(this);
-                    //}
-                    //return;
-                }
-                else
-                    settings = new PluginSettings();
+                Settings = SettingsManager.Instance.TryLoad<PluginSettings>(typeof(DeltaStepsBetweenEnvironments), out var settings) 
+                    ? settings 
+                    : new PluginSettings();
             }
             catch (InvalidOperationException ex) {
-                this.log.LogData(EventType.Exception, LogAction.SettingLoaded, ex);
+                Log.LogData(EventType.Exception, LogAction.SettingLoaded, ex);
             }
 
-            this.log.LogData(EventType.Event, LogAction.SettingLoaded);
+            Log.LogData(EventType.Event, LogAction.SettingLoaded);
 
-            if (!settings.AllowLogUsage.HasValue)
+            if (!Settings.AllowLogUsage.HasValue)
             {
-                this.log.PromptToLog();
-                this.SaveSettings();
+                Log.PromptToLog();
+                SaveSettings();
             }
         }
 
@@ -572,52 +493,165 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
             }
         }
 
+        #endregion Log/Settings
+
+        #region Details GroupBox
+
+        /// <summary>
+        /// Select the solution from where we will query the steps
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void comboBoxSolutionsList_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (CanProceed())
+            {
+                if (ComparisonMethod.RequiresItemSelection)
+                {
+                    if(comboBoxSolutionsAssembliesList.SelectedItem != null)
+                    {
+                        SolutionAssemblyPluginStepsName = comboBoxSolutionsAssembliesList.SelectedItem.ToString();
+
+                        IsSolutionOrAssemblyExistingInTargetEnv();
+                    }
+                }
+            }
+        }
+
+        private void IsSolutionOrAssemblyExistingInTargetEnv()
+        {
+            WorkAsync(new WorkAsyncInfo
+            {
+                Message = $"Checking if the {ComparisonMethod.Name} name exists in the target environment...",
+                Work = (bw, e) =>
+                {
+                    e.Result = ComparisonMethod.ExistsInTarget(Controller.DataManager, SolutionAssemblyPluginStepsName);
+                },
+                PostWorkCallBack = e =>
+                {
+                    if (e.Error != null)
+                    {
+                        Log.LogData(EventType.Exception, ComparisonMethod.LogActionOnExistsInTarget, e.Error);
+                        MessageBox.Show(this, e.Error.Message, @"Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return;
+                    }
+
+                    if ((bool) e.Result)
+                    {
+                        MessageBox.Show($@"The {ComparisonMethod.Name} doesn't exist in the Target environment. \rThe compare function will return a ""Perfect match"" in this case.\r\r You will still have the possibility to copy steps from the Source to Target environment.", @"Information", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    }
+                },
+                ProgressChanged = e => { SetWorkingMessage(e.UserState.ToString()); }
+            });
+        }
+
+        /// <summary>
+        /// Loading solutions from the Source environment
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="evt"></param>
+        private void buttonLoadSolutionsAssemblies_Click(object sender, EventArgs evt)
+        {
+            if (!CanProceed())
+            {
+                return;
+            }
+
+            LoadItems();
+        }
+
+        private void LoadItems()
+        {
+            WorkAsync(new WorkAsyncInfo
+            {
+                Message = $"Loading CRM {ComparisonMethod.PluralName.Capitalize()}...",
+                Work = (bw, e) =>
+                {
+                    if (!Controller.DataManager.UserHasPrivilege(ComparisonMethod.RequiredPrivilege, Controller.DataManager.WhoAmI()))
+                    {
+                        MessageBox.Show($@"Make sure your user has the '{ComparisonMethod.RequiredPrivilege}' privilege to load the {ComparisonMethod.PluralName}.{Environment.NewLine}Aborting action.");
+                        return;
+                    }
+                    e.Result = ComparisonMethod.GetNames(Controller.DataManager);
+                },
+
+                PostWorkCallBack = e =>
+                {
+                    if (e.Error != null)
+                    {
+                        Log.LogData(EventType.Exception, ComparisonMethod.LogActionOnLoadItems, e.Error);
+                        MessageBox.Show(this, e.Error.Message, @"Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return;
+                    }
+
+                    var values = (string[])e.Result;
+
+                    comboBoxSolutionsAssembliesList.Items.Clear();
+                    Log.LogData(EventType.Event, $"{ComparisonMethod.PluralName.Capitalize()} retrieved");
+                    if (values != null)
+                    {
+                        comboBoxSolutionsAssembliesList.Items.AddRange(values.Cast<object>().ToArray());
+                    }
+
+                    Log.LogData(EventType.Event, ComparisonMethod.LogActionOnLoadItems);
+                },
+                ProgressChanged = e => { SetWorkingMessage(e.UserState.ToString()); }
+            });
+        }
+
         private void radioButtonCompareSolution_Click(object sender, EventArgs e)
         {
-            comparing = Comparing.Solution;
-            manageRadioButtonsAssemblySolution();
+            ComparisonMethod = SolutionComparisonMethod.Instance;
+            ManageRadioButtonsAssemblySolution();
         }
 
         private void radioButtonCompareAssembly_Click(object sender, EventArgs e)
         {
-            comparing = Comparing.Assembly;
-            manageRadioButtonsAssemblySolution();
+            ComparisonMethod = AssemblyComparisonMethod.Instance;
+            ManageRadioButtonsAssemblySolution();
         }
 
-        private void manageRadioButtonsAssemblySolution()
+        private void RadioButtonCompareOrg_CheckedChanged(object sender, EventArgs e)
         {
-            
-            if(comparing == Comparing.Solution)
-            {
-                buttonLoadSolutionsAssemblies.Text = "Load Solutions";
-                labelComparing.Text = "Select the solution to compare :";
-            }
-            else if(comparing == Comparing.Assembly)
-            {
-                buttonLoadSolutionsAssemblies.Text = "Load Assemblies";
-                labelComparing.Text = "Select the assembly to compare :";
-            }
-
-            comboBoxSolutionsAssembliesList.SelectedIndex = -1;
-            comboBoxSolutionsAssembliesList.Items.Clear();
+            ComparisonMethod = OrgComparisonMethod.Instance;
+            ManageRadioButtonsAssemblySolution();
         }
 
-        private void fillListViewItems(ListView listView, List<CarfupStep> stepsList, string[] diff)
+        private void ManageRadioButtonsAssemblySolution()
+        {
+            if (ComparisonMethod.RequiresItemSelection)
+            {
+
+                buttonLoadSolutionsAssemblies.Text = @"Load " + ComparisonMethod.PluralName.Capitalize();
+                labelComparing.Text = $@"Select the {ComparisonMethod.Name} to compare: ";
+
+                comboBoxSolutionsAssembliesList.SelectedIndex = -1;
+                comboBoxSolutionsAssembliesList.Items.Clear();
+            }
+            var visible = ComparisonMethod.RequiresItemSelection;
+            labelComparing.Visible = visible;
+            comboBoxSolutionsAssembliesList.Visible = visible;
+            buttonLoadSolutionsAssemblies.Visible = visible;
+        }
+
+        #endregion Details GroupBox
+
+        private void FillListViewItems(ListView listView, List<CarfupStep> stepsList, Guid[] diff)
         {
             listView.Items.Clear();
 
-            foreach (var step in stepsList.Where(x => diff.Contains(x.stepName)))
+            foreach (var step in stepsList.Where(x => diff.Contains(x.StepId)))
             {
-                string createon = step.createOn.ToLocalTime().ToString("dd-MMM-yyyy HH:mm");
-                string modifiedon = step.modifiedOn.ToLocalTime().ToString("dd-MMM-yyyy HH:mm");
+                string createon = step.CreateOn.ToLocalTime().ToString("dd-MMM-yyyy HH:mm");
+                string modifiedon = step.ModifiedOn.ToLocalTime().ToString("dd-MMM-yyyy HH:mm");
 
                 var item = new ListViewItem();
-                item.Text = step.stepName;
-                item.SubItems.Add(step.entityName);
-                item.SubItems.Add(step.stepMessageName);
+                item.Text = step.StepName;
+                item.SubItems.Add(step.EntityName);
+                item.SubItems.Add(step.StepMessageName);
                 item.SubItems.Add(createon);
                 item.SubItems.Add(modifiedon);
-                item.Tag = step.entity.Id;
+                item.Tag = step.Plugin.Id;
 
                 listView.Items.Add((ListViewItem)item.Clone());
             }
@@ -629,26 +663,26 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
         {
             if (listViewTargetSource.CheckedItems.Count == 0 && listViewSourceTarget.CheckedItems.Count == 0)
             {
-                MessageBox.Show($"Make sure you checked at least one step before trying to perform a Delete action.", "Information", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show(@"Make sure you checked at least one step before trying to perform a Delete action.", @"Information", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
             // assuming selection was made on SourceToTarget
-            IOrganizationService service = sourceService;
+            IOrganizationService service = SourceService;
             ListView listViewToProceed = listViewSourceTarget;
             
 
             if (listViewSourceTarget.CheckedItems.Count == 0)
             {
                 listViewToProceed = listViewTargetSource;
-                service = targetService;
+                service = TargetService;
             }
 
             // Getting list of selected Items
             ListViewItem[] stepsGuid = new ListViewItem[listViewToProceed.CheckedItems.Count];
 
 
-            var areYouSure = MessageBox.Show($"Do you really want to delete the step(s) ? {Environment.NewLine} You won't be able to get it back after that.", "Warning !", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            var areYouSure = MessageBox.Show($@"Do you really want to delete the step(s) ? {Environment.NewLine} You won't be able to get it back after that.", @"Warning !", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
             if (areYouSure == DialogResult.No)
                 return;
 
@@ -661,9 +695,6 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
                     {
                         listViewToProceed.CheckedItems.CopyTo(stepsGuid, 0);
                     }));
-
-                    if (stepsGuid == null)
-                        return;
 
                     bw.ReportProgress(0, "Deleting the step(s)...");
                     foreach (ListViewItem itemView in stepsGuid)
@@ -680,18 +711,19 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
                 {
                     if (e.Error != null)
                     {
-                        this.log.LogData(EventType.Exception, LogAction.StepsDeleted, e.Error);
-                        MessageBox.Show(this, e.Error.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        Log.LogData(EventType.Exception, LogAction.StepsDeleted, e.Error);
+                        MessageBox.Show(this, e.Error.Message, @"Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         return;
                     }
-                    else
-                    {
-                        foreach (ListViewItem step in stepsGuid.ToList())
-                            listViewToProceed.Items.Remove(step);
 
-                        this.log.LogData(EventType.Event, LogAction.StepsDeleted);
-                        MessageBox.Show("Step(s) are now deleted !");
+                    foreach (ListViewItem step in stepsGuid.ToList())
+                    {
+                        listViewToProceed.Items.Remove(step);
                     }
+
+                    Log.LogData(EventType.Event, LogAction.StepsDeleted);
+                    MessageBox.Show(@"Step(s) are now deleted !");
+
                 },
                 ProgressChanged = e => { SetWorkingMessage(e.UserState.ToString()); }
             });
@@ -705,21 +737,21 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
 
         private void listViewSourceTarget_ColumnClick(object sender, ColumnClickEventArgs e)
         {
-            sortListView(listViewSourceTarget, e.Column);
+            SortListView(listViewSourceTarget, e.Column);
         }
 
         private void listViewTargetSource_ColumnClick(object sender, ColumnClickEventArgs e)
         {
-            sortListView(listViewTargetSource, e.Column);
+            SortListView(listViewTargetSource, e.Column);
         }
 
-        public void sortListView(ListView listView, int columnIndex, SortOrder? sort = null)
+        public void SortListView(ListView listView, int columnIndex, SortOrder? sort = null)
         {
             if(sort != null)
             {
                 listView.ListViewItemSorter = new ListViewItemComparer(columnIndex, sort.Value);
             }
-            else if (columnIndex == currentColumnOrder)
+            else if (columnIndex == CurrentColumnOrder)
             {
                 listView.Sorting = listView.Sorting == SortOrder.Ascending ? SortOrder.Descending : SortOrder.Ascending;
 
@@ -727,7 +759,7 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
             }
             else
             {
-                currentColumnOrder = columnIndex;
+                CurrentColumnOrder = columnIndex;
                 listView.ListViewItemSorter = new ListViewItemComparer(columnIndex, SortOrder.Ascending);
             }
         }
