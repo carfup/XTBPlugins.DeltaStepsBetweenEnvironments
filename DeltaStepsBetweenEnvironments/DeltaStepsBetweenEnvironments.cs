@@ -118,8 +118,8 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
                 return;
             }
 
-            string[] diffCrmSourceTarget = null;
-            string[] diffCrmTargetSource = null;
+            Guid[] diffCrmSourceTarget = null;
+            Guid[] diffCrmTargetSource = null;
 
             StepsCrmSource.Clear();
             StepsCrmTarget.Clear();
@@ -142,8 +142,8 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
 
                     Comparer.Compare(StepsCrmSource, StepsCrmTarget);
                     SendMessageToStatusBar?.Invoke(this, new StatusBarMessageEventArgs(90, "Finding Differences..."));
-                    diffCrmSourceTarget = StepsCrmSource.Select(x => x.StepName).Except(StepsCrmTarget.Select(x => x.StepName)).ToArray();
-                    diffCrmTargetSource = StepsCrmTarget.Select(x => x.StepName).Except(StepsCrmSource.Select(x => x.StepName)).ToArray();
+                    diffCrmSourceTarget = StepsCrmSource.Select(x => x.StepId).Except(StepsCrmTarget.Select(x => x.StepId)).ToArray();
+                    diffCrmTargetSource = StepsCrmTarget.Select(x => x.StepId).Except(StepsCrmSource.Select(x => x.StepId)).ToArray();
                     SendMessageToStatusBar?.Invoke(this, new StatusBarMessageEventArgs(100, "Done!"));
                 },
                 PostWorkCallBack = e =>
@@ -636,11 +636,11 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
 
         #endregion Details GroupBox
 
-        private void FillListViewItems(ListView listView, List<CarfupStep> stepsList, string[] diff)
+        private void FillListViewItems(ListView listView, List<CarfupStep> stepsList, Guid[] diff)
         {
             listView.Items.Clear();
 
-            foreach (var step in stepsList.Where(x => diff.Contains(x.StepName)))
+            foreach (var step in stepsList.Where(x => diff.Contains(x.StepId)))
             {
                 string createon = step.CreateOn.ToLocalTime().ToString("dd-MMM-yyyy HH:mm");
                 string modifiedon = step.ModifiedOn.ToLocalTime().ToString("dd-MMM-yyyy HH:mm");
