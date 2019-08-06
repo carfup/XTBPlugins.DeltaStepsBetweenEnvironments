@@ -11,7 +11,7 @@ namespace Carfup.XTBPlugins.Forms
         {
             InitializeComponent();
             this.dbe = dbe;
-            PopulateSettings(dbe.settings);
+            PopulateSettings(dbe.Settings);
         }
 
         private void PopulateSettings(PluginSettings settings)
@@ -22,14 +22,16 @@ namespace Carfup.XTBPlugins.Forms
             }
 
             checkboxAllowStats.Checked = settings.AllowLogUsage != false;
-            radioButtonSortingOrderAsc.Checked = (settings.SortOrderPref == SortOrder.Ascending || settings.SortOrderPref == null) ? true : false;
+            checkBoxSkipHidden.Checked = settings.SkipHiddenSteps;
+            radioButtonSortingOrderAsc.Checked = settings.SortOrderPref == SortOrder.Ascending || settings.SortOrderPref == null;
             radioButtoradioButtonSortingOrderDesc.Checked = !radioButtonSortingOrderAsc.Checked;
         }
 
         internal PluginSettings GetSettings()
         {
-            var settings = dbe.settings;
+            var settings = dbe.Settings;
             settings.AllowLogUsage = checkboxAllowStats.Checked;
+            settings.SkipHiddenSteps = checkBoxSkipHidden.Checked;
             settings.SortOrderPref = (radioButtonSortingOrderAsc.Checked || settings.SortOrderPref == null) ? SortOrder.Ascending : SortOrder.Descending;
             settings.CurrentVersion = DeltaStepsBetweenEnvironments.DeltaStepsBetweenEnvironments.CurrentVersion;
 
@@ -43,7 +45,7 @@ namespace Carfup.XTBPlugins.Forms
 
         private void buttonOk_Click(object sender, EventArgs e)
         {
-            this.dbe.settings = GetSettings();
+            this.dbe.Settings = GetSettings();
             this.dbe.SaveSettings();
             this.Close();
         }

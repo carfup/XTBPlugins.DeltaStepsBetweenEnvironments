@@ -12,7 +12,7 @@ namespace Carfup.XTBPlugins.Forms
         {
             InitializeComponent();
             this.dbe = dbe;
-            this.dbe.log.LogData(EventType.Event, LogAction.ShowHelpScreen);
+            this.dbe.Log.LogData(EventType.Event, LogAction.ShowHelpScreen);
             //PopulateSettings(dbe.settings);
         }
 
@@ -39,7 +39,7 @@ namespace Carfup.XTBPlugins.Forms
         {
             //this.dbe.settings = GetSettings();
             //this.dbe.SaveSettings();
-            this.Close();
+            Close();
         }
     }
 }

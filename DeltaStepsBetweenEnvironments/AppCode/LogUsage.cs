@@ -23,7 +23,7 @@ namespace Carfup.XTBPlugins.AppCode
         {
             this.dbe = dbe;
 
-            TelemetryConfiguration.Active.InstrumentationKey = CustomParameter.INSIGHTS_INTRUMENTATIONKEY;
+            TelemetryConfiguration.Active.InstrumentationKey = CustomParameter.InsightsInstrumentationKey;
             this.telemetry = new TelemetryClient();
             this.telemetry.Context.Component.Version = DeltaStepsBetweenEnvironments.DeltaStepsBetweenEnvironments.CurrentVersion;
             this.telemetry.Context.Device.Id = this.dbe.GetType().Name;
@@ -37,7 +37,7 @@ namespace Carfup.XTBPlugins.AppCode
 
         public void LogData(string type, string action, Exception exception = null)
         {
-            if (this.dbe.settings.AllowLogUsage == true || this.forceLog)
+            if (this.dbe.Settings.AllowLogUsage == true || this.forceLog)
             {
                 switch (type)
                 {
@@ -87,7 +87,7 @@ namespace Carfup.XTBPlugins.AppCode
                       "You can change this setting in plugin's options anytime.\n\n" +
                       "Thanks!";
 
-            this.dbe.settings.AllowLogUsage = true;
+            this.dbe.Settings.AllowLogUsage = true;
             MessageBox.Show(msg, "Information");
         }
     }
