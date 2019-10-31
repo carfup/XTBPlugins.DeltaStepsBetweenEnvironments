@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Windows.Forms;
 
-namespace Carfup.XTBPlugins.AppCode
+namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments.AppCode
 {
     /// <summary>
     /// Compares two listview items for sorting

@@ -5,8 +5,9 @@ using System;
 using System.Linq;
 using Carfup.XTBPlugins.Entities;
 using Source.DLaB.Xrm;
+using System.Collections.Generic;
 
-namespace Carfup.XTBPlugins.AppCode
+namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments.AppCode
 {
     public class DataManager
     {
@@ -38,6 +39,14 @@ namespace Carfup.XTBPlugins.AppCode
         //   return (comparing == Comparing.Solution) ? this.returnAliasedValue(entity, "step.name").ToString() : entity.GetAttributeValue<string>("name");
         //}
 
+      
+
+        public PluginType GetPluginTypeName(IOrganizationService service, Guid pluginTypeGuid)
+        {
+            return service.GetFirstOrDefault<PluginType>(new ColumnSet("name"),
+                PluginType.Fields.Id, pluginTypeGuid);
+        }
+
         public PluginType GetPluginType(IOrganizationService service, string pluginTypeName)
         {
             return service.GetFirstOrDefault<PluginType>(new ColumnSet(false),
@@ -48,7 +57,29 @@ namespace Carfup.XTBPlugins.AppCode
         public SdkMessage GetSdkMessage(IOrganizationService service, string name)
         {
             return service.GetFirstOrDefault<SdkMessage>(new ColumnSet(false),
-                    SdkMessage.Fields.Name, name);
+                  SdkMessage.Fields.Name, name);
+        }
+
+        public SdkMessageProcessingStepImage GetSdkMessageProcessingStepImage(IOrganizationService service,
+            Guid sdkMessageGuid)
+        {
+            return service.GetFirstOrDefault<SdkMessageProcessingStepImage>(new ColumnSet(true),
+                SdkMessageProcessingStepImage.Fields.SdkMessageProcessingStepId, sdkMessageGuid);
+        }
+
+        // return all sdk messages
+        public List<SdkMessage> GetSdkMessages(IOrganizationService service)
+        {
+            return service.GetEntities<SdkMessage>(new ColumnSet(false),
+                  SdkMessage.Fields.IsPrivate, false)
+                .OrderBy(p => p.Name).ToList();
+        }
+
+        // return all users
+        public List<SystemUser> GetUsers(IOrganizationService service)
+        {
+            return service.GetEntities<SystemUser>(new ColumnSet(SystemUser.Fields.SystemUserId, SystemUser.Fields.FullName, SystemUser.Fields.DomainName, SystemUser.Fields.InternalEMailAddress, SystemUser.Fields.IsDisabled))
+                .OrderBy(p => p.FullName).ToList();
         }
 
         // return the message filter

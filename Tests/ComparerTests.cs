@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
-using Carfup.XTBPlugins.AppCode;
 using Carfup.XTBPlugins.DeltaStepsBetweenEnvironments.AppCode;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 

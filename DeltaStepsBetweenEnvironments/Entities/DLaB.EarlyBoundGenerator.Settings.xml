@@ -16,7 +16,7 @@
     <CreateOneFilePerEntity>false</CreateOneFilePerEntity>
     <CreateOneFilePerOptionSet>false</CreateOneFilePerOptionSet>
     <EntitiesToSkip />
-    <EntitiesWhitelist>pluginassembly|plugintype|privilege|sdkmessage|sdkmessagefilter|sdkmessagepair|sdkmessageprocessingstep|sdkmessageprocessingstepimage|sdkmessageprocessingstepsecureconfig|solution|solutioncomponent</EntitiesWhitelist>
+    <EntitiesWhitelist>pluginassembly|plugintype|privilege|sdkmessage|sdkmessagefilter|sdkmessagepair|sdkmessageprocessingstep|sdkmessageprocessingstepimage|sdkmessageprocessingstepsecureconfig|solution|solutioncomponent|systemuser</EntitiesWhitelist>
     <EntityAttributeSpecifiedNames />
     <EntityPrefixesToSkip>gamify_|msdyn_|msfp_|new_bpf_|sonoma_</EntityPrefixesToSkip>
     <EntityPrefixesWhitelist />

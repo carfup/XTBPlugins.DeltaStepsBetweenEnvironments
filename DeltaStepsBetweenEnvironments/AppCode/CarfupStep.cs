@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Linq;
 using System.Windows.Documents;
-using Carfup.XTBPlugins.AppCode;
 using Carfup.XTBPlugins.Entities;
 using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Query;
@@ -21,6 +21,16 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments.AppCode
         NoPluginStepMatchFound,
         NoImageMatchFound,
         Different
+    }
+    public enum CrmPluginStepInvocationSource
+    {
+        Parent = 0,
+        Child = 1
+    }
+    public enum CrmPluginStepMode
+    {
+        Asynchronous = 1,
+        Synchronous = 0
     }
     [DebuggerDisplay("{PluginTypeName} {StepMessageName} {EntityName}")]
     public class CarfupStep
@@ -44,6 +54,7 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments.AppCode
         public string StepConfiguration => Step.Configuration;
         public string StepDescription => Step.Description;
         public string StepFilteringAttributes => Step.FilteringAttributes;
+        public Guid StepMessageId => Step.SdkMessageId.Id;
         public string StepMessageName => Step.SdkMessageId?.Name;
         public string StepName => Step.Name;
         public SdkMessageProcessingStep_Mode StepMode => Step.ModeEnum.GetValueOrDefault();
@@ -67,17 +78,19 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments.AppCode
         public SdkMessage Message { get; }
         public PluginType Plugin { get; }
         public SdkMessageProcessingStepSecureConfig SecureConfig { get; }
-        public SdkMessageProcessingStep Step { get; }
+     //   public SdkMessageProcessingStepUnSecureConfig UnSecureConfig { get; }
+        public SdkMessageProcessingStep Step { get; set; }
 
         public CarfupStep(){}
 
         public CarfupStep(PluginType plugin, string environment)
         {
+            Step = plugin.GetAliasedEntity<SdkMessageProcessingStep>();
             Filter = plugin.GetAliasedEntity<SdkMessageFilter>();
             Image = plugin.GetAliasedEntity<SdkMessageProcessingStepImage>();
             Message = plugin.GetAliasedEntity<SdkMessage>();
             Plugin = plugin;
-            Step = plugin.GetAliasedEntity<SdkMessageProcessingStep>();
+            
             SecureConfig = plugin.GetAliasedEntity<SdkMessageProcessingStepSecureConfig>();
 
             Environment = environment;

@@ -1,7 +1,8 @@
 ﻿using McTools.Xrm.Connection;
 using Microsoft.Xrm.Sdk;
+using Carfup.XTBPlugins.DeltaStepsBetweenEnvironments.AppCode;
 
-namespace Carfup.XTBPlugins.AppCode
+namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments.AppCode
 {
     public class ControllerManager
     {

@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using Carfup.XTBPlugins.AppCode;
 using Microsoft.Xrm.Sdk;
 
 namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments.AppCode

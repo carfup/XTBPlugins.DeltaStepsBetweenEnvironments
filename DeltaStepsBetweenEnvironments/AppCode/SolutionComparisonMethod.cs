@@ -1,13 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Carfup.XTBPlugins.AppCode;
+﻿using System.Collections.Generic;
 using Microsoft.Xrm.Sdk;
-using Source.DLaB.Common;
-using Source.DLaB.Xrm;
 
 namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments.AppCode
 {

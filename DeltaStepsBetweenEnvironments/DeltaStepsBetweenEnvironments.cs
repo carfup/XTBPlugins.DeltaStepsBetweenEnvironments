@@ -11,12 +11,13 @@ using System.Reflection;
 using System.Diagnostics;
 using System.IO;
 using Carfup.XTBPlugins.Forms;
-using Carfup.XTBPlugins.AppCode;
 using Carfup.XTBPlugins.DeltaStepsBetweenEnvironments.AppCode;
 using Microsoft.Xrm.Sdk.Messages;
 using Microsoft.Crm.Sdk.Messages;
 using XrmToolBox.Extensibility.Args;
 using Label = Microsoft.Xrm.Sdk.Label;
+using Carfup.XTBPlugins.DeltaStepsBetweenEnvironments.Forms;
+using Carfup.XTBPlugins.Entities;
 
 namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
 {
@@ -26,6 +27,8 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
 
         private IOrganizationService SourceService { get; set; }
         private IOrganizationService TargetService { get; set; }
+        private OrganizationData SourceOrgData { get; set; }
+        private OrganizationData TargetOrgData { get; set; }
         private List<CarfupStep> StepsCrmSource { get; set; }
         private List<CarfupStep> StepsCrmTarget { get; set; }
         private static string SolutionAssemblyPluginStepsName { get; set; }
@@ -203,6 +206,8 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
                 SetConnectionLabel(connectionDetail, labelTargetEnvironment);
                 Controller.TargetService = TargetService;
                 Controller.Target = connectionDetail;
+                TargetOrgData = new OrganizationData();
+                LoadOrganizationData(TargetService, TargetOrgData);
             }
             else
             {
@@ -210,10 +215,19 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
                 SetConnectionLabel(connectionDetail, labelSourceEnvironment);
                 Controller.SourceService = SourceService;
                 Controller.Source = connectionDetail;
+                SourceOrgData = new OrganizationData();
+                LoadOrganizationData(SourceService, SourceOrgData);
             }
 
             buttonCompare.Visible = TargetService != null && SourceService != null;
         }
+
+        private void LoadOrganizationData(IOrganizationService service,  OrganizationData orgData)
+        {
+            orgData.cMessages = Controller.DataManager.GetSdkMessages(service);
+            orgData.cUsers = Controller.DataManager.GetUsers(service);
+        }
+
         private void SetConnectionLabel(ConnectionDetail detail, System.Windows.Forms.Label label)
         {
             label.Text = detail.ConnectionName;
@@ -272,7 +286,7 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
         {
             CreateStepProcess(listViewSourceTarget, StepsCrmSource, TargetService);
         }
-        
+
         public void CreateStepProcess(ListView listView, List<CarfupStep> stepsList, IOrganizationService service)
         {
             var addToSolution = false;
@@ -284,7 +298,7 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
                 return;
             }
 
-            if(ComparisonMethod.SolutionSpecified)
+            if (ComparisonMethod.SolutionSpecified)
             {
                 var whichDestination = MessageBox.Show(@"Since you have specified a solution, do you want to copy the step to the specified solution?\r\rYes : Custom Solution.\rNo : Default Solution.\rCancel : Abort operation.", @"Which destination do you want?", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
 
@@ -330,6 +344,7 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
                                 SolutionUniqueName = SolutionAssemblyPluginStepsName
                             });
                         }
+
                         i++;
                     }
                 },
@@ -346,9 +361,13 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
                     MessageBox.Show($@"Your step(s) were successfully copied to the {(addToSolution ? SolutionAssemblyPluginStepsName : "default")} solution in the {((logAction == LogAction.StepCreatedSourceToTarget) ? "target" : "source")} environment.");
                     labelSourceTargetMatch.Visible = false;
                     labelTargetSourceMatch.Visible = false;
+
+                    Compare();
                 },
                 ProgressChanged = e => { SetWorkingMessage(e.UserState.ToString()); }
             });
+
+            
         }
 
         public Guid? CreateStep(CarfupStep selectedStep, bool toTarget = true)
@@ -357,18 +376,24 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
             var sdkMessageRetrievedLogAction = (toTarget) ? LogAction.SdkMessageRetrievedSourceToTarget : LogAction.SdkMessageRetrievedTargetToSource;
             var messageFilterRetrievedLogAction = (toTarget) ? LogAction.MessageFilterRetrievedSourceToTarget : LogAction.MessageFilterRetrievedTargetToSource;
             var service = (toTarget) ? TargetService : SourceService;
+            var serviceFrom = (toTarget) ? SourceService : TargetService;
 
             // retrieving the 3 data mandatory to have a proper step created
-            var pluginType = Controller.DataManager.GetPluginType(service, selectedStep.PluginTypeName);
+            var pluginTypeName = selectedStep.PluginTypeName == null
+                ? Controller.DataManager.GetPluginTypeName(serviceFrom, selectedStep.Plugin.Id).GetAttributeValue<string>("name")
+                : selectedStep.PluginTypeName;
+            var pluginType = Controller.DataManager.GetPluginType(service, pluginTypeName);
             var sdkMessage = Controller.DataManager.GetSdkMessage(service, selectedStep.StepMessageName);
             var messageFilter = Controller.DataManager.GetMessageFilter(service, selectedStep.EntityName);
+            
 
-            if (pluginType == null)
-            {
-                Log.LogData(EventType.Exception, pluginTypeRetrievedLogAction);
-                MessageBox.Show(@"Sorry, but we didn't find the necessary Plugin Type information in the destination system...\r\rThis can occur because you didn't load the same assembly in the destination system.");
-                return null;
-            }
+
+            //if (pluginType == null)
+            //{
+            //    Log.LogData(EventType.Exception, pluginTypeRetrievedLogAction);
+            //    MessageBox.Show(@"Sorry, but we didn't find the necessary Plugin Type information in the destination system...\r\rThis can occur because you didn't load the same assembly in the destination system.");
+            //    return null;
+            //}
 
             if (sdkMessage == null)
             {
@@ -385,20 +410,22 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
             }
 
 
+            var sdkMessageImage = Controller.DataManager.GetSdkMessageProcessingStepImage(serviceFrom, selectedStep.StepId);
+
             Log.LogData(EventType.Event, pluginTypeRetrievedLogAction);
             Log.LogData(EventType.Event, sdkMessageRetrievedLogAction);
             Log.LogData(EventType.Event, messageFilterRetrievedLogAction);
 
             // Preparing the object step
             Entity newStepToCreate = new Entity("sdkmessageprocessingstep");
-            newStepToCreate["plugintypeid"] = new EntityReference("plugintype", pluginType.Id);
-            newStepToCreate["sdkmessageid"] = new EntityReference("sdkmessage", sdkMessage.Id);
-            newStepToCreate["sdkmessagefilterid"] = new EntityReference("sdkmessagefilter", messageFilter.Id);
+            newStepToCreate["plugintypeid"] = pluginType.ToEntityReference();
+            newStepToCreate["sdkmessageid"] = sdkMessage.ToEntityReference();
+            newStepToCreate["sdkmessagefilterid"] = messageFilter.ToEntityReference();
             newStepToCreate["name"] = selectedStep.StepName;
-            newStepToCreate["mode"] = selectedStep.StepMode;
+            newStepToCreate["mode"] = new OptionSetValue((int)selectedStep.StepMode);
             newStepToCreate["rank"] = selectedStep.StepRank;
-            newStepToCreate["stage"] = selectedStep.StepStage;
-            newStepToCreate["supporteddeployment"] = selectedStep.StepSupportedDeployment;
+            newStepToCreate["stage"] = new OptionSetValue((int)selectedStep.StepStage);
+            newStepToCreate["supporteddeployment"] = new OptionSetValue((int)selectedStep.StepSupportedDeployment);
             newStepToCreate["invocationsource"] = selectedStep.StepInvocationSource;
             newStepToCreate["configuration"] = selectedStep.StepConfiguration;
             newStepToCreate["filteringattributes"] = selectedStep.StepFilteringAttributes;
@@ -406,7 +433,26 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
             newStepToCreate["asyncautodelete"] = selectedStep.StepAsyncAutoDelete;
             newStepToCreate["customizationlevel"] = selectedStep.StepCustomizationLevel;
 
-            return service.Create(newStepToCreate);
+            var  createdStep = service.Create(newStepToCreate);
+
+            if (sdkMessageImage != null)
+            {
+                Entity newStepImageToCreate = new Entity("sdkmessageprocessingstepimage");
+                newStepImageToCreate["messagepropertyname"] = sdkMessageImage.GetAttributeValue<string>("messagepropertyname");
+                newStepImageToCreate["customizationlevel"] = sdkMessageImage.GetAttributeValue<int?>("customizationlevel");
+                newStepImageToCreate["ismanaged"] = sdkMessageImage.GetAttributeValue<bool?>("ismanaged");
+                newStepImageToCreate["imagetype"] = sdkMessageImage.GetAttributeValue<OptionSetValue>("imagetype");
+                newStepImageToCreate["name"] = sdkMessageImage.GetAttributeValue<string>("name");
+                newStepImageToCreate["entityalias"] = sdkMessageImage.GetAttributeValue<string>("entityalias");
+                newStepImageToCreate["attributes"] = sdkMessageImage.GetAttributeValue<string>("attributes");
+                newStepImageToCreate["description"] = sdkMessageImage.GetAttributeValue<string>("description");
+                newStepImageToCreate["relatedattributename"] = sdkMessageImage.GetAttributeValue<string>("relatedattributename");
+                newStepImageToCreate["sdkmessageprocessingstepid"] = new EntityReference("sdkmessageprocessingstep", createdStep);
+
+                service.Create(newStepImageToCreate);
+            }
+
+            return createdStep;
         }
 
         #region Log/Settings
@@ -536,7 +582,7 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
                         return;
                     }
 
-                    if ((bool) e.Result)
+                    if (!((bool) e.Result))
                     {
                         MessageBox.Show($@"The {ComparisonMethod.Name} doesn't exist in the Target environment. \rThe compare function will return a ""Perfect match"" in this case.\r\r You will still have the possibility to copy steps from the Source to Target environment.", @"Information", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     }
@@ -640,18 +686,23 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
         {
             listView.Items.Clear();
 
+            var imgList = new ImageList();
+            imgList.Images.Add("imgDetails",new Bitmap(Properties.Resources.details));
+
+
             foreach (var step in stepsList.Where(x => diff.Contains(x.StepId)))
             {
                 string createon = step.CreateOn.ToLocalTime().ToString("dd-MMM-yyyy HH:mm");
                 string modifiedon = step.ModifiedOn.ToLocalTime().ToString("dd-MMM-yyyy HH:mm");
 
-                var item = new ListViewItem();
-                item.Text = step.StepName;
-                item.SubItems.Add(step.EntityName);
-                item.SubItems.Add(step.StepMessageName);
-                item.SubItems.Add(createon);
-                item.SubItems.Add(modifiedon);
-                item.Tag = step.Plugin.Id;
+                var item = new ListViewItem(new string[] {step.StepName, step.EntityName, step.StepMessageName, createon, modifiedon}, "imgDetails");
+                //item.ImageKey = "imgDetails";
+                //item.Text = step.StepName;
+                //item.SubItems.Add(step.EntityName);
+                //item.SubItems.Add(step.StepMessageName);
+                //item.SubItems.Add(createon);
+                //item.SubItems.Add(modifiedon);
+                item.Tag = step.StepId;
 
                 listView.Items.Add((ListViewItem)item.Clone());
             }
@@ -762,6 +813,60 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
                 CurrentColumnOrder = columnIndex;
                 listView.ListViewItemSorter = new ListViewItemComparer(columnIndex, SortOrder.Ascending);
             }
+        }
+
+        private void ListViewSourceTarget_DoubleClick(object sender, EventArgs e)
+        {
+            var itemFrom = ((ListView)sender).Items[0].Tag.ToString();
+            var step = StepsCrmSource.Where(x => itemFrom == x.StepId.ToString()).FirstOrDefault();
+
+            if (step == null)
+                return;
+
+            var stepDetails = new StepDiffDetails(step);
+            stepDetails.Show();
+        }
+
+        private void ListViewSourceTarget_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            var check = listViewSourceTarget.SelectedItems.Count == 1;
+            btnStepDetailsSourceToTarget.Enabled = check;
+        }
+
+        private void BtnStepDetailsSourceToTarget_Click(object sender, EventArgs e)
+        {
+            var itemFrom = listViewSourceTarget.SelectedItems[0].Tag.ToString();
+            var step = StepsCrmSource.Where(x => itemFrom == x.StepId.ToString()).FirstOrDefault();
+
+            if (step == null)
+                return;
+
+            var stepregform = new StepRegistrationForm(SourceOrgData, step);
+            stepregform.Show();
+
+            //var stepDetails = new StepDiffDetails(step);
+            //stepDetails.Show();
+        }
+
+        private void ListViewTargetSource_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            var check = listViewTargetSource.SelectedItems.Count == 1;
+            btnStepDetailsTargetToSource.Enabled = check;
+        }
+
+        private void BtnStepDetailsTargetToSource_Click(object sender, EventArgs e)
+        {
+            var itemFrom = listViewTargetSource.SelectedItems[0].Tag.ToString();
+            var step = StepsCrmTarget.Where(x => itemFrom == x.StepId.ToString()).FirstOrDefault();
+
+            if (step == null)
+                return;
+
+            var stepregform = new StepRegistrationForm(TargetOrgData, step);
+            stepregform.Show();
+
+            //var stepDetails = new StepDiffDetails(step);
+            //stepDetails.Show();
         }
     }
 }
