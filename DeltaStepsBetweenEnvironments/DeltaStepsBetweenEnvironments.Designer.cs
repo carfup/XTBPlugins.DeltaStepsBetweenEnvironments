@@ -57,6 +57,7 @@
             this.comboBoxSolutionsAssembliesList = new System.Windows.Forms.ComboBox();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.btnStepDetailsSourceToTarget = new System.Windows.Forms.Button();
             this.labelSourceTargetMatch = new System.Windows.Forms.Label();
             this.listViewSourceTarget = new System.Windows.Forms.ListView();
             this.columnHeaderSTStepName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -65,6 +66,7 @@
             this.columnHeaderSTModifiedOn = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeaderSTCreatedOn = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.btnStepDetailsTargetToSource = new System.Windows.Forms.Button();
             this.labelTargetSourceMatch = new System.Windows.Forms.Label();
             this.listViewTargetSource = new System.Windows.Forms.ListView();
             this.columnHeaderTSStepName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -102,7 +104,6 @@
             this.toolStripButtonHelp});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Padding = new System.Windows.Forms.Padding(0, 0, 2, 0);
             this.toolStrip1.Size = new System.Drawing.Size(1903, 37);
             this.toolStrip1.TabIndex = 0;
             this.toolStrip1.Text = "toolStrip1";
@@ -169,7 +170,7 @@
             this.tableLayoutPanel1.Controls.Add(this.groupBox3, 0, 0);
             this.tableLayoutPanel1.Controls.Add(this.groupBoxSolutionComparing, 1, 0);
             this.tableLayoutPanel1.Location = new System.Drawing.Point(6, 68);
-            this.tableLayoutPanel1.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.tableLayoutPanel1.Margin = new System.Windows.Forms.Padding(6);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
             this.tableLayoutPanel1.RowCount = 1;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
@@ -188,9 +189,9 @@
             this.groupBox3.Controls.Add(this.label2);
             this.groupBox3.Controls.Add(this.label1);
             this.groupBox3.Location = new System.Drawing.Point(6, 6);
-            this.groupBox3.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.groupBox3.Margin = new System.Windows.Forms.Padding(6);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Padding = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.groupBox3.Padding = new System.Windows.Forms.Padding(6);
             this.groupBox3.Size = new System.Drawing.Size(679, 200);
             this.groupBox3.TabIndex = 0;
             this.groupBox3.TabStop = false;
@@ -199,7 +200,7 @@
             // buttonChangeSource
             // 
             this.buttonChangeSource.Location = new System.Drawing.Point(466, 50);
-            this.buttonChangeSource.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.buttonChangeSource.Margin = new System.Windows.Forms.Padding(6);
             this.buttonChangeSource.Name = "buttonChangeSource";
             this.buttonChangeSource.Size = new System.Drawing.Size(191, 42);
             this.buttonChangeSource.TabIndex = 32;
@@ -210,7 +211,7 @@
             // btnChangeTargetEnvironment
             // 
             this.btnChangeTargetEnvironment.Location = new System.Drawing.Point(466, 100);
-            this.btnChangeTargetEnvironment.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.btnChangeTargetEnvironment.Margin = new System.Windows.Forms.Padding(6);
             this.btnChangeTargetEnvironment.Name = "btnChangeTargetEnvironment";
             this.btnChangeTargetEnvironment.Size = new System.Drawing.Size(191, 42);
             this.btnChangeTargetEnvironment.TabIndex = 31;
@@ -274,9 +275,9 @@
             this.groupBoxSolutionComparing.Controls.Add(this.labelComparing);
             this.groupBoxSolutionComparing.Controls.Add(this.comboBoxSolutionsAssembliesList);
             this.groupBoxSolutionComparing.Location = new System.Drawing.Point(697, 6);
-            this.groupBoxSolutionComparing.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.groupBoxSolutionComparing.Margin = new System.Windows.Forms.Padding(6);
             this.groupBoxSolutionComparing.Name = "groupBoxSolutionComparing";
-            this.groupBoxSolutionComparing.Padding = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.groupBoxSolutionComparing.Padding = new System.Windows.Forms.Padding(6);
             this.groupBoxSolutionComparing.Size = new System.Drawing.Size(1176, 200);
             this.groupBoxSolutionComparing.TabIndex = 1;
             this.groupBoxSolutionComparing.TabStop = false;
@@ -287,7 +288,7 @@
             this.radioButtonCompareOrg.AutoSize = true;
             this.radioButtonCompareOrg.Checked = true;
             this.radioButtonCompareOrg.Location = new System.Drawing.Point(11, 74);
-            this.radioButtonCompareOrg.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.radioButtonCompareOrg.Margin = new System.Windows.Forms.Padding(6);
             this.radioButtonCompareOrg.Name = "radioButtonCompareOrg";
             this.radioButtonCompareOrg.Size = new System.Drawing.Size(125, 29);
             this.radioButtonCompareOrg.TabIndex = 33;
@@ -300,7 +301,7 @@
             // 
             this.radioButtonCompareAssembly.AutoSize = true;
             this.radioButtonCompareAssembly.Location = new System.Drawing.Point(11, 159);
-            this.radioButtonCompareAssembly.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.radioButtonCompareAssembly.Margin = new System.Windows.Forms.Padding(6);
             this.radioButtonCompareAssembly.Name = "radioButtonCompareAssembly";
             this.radioButtonCompareAssembly.Size = new System.Drawing.Size(123, 29);
             this.radioButtonCompareAssembly.TabIndex = 32;
@@ -312,7 +313,7 @@
             // 
             this.radioButtonCompareSolution.AutoSize = true;
             this.radioButtonCompareSolution.Location = new System.Drawing.Point(11, 116);
-            this.radioButtonCompareSolution.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.radioButtonCompareSolution.Margin = new System.Windows.Forms.Padding(6);
             this.radioButtonCompareSolution.Name = "radioButtonCompareSolution";
             this.radioButtonCompareSolution.Size = new System.Drawing.Size(108, 29);
             this.radioButtonCompareSolution.TabIndex = 31;
@@ -333,7 +334,7 @@
             // buttonLoadSolutionsAssemblies
             // 
             this.buttonLoadSolutionsAssemblies.Location = new System.Drawing.Point(937, 48);
-            this.buttonLoadSolutionsAssemblies.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.buttonLoadSolutionsAssemblies.Margin = new System.Windows.Forms.Padding(6);
             this.buttonLoadSolutionsAssemblies.Name = "buttonLoadSolutionsAssemblies";
             this.buttonLoadSolutionsAssemblies.Size = new System.Drawing.Size(229, 42);
             this.buttonLoadSolutionsAssemblies.TabIndex = 29;
@@ -345,7 +346,7 @@
             // buttonCompare
             // 
             this.buttonCompare.Location = new System.Drawing.Point(204, 105);
-            this.buttonCompare.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.buttonCompare.Margin = new System.Windows.Forms.Padding(6);
             this.buttonCompare.Name = "buttonCompare";
             this.buttonCompare.Size = new System.Drawing.Size(963, 42);
             this.buttonCompare.TabIndex = 28;
@@ -369,7 +370,7 @@
             this.comboBoxSolutionsAssembliesList.FormattingEnabled = true;
             this.comboBoxSolutionsAssembliesList.ItemHeight = 24;
             this.comboBoxSolutionsAssembliesList.Location = new System.Drawing.Point(507, 50);
-            this.comboBoxSolutionsAssembliesList.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.comboBoxSolutionsAssembliesList.Margin = new System.Windows.Forms.Padding(6);
             this.comboBoxSolutionsAssembliesList.Name = "comboBoxSolutionsAssembliesList";
             this.comboBoxSolutionsAssembliesList.Size = new System.Drawing.Size(425, 32);
             this.comboBoxSolutionsAssembliesList.TabIndex = 26;
@@ -389,7 +390,7 @@
             this.tableLayoutPanel2.Controls.Add(this.groupBox2, 2, 0);
             this.tableLayoutPanel2.Controls.Add(this.groupBox4, 1, 0);
             this.tableLayoutPanel2.Location = new System.Drawing.Point(6, 292);
-            this.tableLayoutPanel2.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.tableLayoutPanel2.Margin = new System.Windows.Forms.Padding(6);
             this.tableLayoutPanel2.Name = "tableLayoutPanel2";
             this.tableLayoutPanel2.RowCount = 1;
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
@@ -401,16 +402,35 @@
             this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox1.Controls.Add(this.btnStepDetailsSourceToTarget);
             this.groupBox1.Controls.Add(this.labelSourceTargetMatch);
             this.groupBox1.Controls.Add(this.listViewSourceTarget);
             this.groupBox1.Location = new System.Drawing.Point(6, 6);
-            this.groupBox1.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.groupBox1.Margin = new System.Windows.Forms.Padding(6);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Padding = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.groupBox1.Padding = new System.Windows.Forms.Padding(6);
             this.groupBox1.Size = new System.Drawing.Size(863, 808);
             this.groupBox1.TabIndex = 28;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Steps which are on Source but not on Target environment";
+            // 
+            // btnStepDetailsSourceToTarget
+            // 
+            this.btnStepDetailsSourceToTarget.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
+            this.btnStepDetailsSourceToTarget.Enabled = false;
+            this.btnStepDetailsSourceToTarget.Image = global::Carfup.XTBPlugins.DeltaStepsBetweenEnvironments.Properties.Resources.details;
+            this.btnStepDetailsSourceToTarget.ImageAlign = System.Drawing.ContentAlignment.TopLeft;
+            this.btnStepDetailsSourceToTarget.Location = new System.Drawing.Point(17, 27);
+            this.btnStepDetailsSourceToTarget.Margin = new System.Windows.Forms.Padding(6);
+            this.btnStepDetailsSourceToTarget.Name = "btnStepDetailsSourceToTarget";
+            this.btnStepDetailsSourceToTarget.Size = new System.Drawing.Size(195, 47);
+            this.btnStepDetailsSourceToTarget.TabIndex = 3;
+            this.btnStepDetailsSourceToTarget.Text = "Step Details";
+            this.btnStepDetailsSourceToTarget.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.toolTipWarning.SetToolTip(this.btnStepDetailsSourceToTarget, "Delete the selected step(s), it\'s permanent !");
+            this.btnStepDetailsSourceToTarget.UseVisualStyleBackColor = true;
+            this.btnStepDetailsSourceToTarget.Visible = false;
+            this.btnStepDetailsSourceToTarget.Click += new System.EventHandler(this.BtnStepDetailsSourceToTarget_Click);
             // 
             // labelSourceTargetMatch
             // 
@@ -439,15 +459,17 @@
             this.columnHeaderSTModifiedOn,
             this.columnHeaderSTCreatedOn});
             this.listViewSourceTarget.HideSelection = false;
-            this.listViewSourceTarget.Location = new System.Drawing.Point(17, 35);
-            this.listViewSourceTarget.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.listViewSourceTarget.Location = new System.Drawing.Point(17, 27);
+            this.listViewSourceTarget.Margin = new System.Windows.Forms.Padding(6);
             this.listViewSourceTarget.Name = "listViewSourceTarget";
-            this.listViewSourceTarget.Size = new System.Drawing.Size(832, 758);
+            this.listViewSourceTarget.Size = new System.Drawing.Size(832, 766);
             this.listViewSourceTarget.Sorting = System.Windows.Forms.SortOrder.Ascending;
             this.listViewSourceTarget.TabIndex = 26;
             this.listViewSourceTarget.UseCompatibleStateImageBehavior = false;
             this.listViewSourceTarget.View = System.Windows.Forms.View.Details;
             this.listViewSourceTarget.ColumnClick += new System.Windows.Forms.ColumnClickEventHandler(this.listViewSourceTarget_ColumnClick);
+            this.listViewSourceTarget.SelectedIndexChanged += new System.EventHandler(this.ListViewSourceTarget_SelectedIndexChanged);
+            this.listViewSourceTarget.DoubleClick += new System.EventHandler(this.ListViewSourceTarget_DoubleClick);
             // 
             // columnHeaderSTStepName
             // 
@@ -464,13 +486,11 @@
             // 
             // columnHeaderSTModifiedOn
             // 
-            this.columnHeaderSTModifiedOn.DisplayIndex = 4;
             this.columnHeaderSTModifiedOn.Text = "Modified On";
             this.columnHeaderSTModifiedOn.Width = 81;
             // 
             // columnHeaderSTCreatedOn
             // 
-            this.columnHeaderSTCreatedOn.DisplayIndex = 3;
             this.columnHeaderSTCreatedOn.Text = "Created On";
             // 
             // groupBox2
@@ -478,16 +498,34 @@
             this.groupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox2.Controls.Add(this.btnStepDetailsTargetToSource);
             this.groupBox2.Controls.Add(this.labelTargetSourceMatch);
             this.groupBox2.Controls.Add(this.listViewTargetSource);
             this.groupBox2.Location = new System.Drawing.Point(1009, 6);
-            this.groupBox2.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.groupBox2.Margin = new System.Windows.Forms.Padding(6);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Padding = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.groupBox2.Padding = new System.Windows.Forms.Padding(6);
             this.groupBox2.Size = new System.Drawing.Size(864, 808);
             this.groupBox2.TabIndex = 29;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Steps which are on Target but not on Source environment";
+            // 
+            // btnStepDetailsTargetToSource
+            // 
+            this.btnStepDetailsTargetToSource.Enabled = false;
+            this.btnStepDetailsTargetToSource.Image = global::Carfup.XTBPlugins.DeltaStepsBetweenEnvironments.Properties.Resources.details;
+            this.btnStepDetailsTargetToSource.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnStepDetailsTargetToSource.Location = new System.Drawing.Point(11, 27);
+            this.btnStepDetailsTargetToSource.Margin = new System.Windows.Forms.Padding(6);
+            this.btnStepDetailsTargetToSource.Name = "btnStepDetailsTargetToSource";
+            this.btnStepDetailsTargetToSource.Size = new System.Drawing.Size(195, 47);
+            this.btnStepDetailsTargetToSource.TabIndex = 28;
+            this.btnStepDetailsTargetToSource.Text = "Step Details";
+            this.btnStepDetailsTargetToSource.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.toolTipWarning.SetToolTip(this.btnStepDetailsTargetToSource, "Delete the selected step(s), it\'s permanent !");
+            this.btnStepDetailsTargetToSource.UseVisualStyleBackColor = true;
+            this.btnStepDetailsTargetToSource.Visible = false;
+            this.btnStepDetailsTargetToSource.Click += new System.EventHandler(this.BtnStepDetailsTargetToSource_Click);
             // 
             // labelTargetSourceMatch
             // 
@@ -516,15 +554,16 @@
             this.columnHeaderTSModifiedOn,
             this.columnHeaderTSCreatedOn});
             this.listViewTargetSource.HideSelection = false;
-            this.listViewTargetSource.Location = new System.Drawing.Point(11, 35);
-            this.listViewTargetSource.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.listViewTargetSource.Location = new System.Drawing.Point(11, 27);
+            this.listViewTargetSource.Margin = new System.Windows.Forms.Padding(6);
             this.listViewTargetSource.Name = "listViewTargetSource";
-            this.listViewTargetSource.Size = new System.Drawing.Size(839, 758);
+            this.listViewTargetSource.Size = new System.Drawing.Size(839, 766);
             this.listViewTargetSource.Sorting = System.Windows.Forms.SortOrder.Ascending;
             this.listViewTargetSource.TabIndex = 27;
             this.listViewTargetSource.UseCompatibleStateImageBehavior = false;
             this.listViewTargetSource.View = System.Windows.Forms.View.Details;
             this.listViewTargetSource.ColumnClick += new System.Windows.Forms.ColumnClickEventHandler(this.listViewTargetSource_ColumnClick);
+            this.listViewTargetSource.SelectedIndexChanged += new System.EventHandler(this.ListViewTargetSource_SelectedIndexChanged);
             // 
             // columnHeaderTSStepName
             // 
@@ -559,9 +598,9 @@
             this.groupBox4.Controls.Add(this.buttonCopySourceToTarget);
             this.groupBox4.Controls.Add(this.buttonCopyTargetToSource);
             this.groupBox4.Location = new System.Drawing.Point(881, 6);
-            this.groupBox4.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.groupBox4.Margin = new System.Windows.Forms.Padding(6);
             this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Padding = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.groupBox4.Padding = new System.Windows.Forms.Padding(6);
             this.groupBox4.Size = new System.Drawing.Size(116, 808);
             this.groupBox4.TabIndex = 30;
             this.groupBox4.TabStop = false;
@@ -571,7 +610,7 @@
             // 
             this.buttonDeleteStep.Image = ((System.Drawing.Image)(resources.GetObject("buttonDeleteStep.Image")));
             this.buttonDeleteStep.Location = new System.Drawing.Point(22, 198);
-            this.buttonDeleteStep.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.buttonDeleteStep.Margin = new System.Windows.Forms.Padding(6);
             this.buttonDeleteStep.Name = "buttonDeleteStep";
             this.buttonDeleteStep.Size = new System.Drawing.Size(77, 66);
             this.buttonDeleteStep.TabIndex = 2;
@@ -583,7 +622,7 @@
             // 
             this.buttonCopySourceToTarget.Image = global::Carfup.XTBPlugins.DeltaStepsBetweenEnvironments.Properties.Resources.move_right;
             this.buttonCopySourceToTarget.Location = new System.Drawing.Point(20, 118);
-            this.buttonCopySourceToTarget.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.buttonCopySourceToTarget.Margin = new System.Windows.Forms.Padding(6);
             this.buttonCopySourceToTarget.Name = "buttonCopySourceToTarget";
             this.buttonCopySourceToTarget.Size = new System.Drawing.Size(79, 68);
             this.buttonCopySourceToTarget.TabIndex = 1;
@@ -595,7 +634,7 @@
             // 
             this.buttonCopyTargetToSource.Image = ((System.Drawing.Image)(resources.GetObject("buttonCopyTargetToSource.Image")));
             this.buttonCopyTargetToSource.Location = new System.Drawing.Point(22, 39);
-            this.buttonCopyTargetToSource.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.buttonCopyTargetToSource.Margin = new System.Windows.Forms.Padding(6);
             this.buttonCopyTargetToSource.Name = "buttonCopyTargetToSource";
             this.buttonCopyTargetToSource.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.buttonCopyTargetToSource.Size = new System.Drawing.Size(79, 68);
@@ -628,7 +667,7 @@
             this.Controls.Add(this.tableLayoutPanel2);
             this.Controls.Add(this.tableLayoutPanel1);
             this.Controls.Add(this.toolStrip1);
-            this.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.Margin = new System.Windows.Forms.Padding(6);
             this.Name = "DeltaStepsBetweenEnvironments";
             this.Size = new System.Drawing.Size(1903, 1132);
             this.Load += new System.EventHandler(this.DeltaStepsBetweenEnvironments_Load);
@@ -701,5 +740,7 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
         private System.Windows.Forms.ToolStripButton toolStripButtonExport;
         private System.Windows.Forms.SaveFileDialog saveFileDialog1;
+        private System.Windows.Forms.Button btnStepDetailsSourceToTarget;
+        private System.Windows.Forms.Button btnStepDetailsTargetToSource;
     }
 }

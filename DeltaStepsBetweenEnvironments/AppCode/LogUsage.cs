@@ -10,7 +10,7 @@ using System.Windows;
 using Microsoft.ApplicationInsights;
 using Microsoft.ApplicationInsights.Extensibility;
 
-namespace Carfup.XTBPlugins.AppCode
+namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments.AppCode
 {
     public class LogUsage
     {
@@ -18,14 +18,14 @@ namespace Carfup.XTBPlugins.AppCode
         private TelemetryClient telemetry = null;
         private bool forceLog { get; set; } = false;
 
-        private DeltaStepsBetweenEnvironments.DeltaStepsBetweenEnvironments dbe = null;
-        public LogUsage(DeltaStepsBetweenEnvironments.DeltaStepsBetweenEnvironments dbe)
+        private DeltaStepsBetweenEnvironments dbe = null;
+        public LogUsage(DeltaStepsBetweenEnvironments dbe)
         {
             this.dbe = dbe;
 
             TelemetryConfiguration.Active.InstrumentationKey = CustomParameter.InsightsInstrumentationKey;
             this.telemetry = new TelemetryClient();
-            this.telemetry.Context.Component.Version = DeltaStepsBetweenEnvironments.DeltaStepsBetweenEnvironments.CurrentVersion;
+            this.telemetry.Context.Component.Version = DeltaStepsBetweenEnvironments.CurrentVersion;
             this.telemetry.Context.Device.Id = this.dbe.GetType().Name;
             this.telemetry.Context.User.Id = Guid.NewGuid().ToString();
         }
@@ -72,7 +72,7 @@ namespace Carfup.XTBPlugins.AppCode
             {
                 { "plugin", telemetry.Context.Device.Id },
                 { "xtbversion", Assembly.GetEntryAssembly().GetName().Version.ToString() },
-                { "pluginversion", DeltaStepsBetweenEnvironments.DeltaStepsBetweenEnvironments.CurrentVersion }
+                { "pluginversion", DeltaStepsBetweenEnvironments.CurrentVersion }
             };
 
             if (action != null)

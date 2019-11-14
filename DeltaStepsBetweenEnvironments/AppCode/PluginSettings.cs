@@ -1,6 +1,6 @@
 ﻿using System.Windows.Forms;
 
-namespace Carfup.XTBPlugins.AppCode
+namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments.AppCode
 {
     public class PluginSettings
     {
@@ -8,7 +8,7 @@ namespace Carfup.XTBPlugins.AppCode
         //public bool? ShowHelpOnStartUp { get; set; }
         public SortOrder? SortOrderPref { get; set; } = SortOrder.Ascending;
         public bool SkipHiddenSteps { get; set; } = true;
-        public string CurrentVersion { get; set; } = DeltaStepsBetweenEnvironments.DeltaStepsBetweenEnvironments.CurrentVersion;
+        public string CurrentVersion { get; set; } = DeltaStepsBetweenEnvironments.CurrentVersion;
     }
 
     static class EventType

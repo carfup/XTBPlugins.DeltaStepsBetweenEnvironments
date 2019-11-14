@@ -128,9 +128,11 @@
     <Compile Include="AppCode\IComparisonMethod.cs" />
     <Compile Include="AppCode\ListViewItemComparer.cs" />
     <Compile Include="AppCode\LogUsage.cs" />
+    <Compile Include="AppCode\OrganizationData.cs" />
     <Compile Include="AppCode\OrgComparisonMethod.cs" />
     <Compile Include="AppCode\PluginSettings.cs" />
     <Compile Include="AppCode\SolutionComparisonMethod.cs" />
+    <Compile Include="AppCode\StepRegistration.cs" />
     <Compile Include="App_Packages\DLaB.Common.Source.1.2.0.3\Config.cs" />
     <Compile Include="App_Packages\DLaB.Common.Source.1.2.0.3\ConfigKeyValueSplitInfo.cs" />
     <Compile Include="App_Packages\DLaB.Common.Source.1.2.0.3\ConfigKeyValuesSplitInfo.cs" />
@@ -231,11 +233,23 @@
     <Compile Include="Forms\HelpForm.Designer.cs">
       <DependentUpon>HelpForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\StepDiffDetails.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\StepDiffDetails.Designer.cs">
+      <DependentUpon>StepDiffDetails.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\Options.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\Options.Designer.cs">
       <DependentUpon>Options.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\StepRegistrationForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\StepRegistrationForm.designer.cs">
+      <DependentUpon>StepRegistrationForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Plugin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -268,8 +282,14 @@
     <EmbeddedResource Include="Forms\HelpForm.resx">
       <DependentUpon>HelpForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\StepDiffDetails.resx">
+      <DependentUpon>StepDiffDetails.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\Options.resx">
       <DependentUpon>Options.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\StepRegistrationForm.resx">
+      <DependentUpon>StepRegistrationForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -303,6 +323,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Entities\DLaB.EarlyBoundGenerator.Settings.xml" />
+    <None Include="Resources\details.png" />
     <None Include="Resources\Export.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
