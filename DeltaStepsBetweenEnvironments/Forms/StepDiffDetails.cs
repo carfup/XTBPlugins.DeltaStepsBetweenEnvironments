@@ -13,14 +13,16 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments.Forms
         {
             InitializeComponent();
             this.step = step;
+            this.Text = $"Step Details : {step.StepName}";
 
             foreach (var s in step.GetType().GetProperties().OrderBy(x => x.Name))
             {
                 dataGridViewStepDetails.Rows.Add(new string[]{ s.Name, s.GetValue(step, null)?.ToString()});
             }
 
-            dataGridViewStepDetails.AutoResizeColumn(0);
-            dataGridViewStepDetails.AutoResizeColumn(1);
+            dataGridViewStepDetails.DefaultCellStyle.WrapMode = DataGridViewTriState.True;
+            dataGridViewStepDetails.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
+            dataGridViewStepDetails.AutoResizeColumns();
         }
 
         private void buttonCancel_Click(object sender, EventArgs e)

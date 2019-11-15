@@ -817,7 +817,7 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
 
         private void ListViewSourceTarget_DoubleClick(object sender, EventArgs e)
         {
-            var itemFrom = ((ListView)sender).Items[0].Tag.ToString();
+            var itemFrom = ((ListView)sender).FocusedItem.Tag.ToString();
             var step = StepsCrmSource.Where(x => itemFrom == x.StepId.ToString()).FirstOrDefault();
 
             if (step == null)
