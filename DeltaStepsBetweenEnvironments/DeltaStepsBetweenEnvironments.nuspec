@@ -1,16 +1,24 @@
 ﻿<package>
   <metadata>
     <id>Carfup.XTBPlugins.DeltaStepsBetweenEnvironments</id>
-    <version>1.2018.12.10</version>
+    <version>1.2019.11.11</version>
     <title>Delta Plugin Steps between two environments</title>
     <authors>Clement O.</authors>
     <owners>Clement O.</owners>
     <projectUrl>https://github.com/carfup/XTBPlugins.DeltaAssemblyvsCrm</projectUrl>
-	<iconUrl>http://www.gravatar.com/avatar/8b87aef303e872503c47ef3fdf83c801?s=64</iconUrl>
+	  <iconUrl>http://www.gravatar.com/avatar/8b87aef303e872503c47ef3fdf83c801?s=64</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Find out if there is differences about your plugin steps between two of your environments</description>
     <summary>Really sweet plugin that does awesome things</summary>
     <releaseNotes>
+1.2019.11.11
+Feature to export the results into an excel sheet ! (thanks to Daryl Labar)
+Ability to compare the entire organization besides the solutions and assembly. (thanks to Daryl Labar)
+Ability to view the details of a step by double clicking on it.
+Fixed the compare solution and assembly.
+Fixed the copy of step between environment, and it's now copying image as well if wanted.
+Various bug fixing and improvement.
+
 1.2018.12.10
 Bug fixing
 

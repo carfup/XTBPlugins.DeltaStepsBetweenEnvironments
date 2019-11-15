@@ -10,7 +10,7 @@ using System.Windows;
 using Microsoft.ApplicationInsights;
 using Microsoft.ApplicationInsights.Extensibility;
 
-namespace Carfup.XTBPlugins.AppCode
+namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments.AppCode
 {
     public class LogUsage
     {
@@ -18,14 +18,14 @@ namespace Carfup.XTBPlugins.AppCode
         private TelemetryClient telemetry = null;
         private bool forceLog { get; set; } = false;
 
-        private DeltaStepsBetweenEnvironments.DeltaStepsBetweenEnvironments dbe = null;
-        public LogUsage(DeltaStepsBetweenEnvironments.DeltaStepsBetweenEnvironments dbe)
+        private DeltaStepsBetweenEnvironments dbe = null;
+        public LogUsage(DeltaStepsBetweenEnvironments dbe)
         {
             this.dbe = dbe;
 
-            TelemetryConfiguration.Active.InstrumentationKey = CustomParameter.INSIGHTS_INTRUMENTATIONKEY;
+            TelemetryConfiguration.Active.InstrumentationKey = CustomParameter.InsightsInstrumentationKey;
             this.telemetry = new TelemetryClient();
-            this.telemetry.Context.Component.Version = DeltaStepsBetweenEnvironments.DeltaStepsBetweenEnvironments.CurrentVersion;
+            this.telemetry.Context.Component.Version = DeltaStepsBetweenEnvironments.CurrentVersion;
             this.telemetry.Context.Device.Id = this.dbe.GetType().Name;
             this.telemetry.Context.User.Id = Guid.NewGuid().ToString();
         }
@@ -37,7 +37,7 @@ namespace Carfup.XTBPlugins.AppCode
 
         public void LogData(string type, string action, Exception exception = null)
         {
-            if (this.dbe.settings.AllowLogUsage == true || this.forceLog)
+            if (this.dbe.Settings.AllowLogUsage == true || this.forceLog)
             {
                 switch (type)
                 {
@@ -72,7 +72,7 @@ namespace Carfup.XTBPlugins.AppCode
             {
                 { "plugin", telemetry.Context.Device.Id },
                 { "xtbversion", Assembly.GetEntryAssembly().GetName().Version.ToString() },
-                { "pluginversion", DeltaStepsBetweenEnvironments.DeltaStepsBetweenEnvironments.CurrentVersion }
+                { "pluginversion", DeltaStepsBetweenEnvironments.CurrentVersion }
             };
 
             if (action != null)
@@ -87,7 +87,7 @@ namespace Carfup.XTBPlugins.AppCode
                       "You can change this setting in plugin's options anytime.\n\n" +
                       "Thanks!";
 
-            this.dbe.settings.AllowLogUsage = true;
+            this.dbe.Settings.AllowLogUsage = true;
             MessageBox.Show(msg, "Information");
         }
     }

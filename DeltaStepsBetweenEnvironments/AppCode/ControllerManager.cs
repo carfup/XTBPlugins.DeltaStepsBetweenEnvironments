@@ -1,24 +1,22 @@
-﻿using Microsoft.Xrm.Sdk;
-using Microsoft.Xrm.Sdk.Client;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using McTools.Xrm.Connection;
+using Microsoft.Xrm.Sdk;
+using Carfup.XTBPlugins.DeltaStepsBetweenEnvironments.AppCode;
 
-namespace Carfup.XTBPlugins.AppCode
+namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments.AppCode
 {
-    class ControllerManager
+    public class ControllerManager
     {
-        public IOrganizationService sourceService { get; set; } = null;
-        public IOrganizationService targetService { get; set; } = null;
-        public DataManager dataManager { get; set; } = null;
+        public IOrganizationService SourceService { get; set; }
+        public IOrganizationService TargetService { get; set; }
+        public ConnectionDetail Source { get; set; }
+        public ConnectionDetail Target { get; set; }
+        public DataManager DataManager { get; set; }
 
         public ControllerManager(IOrganizationService sourceService, IOrganizationService targetService)
         {
-            this.sourceService = sourceService;
-            this.targetService = targetService;
-            this.dataManager = new DataManager(this);
+            SourceService = sourceService;
+            TargetService = targetService;
+            DataManager = new DataManager(this);
         }
     }
 }
