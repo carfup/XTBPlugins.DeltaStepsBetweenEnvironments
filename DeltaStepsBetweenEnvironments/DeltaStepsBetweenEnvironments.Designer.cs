@@ -567,6 +567,7 @@
             this.listViewTargetSource.View = System.Windows.Forms.View.Details;
             this.listViewTargetSource.ColumnClick += new System.Windows.Forms.ColumnClickEventHandler(this.listViewTargetSource_ColumnClick);
             this.listViewTargetSource.SelectedIndexChanged += new System.EventHandler(this.ListViewTargetSource_SelectedIndexChanged);
+            this.listViewTargetSource.DoubleClick += new System.EventHandler(this.listViewTargetSource_DoubleClick);
             // 
             // columnHeaderTSStepName
             // 

@@ -896,5 +896,17 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
             checkBoxCompareByGuid.Checked = !checkBoxCompareByName.Checked;
             compareBy = CompareBy.Name;
         }
+
+        private void listViewTargetSource_DoubleClick(object sender, EventArgs e)
+        {
+            var itemFrom = ((ListView)sender).FocusedItem.Tag.ToString();
+            var step = StepsCrmTarget.Where(x => itemFrom == x.StepId.ToString()).FirstOrDefault();
+
+            if (step == null)
+                return;
+
+            var stepDetails = new StepDiffDetails(step);
+            stepDetails.Show();
+        }
     }
 }

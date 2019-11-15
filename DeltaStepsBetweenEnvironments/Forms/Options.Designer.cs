@@ -54,7 +54,7 @@
             this.bgStats.Margin = new System.Windows.Forms.Padding(5, 6, 5, 6);
             this.bgStats.Name = "bgStats";
             this.bgStats.Padding = new System.Windows.Forms.Padding(5, 6, 5, 6);
-            this.bgStats.Size = new System.Drawing.Size(1651, 216);
+            this.bgStats.Size = new System.Drawing.Size(761, 216);
             this.bgStats.TabIndex = 5;
             this.bgStats.TabStop = false;
             this.bgStats.Text = "Statistics";
@@ -66,7 +66,7 @@
             this.label1.Location = new System.Drawing.Point(12, 37);
             this.label1.Margin = new System.Windows.Forms.Padding(5, 0, 5, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(1627, 126);
+            this.label1.Size = new System.Drawing.Size(737, 126);
             this.label1.TabIndex = 6;
             this.label1.Text = "This plugin collects ONLY anonymous usage statistics. \r\nNo information related yo" +
     "ur CRM / Organization will be retrieve. \r\n\r\nThis will help us to improve the mos" +
@@ -89,7 +89,7 @@
             // 
             this.buttonOk.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonOk.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.buttonOk.Location = new System.Drawing.Point(1389, 578);
+            this.buttonOk.Location = new System.Drawing.Point(499, 578);
             this.buttonOk.Margin = new System.Windows.Forms.Padding(5, 6, 5, 6);
             this.buttonOk.Name = "buttonOk";
             this.buttonOk.Size = new System.Drawing.Size(137, 42);
@@ -102,7 +102,7 @@
             // 
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.buttonCancel.Location = new System.Drawing.Point(1537, 578);
+            this.buttonCancel.Location = new System.Drawing.Point(647, 578);
             this.buttonCancel.Margin = new System.Windows.Forms.Padding(5, 6, 5, 6);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(137, 42);
@@ -121,7 +121,7 @@
             this.groupBox1.Margin = new System.Windows.Forms.Padding(5, 6, 5, 6);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Padding = new System.Windows.Forms.Padding(5, 6, 5, 6);
-            this.groupBox1.Size = new System.Drawing.Size(1651, 152);
+            this.groupBox1.Size = new System.Drawing.Size(761, 152);
             this.groupBox1.TabIndex = 7;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Result sorting";
@@ -159,7 +159,7 @@
             this.groupBox2.Margin = new System.Windows.Forms.Padding(5, 6, 5, 6);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Padding = new System.Windows.Forms.Padding(5, 6, 5, 6);
-            this.groupBox2.Size = new System.Drawing.Size(1651, 152);
+            this.groupBox2.Size = new System.Drawing.Size(761, 152);
             this.groupBox2.TabIndex = 8;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Compare Settings";
@@ -170,7 +170,7 @@
             this.checkBoxSkipHidden.Checked = true;
             this.checkBoxSkipHidden.CheckState = System.Windows.Forms.CheckState.Checked;
             this.checkBoxSkipHidden.Location = new System.Drawing.Point(18, 32);
-            this.checkBoxSkipHidden.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.checkBoxSkipHidden.Margin = new System.Windows.Forms.Padding(4);
             this.checkBoxSkipHidden.Name = "checkBoxSkipHidden";
             this.checkBoxSkipHidden.Size = new System.Drawing.Size(259, 29);
             this.checkBoxSkipHidden.TabIndex = 0;
@@ -181,7 +181,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1686, 636);
+            this.ClientSize = new System.Drawing.Size(796, 636);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.buttonCancel);
