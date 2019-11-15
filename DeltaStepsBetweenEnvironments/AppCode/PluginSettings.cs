@@ -54,4 +54,10 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments.AppCode
         public const string ShowHelpScreen = "ShowHelpScreen";
         public const string StepsDeleted = "StepsDeleted";
     }
+
+    static class CompareBy
+    {
+        public const string Guid = "guid";
+        public const string Name = "name";
+    }
 }

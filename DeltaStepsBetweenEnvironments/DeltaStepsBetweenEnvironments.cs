@@ -39,6 +39,7 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
         private int CurrentColumnOrder { get; set; }
         public event EventHandler OnRequestConnection; // Should this be an override?  Is this even needed?
         public event EventHandler<StatusBarMessageEventArgs> SendMessageToStatusBar;
+        public string compareBy = CompareBy.Guid;
 
         public string RepositoryName =>  "XTBPlugins.DeltaStepsBetweenEnvironments";
         public string UserName => "carfup";
@@ -145,8 +146,21 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
 
                     Comparer.Compare(StepsCrmSource, StepsCrmTarget);
                     SendMessageToStatusBar?.Invoke(this, new StatusBarMessageEventArgs(90, "Finding Differences..."));
-                    diffCrmSourceTarget = StepsCrmSource.Select(x => x.StepId).Except(StepsCrmTarget.Select(x => x.StepId)).ToArray();
-                    diffCrmTargetSource = StepsCrmTarget.Select(x => x.StepId).Except(StepsCrmSource.Select(x => x.StepId)).ToArray();
+
+                    if(compareBy == CompareBy.Guid)
+                    {
+                        diffCrmSourceTarget = StepsCrmSource.Select(x => x.StepId)
+                            .Except(StepsCrmTarget.Select(x => x.StepId)).ToArray();
+                        diffCrmTargetSource = StepsCrmTarget.Select(x => x.StepId)
+                            .Except(StepsCrmSource.Select(x => x.StepId)).ToArray();
+                    }
+                    else if (compareBy == CompareBy.Name)
+                    {
+                        diffCrmSourceTarget = StepsCrmSource.Where(xx => (StepsCrmSource.Select(x => x.StepName)
+                            .Except(StepsCrmTarget.Select(x => x.StepName))).Contains(xx.StepName)).Select(x => x.StepId).ToArray();
+                        diffCrmTargetSource = StepsCrmTarget.Where(xx => (StepsCrmTarget.Select(x => x.StepName)
+                            .Except(StepsCrmSource.Select(x => x.StepName))).Contains(xx.StepName)).Select(x => x.StepId).ToArray();
+                    }
                     SendMessageToStatusBar?.Invoke(this, new StatusBarMessageEventArgs(100, "Done!"));
                 },
                 PostWorkCallBack = e =>
@@ -220,6 +234,8 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
             }
 
             buttonCompare.Visible = TargetService != null && SourceService != null;
+            checkBoxCompareByName.Visible = buttonCompare.Visible;
+            checkBoxCompareByGuid.Visible = buttonCompare.Visible;
         }
 
         private void LoadOrganizationData(IOrganizationService service,  OrganizationData orgData)
@@ -867,6 +883,18 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
 
             //var stepDetails = new StepDiffDetails(step);
             //stepDetails.Show();
+        }
+
+        private void checkBoxCompareByGuid_CheckedChanged(object sender, EventArgs e)
+        {
+            checkBoxCompareByName.Checked = !checkBoxCompareByGuid.Checked;
+            compareBy = CompareBy.Guid;
+        }
+
+        private void checkBoxCompareByName_CheckedChanged(object sender, EventArgs e)
+        {
+            checkBoxCompareByGuid.Checked = !checkBoxCompareByName.Checked;
+            compareBy = CompareBy.Name;
         }
     }
 }

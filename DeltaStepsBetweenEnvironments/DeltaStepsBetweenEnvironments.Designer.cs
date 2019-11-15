@@ -81,6 +81,8 @@
             this.toolTipInfo = new System.Windows.Forms.ToolTip(this.components);
             this.toolTipWarning = new System.Windows.Forms.ToolTip(this.components);
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
+            this.checkBoxCompareByName = new System.Windows.Forms.CheckBox();
+            this.checkBoxCompareByGuid = new System.Windows.Forms.CheckBox();
             this.toolStrip1.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -104,7 +106,7 @@
             this.toolStripButtonHelp});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Size = new System.Drawing.Size(1903, 37);
+            this.toolStrip1.Size = new System.Drawing.Size(1903, 40);
             this.toolStrip1.TabIndex = 0;
             this.toolStrip1.Text = "toolStrip1";
             // 
@@ -120,7 +122,7 @@
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(6, 37);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(6, 40);
             // 
             // toolStripButtonOptions
             // 
@@ -134,7 +136,7 @@
             // toolStripSeparator3
             // 
             this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(6, 37);
+            this.toolStripSeparator3.Size = new System.Drawing.Size(6, 40);
             // 
             // toolStripButtonExport
             // 
@@ -149,7 +151,7 @@
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(6, 37);
+            this.toolStripSeparator2.Size = new System.Drawing.Size(6, 40);
             // 
             // toolStripButtonHelp
             // 
@@ -266,6 +268,8 @@
             this.groupBoxSolutionComparing.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxSolutionComparing.Controls.Add(this.checkBoxCompareByGuid);
+            this.groupBoxSolutionComparing.Controls.Add(this.checkBoxCompareByName);
             this.groupBoxSolutionComparing.Controls.Add(this.radioButtonCompareOrg);
             this.groupBoxSolutionComparing.Controls.Add(this.radioButtonCompareAssembly);
             this.groupBoxSolutionComparing.Controls.Add(this.radioButtonCompareSolution);
@@ -292,7 +296,6 @@
             this.radioButtonCompareOrg.Name = "radioButtonCompareOrg";
             this.radioButtonCompareOrg.Size = new System.Drawing.Size(125, 29);
             this.radioButtonCompareOrg.TabIndex = 33;
-            this.radioButtonCompareOrg.TabStop = true;
             this.radioButtonCompareOrg.Text = "Entire Org";
             this.radioButtonCompareOrg.UseVisualStyleBackColor = true;
             this.radioButtonCompareOrg.CheckedChanged += new System.EventHandler(this.RadioButtonCompareOrg_CheckedChanged);
@@ -348,7 +351,7 @@
             this.buttonCompare.Location = new System.Drawing.Point(204, 105);
             this.buttonCompare.Margin = new System.Windows.Forms.Padding(6);
             this.buttonCompare.Name = "buttonCompare";
-            this.buttonCompare.Size = new System.Drawing.Size(963, 42);
+            this.buttonCompare.Size = new System.Drawing.Size(667, 40);
             this.buttonCompare.TabIndex = 28;
             this.buttonCompare.Text = "Compare the two environments";
             this.toolTipInfo.SetToolTip(this.buttonCompare, "Comparing the solution/assembly in order to find out the differences.");
@@ -659,6 +662,32 @@
             this.saveFileDialog1.Filter = "\"Comma Seperated|*.csv\"";
             this.saveFileDialog1.Title = "Save As";
             // 
+            // checkBoxCompareByName
+            // 
+            this.checkBoxCompareByName.AutoSize = true;
+            this.checkBoxCompareByName.Location = new System.Drawing.Point(899, 134);
+            this.checkBoxCompareByName.Name = "checkBoxCompareByName";
+            this.checkBoxCompareByName.Size = new System.Drawing.Size(162, 29);
+            this.checkBoxCompareByName.TabIndex = 34;
+            this.checkBoxCompareByName.Text = "by Step Name";
+            this.checkBoxCompareByName.UseVisualStyleBackColor = true;
+            this.checkBoxCompareByName.Visible = false;
+            this.checkBoxCompareByName.CheckedChanged += new System.EventHandler(this.checkBoxCompareByName_CheckedChanged);
+            // 
+            // checkBoxCompareByGuid
+            // 
+            this.checkBoxCompareByGuid.AutoSize = true;
+            this.checkBoxCompareByGuid.Checked = true;
+            this.checkBoxCompareByGuid.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBoxCompareByGuid.Location = new System.Drawing.Point(899, 100);
+            this.checkBoxCompareByGuid.Name = "checkBoxCompareByGuid";
+            this.checkBoxCompareByGuid.Size = new System.Drawing.Size(151, 29);
+            this.checkBoxCompareByGuid.TabIndex = 35;
+            this.checkBoxCompareByGuid.Text = "by Step Guid";
+            this.checkBoxCompareByGuid.UseVisualStyleBackColor = true;
+            this.checkBoxCompareByGuid.Visible = false;
+            this.checkBoxCompareByGuid.CheckedChanged += new System.EventHandler(this.checkBoxCompareByGuid_CheckedChanged);
+            // 
             // DeltaStepsBetweenEnvironments
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
@@ -742,5 +771,7 @@
         private System.Windows.Forms.SaveFileDialog saveFileDialog1;
         private System.Windows.Forms.Button btnStepDetailsSourceToTarget;
         private System.Windows.Forms.Button btnStepDetailsTargetToSource;
+        private System.Windows.Forms.CheckBox checkBoxCompareByGuid;
+        private System.Windows.Forms.CheckBox checkBoxCompareByName;
     }
 }
