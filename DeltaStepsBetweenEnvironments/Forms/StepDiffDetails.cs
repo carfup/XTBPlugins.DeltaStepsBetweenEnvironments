@@ -2,7 +2,7 @@
 using System.Linq;
 using Carfup.XTBPlugins.DeltaStepsBetweenEnvironments.AppCode;
 using System.Windows.Forms;
-using Carfup.XTBPlugins.DeltaStepsBetweenEnvironments.AppCode;
+using Microsoft.Xrm.Sdk;
 
 namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments.Forms
 {
@@ -17,6 +17,9 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments.Forms
 
             foreach (var s in step.GetType().GetProperties().OrderBy(x => x.Name))
             {
+                if (s.GetValue(step, null) is Entity)
+                    continue;
+
                 dataGridViewStepDetails.Rows.Add(new string[]{ s.Name, s.GetValue(step, null)?.ToString()});
             }
 

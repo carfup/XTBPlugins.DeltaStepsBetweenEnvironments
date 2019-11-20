@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using Carfup.XTBPlugins.DeltaStepsBetweenEnvironments.AppCode;
-using Carfup.XTBPlugins.Entities;
 using Microsoft.Xrm.Sdk;
 using Source.DLaB.Common;
 using Source.DLaB.Xrm;
@@ -38,7 +37,7 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments.AppCode
             {
                 foreach(var file in Directory.GetFiles(@"C:\Temp\XML\" + org + @"\"))
                 {
-                    steps.Add(new CarfupStep(File.ReadAllText(file).DeserializeEntity().ToEntity<PluginType>(), org));
+                    steps.Add(new CarfupStep(File.ReadAllText(file).DeserializeEntity().ToEntity<Entity>(), org));
                 }
 
                 return steps;
