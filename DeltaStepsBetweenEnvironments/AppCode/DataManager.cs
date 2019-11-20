@@ -90,19 +90,18 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments.AppCode
 
         public string[] LoadSolutions()
         {
-            return Connection.SourceService.GetEntities("solution","uniuename")
-                             .Select(p => p.GetAttributeValue<string>("uniquename"))
-                             .OrderBy(p => p)
-                             .ToArray();
+            return Connection.SourceService.RetrieveMultiple(new QueryExpression("solution")
+            {
+                ColumnSet = new ColumnSet("uniquename"),
+            }).Entities.Select(p => p.GetAttributeValue<string>("uniquename")).OrderBy(p => p).ToArray();
         }
 
         public string[] LoadAssemblies()
         {
-            
-            return Connection.SourceService.GetEntities("pluginassembly", "name")
-                             .Select(p => p.GetAttributeValue<string>("name"))
-                             .OrderBy(p => p)
-                             .ToArray();
+            return Connection.SourceService.RetrieveMultiple(new QueryExpression("pluginassembly")
+            {
+                ColumnSet = new ColumnSet("name"),
+            }).Entities.Select(p => p.GetAttributeValue<string>("name")).OrderBy(p => p).ToArray();
         }
 
         public bool SolutionExistsInTargetEnv(string solutionPluginStepsName)
