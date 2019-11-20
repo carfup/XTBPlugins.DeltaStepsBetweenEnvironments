@@ -47,6 +47,8 @@
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.groupBoxSolutionComparing = new System.Windows.Forms.GroupBox();
+            this.checkBoxCompareByGuid = new System.Windows.Forms.CheckBox();
+            this.checkBoxCompareByName = new System.Windows.Forms.CheckBox();
             this.radioButtonCompareOrg = new System.Windows.Forms.RadioButton();
             this.radioButtonCompareAssembly = new System.Windows.Forms.RadioButton();
             this.radioButtonCompareSolution = new System.Windows.Forms.RadioButton();
@@ -57,7 +59,6 @@
             this.comboBoxSolutionsAssembliesList = new System.Windows.Forms.ComboBox();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.btnStepDetailsSourceToTarget = new System.Windows.Forms.Button();
             this.labelSourceTargetMatch = new System.Windows.Forms.Label();
             this.listViewSourceTarget = new System.Windows.Forms.ListView();
             this.columnHeaderSTStepName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -66,7 +67,6 @@
             this.columnHeaderSTModifiedOn = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeaderSTCreatedOn = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.btnStepDetailsTargetToSource = new System.Windows.Forms.Button();
             this.labelTargetSourceMatch = new System.Windows.Forms.Label();
             this.listViewTargetSource = new System.Windows.Forms.ListView();
             this.columnHeaderTSStepName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -81,8 +81,6 @@
             this.toolTipInfo = new System.Windows.Forms.ToolTip(this.components);
             this.toolTipWarning = new System.Windows.Forms.ToolTip(this.components);
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
-            this.checkBoxCompareByName = new System.Windows.Forms.CheckBox();
-            this.checkBoxCompareByGuid = new System.Windows.Forms.CheckBox();
             this.toolStrip1.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -287,6 +285,32 @@
             this.groupBoxSolutionComparing.TabStop = false;
             this.groupBoxSolutionComparing.Text = "Details selection";
             // 
+            // checkBoxCompareByGuid
+            // 
+            this.checkBoxCompareByGuid.AutoSize = true;
+            this.checkBoxCompareByGuid.Checked = true;
+            this.checkBoxCompareByGuid.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBoxCompareByGuid.Location = new System.Drawing.Point(899, 100);
+            this.checkBoxCompareByGuid.Name = "checkBoxCompareByGuid";
+            this.checkBoxCompareByGuid.Size = new System.Drawing.Size(151, 29);
+            this.checkBoxCompareByGuid.TabIndex = 35;
+            this.checkBoxCompareByGuid.Text = "by Step Guid";
+            this.checkBoxCompareByGuid.UseVisualStyleBackColor = true;
+            this.checkBoxCompareByGuid.Visible = false;
+            this.checkBoxCompareByGuid.CheckedChanged += new System.EventHandler(this.checkBoxCompareByGuid_CheckedChanged);
+            // 
+            // checkBoxCompareByName
+            // 
+            this.checkBoxCompareByName.AutoSize = true;
+            this.checkBoxCompareByName.Location = new System.Drawing.Point(899, 134);
+            this.checkBoxCompareByName.Name = "checkBoxCompareByName";
+            this.checkBoxCompareByName.Size = new System.Drawing.Size(162, 29);
+            this.checkBoxCompareByName.TabIndex = 34;
+            this.checkBoxCompareByName.Text = "by Step Name";
+            this.checkBoxCompareByName.UseVisualStyleBackColor = true;
+            this.checkBoxCompareByName.Visible = false;
+            this.checkBoxCompareByName.CheckedChanged += new System.EventHandler(this.checkBoxCompareByName_CheckedChanged);
+            // 
             // radioButtonCompareOrg
             // 
             this.radioButtonCompareOrg.AutoSize = true;
@@ -296,6 +320,7 @@
             this.radioButtonCompareOrg.Name = "radioButtonCompareOrg";
             this.radioButtonCompareOrg.Size = new System.Drawing.Size(125, 29);
             this.radioButtonCompareOrg.TabIndex = 33;
+            this.radioButtonCompareOrg.TabStop = true;
             this.radioButtonCompareOrg.Text = "Entire Org";
             this.radioButtonCompareOrg.UseVisualStyleBackColor = true;
             this.radioButtonCompareOrg.CheckedChanged += new System.EventHandler(this.RadioButtonCompareOrg_CheckedChanged);
@@ -405,7 +430,6 @@
             this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBox1.Controls.Add(this.btnStepDetailsSourceToTarget);
             this.groupBox1.Controls.Add(this.labelSourceTargetMatch);
             this.groupBox1.Controls.Add(this.listViewSourceTarget);
             this.groupBox1.Location = new System.Drawing.Point(6, 6);
@@ -416,24 +440,6 @@
             this.groupBox1.TabIndex = 28;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Steps which are on Source but not on Target environment";
-            // 
-            // btnStepDetailsSourceToTarget
-            // 
-            this.btnStepDetailsSourceToTarget.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
-            this.btnStepDetailsSourceToTarget.Enabled = false;
-            this.btnStepDetailsSourceToTarget.Image = global::Carfup.XTBPlugins.DeltaStepsBetweenEnvironments.Properties.Resources.details;
-            this.btnStepDetailsSourceToTarget.ImageAlign = System.Drawing.ContentAlignment.TopLeft;
-            this.btnStepDetailsSourceToTarget.Location = new System.Drawing.Point(17, 27);
-            this.btnStepDetailsSourceToTarget.Margin = new System.Windows.Forms.Padding(6);
-            this.btnStepDetailsSourceToTarget.Name = "btnStepDetailsSourceToTarget";
-            this.btnStepDetailsSourceToTarget.Size = new System.Drawing.Size(195, 47);
-            this.btnStepDetailsSourceToTarget.TabIndex = 3;
-            this.btnStepDetailsSourceToTarget.Text = "Step Details";
-            this.btnStepDetailsSourceToTarget.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
-            this.toolTipWarning.SetToolTip(this.btnStepDetailsSourceToTarget, "Delete the selected step(s), it\'s permanent !");
-            this.btnStepDetailsSourceToTarget.UseVisualStyleBackColor = true;
-            this.btnStepDetailsSourceToTarget.Visible = false;
-            this.btnStepDetailsSourceToTarget.Click += new System.EventHandler(this.BtnStepDetailsSourceToTarget_Click);
             // 
             // labelSourceTargetMatch
             // 
@@ -501,7 +507,6 @@
             this.groupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBox2.Controls.Add(this.btnStepDetailsTargetToSource);
             this.groupBox2.Controls.Add(this.labelTargetSourceMatch);
             this.groupBox2.Controls.Add(this.listViewTargetSource);
             this.groupBox2.Location = new System.Drawing.Point(1009, 6);
@@ -512,23 +517,6 @@
             this.groupBox2.TabIndex = 29;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Steps which are on Target but not on Source environment";
-            // 
-            // btnStepDetailsTargetToSource
-            // 
-            this.btnStepDetailsTargetToSource.Enabled = false;
-            this.btnStepDetailsTargetToSource.Image = global::Carfup.XTBPlugins.DeltaStepsBetweenEnvironments.Properties.Resources.details;
-            this.btnStepDetailsTargetToSource.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnStepDetailsTargetToSource.Location = new System.Drawing.Point(11, 27);
-            this.btnStepDetailsTargetToSource.Margin = new System.Windows.Forms.Padding(6);
-            this.btnStepDetailsTargetToSource.Name = "btnStepDetailsTargetToSource";
-            this.btnStepDetailsTargetToSource.Size = new System.Drawing.Size(195, 47);
-            this.btnStepDetailsTargetToSource.TabIndex = 28;
-            this.btnStepDetailsTargetToSource.Text = "Step Details";
-            this.btnStepDetailsTargetToSource.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
-            this.toolTipWarning.SetToolTip(this.btnStepDetailsTargetToSource, "Delete the selected step(s), it\'s permanent !");
-            this.btnStepDetailsTargetToSource.UseVisualStyleBackColor = true;
-            this.btnStepDetailsTargetToSource.Visible = false;
-            this.btnStepDetailsTargetToSource.Click += new System.EventHandler(this.BtnStepDetailsTargetToSource_Click);
             // 
             // labelTargetSourceMatch
             // 
@@ -663,32 +651,6 @@
             this.saveFileDialog1.Filter = "\"Comma Seperated|*.csv\"";
             this.saveFileDialog1.Title = "Save As";
             // 
-            // checkBoxCompareByName
-            // 
-            this.checkBoxCompareByName.AutoSize = true;
-            this.checkBoxCompareByName.Location = new System.Drawing.Point(899, 134);
-            this.checkBoxCompareByName.Name = "checkBoxCompareByName";
-            this.checkBoxCompareByName.Size = new System.Drawing.Size(162, 29);
-            this.checkBoxCompareByName.TabIndex = 34;
-            this.checkBoxCompareByName.Text = "by Step Name";
-            this.checkBoxCompareByName.UseVisualStyleBackColor = true;
-            this.checkBoxCompareByName.Visible = false;
-            this.checkBoxCompareByName.CheckedChanged += new System.EventHandler(this.checkBoxCompareByName_CheckedChanged);
-            // 
-            // checkBoxCompareByGuid
-            // 
-            this.checkBoxCompareByGuid.AutoSize = true;
-            this.checkBoxCompareByGuid.Checked = true;
-            this.checkBoxCompareByGuid.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBoxCompareByGuid.Location = new System.Drawing.Point(899, 100);
-            this.checkBoxCompareByGuid.Name = "checkBoxCompareByGuid";
-            this.checkBoxCompareByGuid.Size = new System.Drawing.Size(151, 29);
-            this.checkBoxCompareByGuid.TabIndex = 35;
-            this.checkBoxCompareByGuid.Text = "by Step Guid";
-            this.checkBoxCompareByGuid.UseVisualStyleBackColor = true;
-            this.checkBoxCompareByGuid.Visible = false;
-            this.checkBoxCompareByGuid.CheckedChanged += new System.EventHandler(this.checkBoxCompareByGuid_CheckedChanged);
-            // 
             // DeltaStepsBetweenEnvironments
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 24F);
@@ -770,8 +732,6 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
         private System.Windows.Forms.ToolStripButton toolStripButtonExport;
         private System.Windows.Forms.SaveFileDialog saveFileDialog1;
-        private System.Windows.Forms.Button btnStepDetailsSourceToTarget;
-        private System.Windows.Forms.Button btnStepDetailsTargetToSource;
         private System.Windows.Forms.CheckBox checkBoxCompareByGuid;
         private System.Windows.Forms.CheckBox checkBoxCompareByName;
     }

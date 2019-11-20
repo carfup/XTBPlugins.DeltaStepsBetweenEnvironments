@@ -23,7 +23,7 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments.Forms
     using System.ComponentModel;
     using System.Windows.Forms;
     using Carfup.XTBPlugins.DeltaStepsBetweenEnvironments.AppCode;
-    using Carfup.XTBPlugins.Entities;
+   
     using System.Linq;
 
     public partial class StepRegistrationForm : Form

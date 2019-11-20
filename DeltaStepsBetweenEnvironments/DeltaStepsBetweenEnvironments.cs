@@ -17,7 +17,6 @@ using Microsoft.Crm.Sdk.Messages;
 using XrmToolBox.Extensibility.Args;
 using Label = Microsoft.Xrm.Sdk.Label;
 using Carfup.XTBPlugins.DeltaStepsBetweenEnvironments.Forms;
-using Carfup.XTBPlugins.Entities;
 
 namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
 {
@@ -846,43 +845,12 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
         private void ListViewSourceTarget_SelectedIndexChanged(object sender, EventArgs e)
         {
             var check = listViewSourceTarget.SelectedItems.Count == 1;
-            btnStepDetailsSourceToTarget.Enabled = check;
         }
 
-        private void BtnStepDetailsSourceToTarget_Click(object sender, EventArgs e)
-        {
-            var itemFrom = listViewSourceTarget.SelectedItems[0].Tag.ToString();
-            var step = StepsCrmSource.Where(x => itemFrom == x.StepId.ToString()).FirstOrDefault();
-
-            if (step == null)
-                return;
-
-            var stepregform = new StepRegistrationForm(SourceOrgData, step);
-            stepregform.Show();
-
-            //var stepDetails = new StepDiffDetails(step);
-            //stepDetails.Show();
-        }
 
         private void ListViewTargetSource_SelectedIndexChanged(object sender, EventArgs e)
         {
             var check = listViewTargetSource.SelectedItems.Count == 1;
-            btnStepDetailsTargetToSource.Enabled = check;
-        }
-
-        private void BtnStepDetailsTargetToSource_Click(object sender, EventArgs e)
-        {
-            var itemFrom = listViewTargetSource.SelectedItems[0].Tag.ToString();
-            var step = StepsCrmTarget.Where(x => itemFrom == x.StepId.ToString()).FirstOrDefault();
-
-            if (step == null)
-                return;
-
-            var stepregform = new StepRegistrationForm(TargetOrgData, step);
-            stepregform.Show();
-
-            //var stepDetails = new StepDiffDetails(step);
-            //stepDetails.Show();
         }
 
         private void checkBoxCompareByGuid_CheckedChanged(object sender, EventArgs e)
