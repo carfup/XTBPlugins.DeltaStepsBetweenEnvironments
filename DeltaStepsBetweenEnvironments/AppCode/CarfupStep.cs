@@ -72,7 +72,7 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments.AppCode
         public string AssemblyName => Plugin.GetAttributeValue<string>("assemblyname");
         public string EntityName => string.IsNullOrWhiteSpace(Filter.GetAttributeValue<string>("primaryobjecttypecode")) ? "none" : Filter.GetAttributeValue<string>("primaryobjecttypecode");
         public string Environment { get; set; }
-        public string PluginTypeName => Plugin.GetAttributeValue<string>("name");
+        public string PluginTypeName => Plugin.GetAttributeValue<string>("typename");
         public string PluginFullTypeName => AssemblyName + "|" + PluginTypeName;
         public string StepConfiguration => Step.GetAttributeValue<string>("configuration");
         public string StepDescription => Step.GetAttributeValue<string>("description");
@@ -80,11 +80,11 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments.AppCode
         public Guid StepMessageId => Step.GetAttributeValue<EntityReference>("sdkmessageid").Id;
         public string StepMessageName => Step.GetAttributeValue<EntityReference>("sdkmessageid")?.Name;
         public string StepName => Step.GetAttributeValue<string>("name");
-        public int? StepMode => Step.GetAttributeValue<int?>("mode");
+        public int? StepMode => Step.GetAttributeValue<OptionSetValue>("mode")?.Value;
         public string StepModeName => Plugin.GetFormattedAttributeValueOrNull("pmode");
-        public int? StepStage => Step.GetAttributeValue<int?>("stage");
+        public int? StepStage => Step.GetAttributeValue<OptionSetValue>("stage")?.Value;
         public string StepStageName => Plugin.GetFormattedAttributeValueOrNull("stage");
-        public int? StepSupportedDeployment => Step.GetAttributeValue<int?>("supporteddeployment");
+        public int? StepSupportedDeployment => Step.GetAttributeValue<OptionSetValue>("supporteddeployment")?.Value;
         public string StepSupportedDeploymentName => Plugin.GetFormattedAttributeValueOrNull("supporteddeployment");
         public string StepSecureConfiguration => SecureConfig.GetAttributeValue<string>("secureconfig");
         public string RunAsUserName => Step.GetAttributeValue<EntityReference>("impersonationuserid") == null ? "Calling User" : Step.GetAttributeValue<EntityReference>("impersonationuserid").Name;
@@ -114,13 +114,15 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments.AppCode
 
         public CarfupStep(Entity plugin, string environment)
         {
-            Step = plugin.GetAliasedEntity<Entity>("sdkmessageprocessingstep");
-            Filter = plugin.GetAliasedEntity<Entity>("sdkmessagefilter");
-            Image = plugin.GetAliasedEntity<Entity>("sdkmessageprocessingstepimage");
-            Message = plugin.GetAliasedEntity<Entity>("sdkmessage");
-            Plugin = plugin;
+            Step = DataManager.GetAliasedEntityLateBound(plugin, "sdkmessageprocessingstep", "sdkmessageprocessingstepid");
+            //Step = plugin.GetAliasedEntity<Entity>("sdkmessageprocessingstep");
+            Filter = DataManager.GetAliasedEntityLateBound(plugin, "sdkmessagefilter", "sdkmessagefilterid");
+            Image = DataManager.GetAliasedEntityLateBound(plugin, "sdkmessageprocessingstepimage", "sdkmessageprocessingstepimageid");
+            Message = DataManager.GetAliasedEntityLateBound(plugin, "sdkmessage", "sdkmessageid");
             
-            SecureConfig = plugin.GetAliasedEntity<Entity>("sdkMessageprocessingstepsecureconfig");
+            Plugin = plugin;
+
+            SecureConfig = DataManager.GetAliasedEntityLateBound(plugin, "sdkmessageprocessingstepsecureconfig", "sdkmessageprocessingstepsecureconfigid");
 
             Environment = environment;
         }
@@ -213,7 +215,9 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments.AppCode
             AddSolutionFilter(solutionName, qe);
             AddHiddenFilter(settings, qe);
 
-            return service.RetrieveMultiple(qe).Entities.ToList().Select(x => new CarfupStep(x, "Source")).ToList();
+            var result = service.RetrieveMultiple(qe).Entities.ToList();
+
+            return result.Select(x => new CarfupStep(x, "Source")).ToList();
         }
 
         private static void AddHiddenFilter(PluginSettings settings, QueryExpression qe)
@@ -225,17 +229,86 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments.AppCode
             }
         }
 
+        private Entity GetStepDetails(EntityReference pluginType)
+        {
+
+            return new Entity();
+        }
+
         private static QueryExpression GetStepsQuery()
         {
-            var qe = QueryExpressionFactory.Create("plugintype",
+            var query = new QueryExpression()
+            {
+                EntityName = "plugintype",
+                ColumnSet = new ColumnSet("assemblyname", "pluginassemblyid", "typename", "version", "name"),
+                LinkEntities =
+                {
+                    new LinkEntity()
+                    {
+                        LinkFromEntityName = "plugintype",
+                        LinkFromAttributeName = "plugintypeid",
+                        LinkToEntityName = "sdkmessageprocessingstep",
+                        LinkToAttributeName = "plugintypeid",
+                        JoinOperator = JoinOperator.Inner,
+                        Columns = new ColumnSet(true),
+                        EntityAlias = "sdkmessageprocessingstep",
+                        LinkEntities =
+                        {
+                            new LinkEntity()
+                            {
+                                LinkFromEntityName = "sdkmessageprocessingstep",
+                                LinkFromAttributeName = "sdkmessagefilterid",
+                                LinkToEntityName = "sdkmessagefilter",
+                                LinkToAttributeName = "sdkmessagefilterid",
+                                JoinOperator = JoinOperator.LeftOuter,
+                                Columns = new ColumnSet("primaryobjecttypecode"),
+                                EntityAlias = "sdkmessagefilter"
+                            },
+                            new LinkEntity()
+                            {
+                                LinkFromEntityName = "sdkmessageprocessingstep",
+                                LinkFromAttributeName = "sdkmessageid",
+                                LinkToEntityName = "sdkmessage",
+                                LinkToAttributeName = "sdkmessageid",
+                                JoinOperator = JoinOperator.Inner,
+                                Columns = new ColumnSet("name"),
+                                EntityAlias = "sdkmessage"
+                            },
+                            new LinkEntity()
+                            {
+                                LinkFromEntityName = "sdkmessageprocessingstep",
+                                LinkFromAttributeName = "sdkmessageprocessingstepid",
+                                LinkToEntityName = "sdkmessageprocessingstepimage",
+                                LinkToAttributeName = "sdkmessageprocessingstepid",
+                                JoinOperator = JoinOperator.LeftOuter,
+                                Columns = new ColumnSet("attributes", "description","name","imagetype", "entityalias"),
+                                EntityAlias = "sdkmessageprocessingstepimage"
+                            },
+                            new LinkEntity()
+                            {
+                                LinkFromEntityName = "sdkmessageprocessingstep",
+                                LinkFromAttributeName = "sdkmessageprocessingstepsecureconfigid",
+                                LinkToEntityName = "sdkmessageprocessingstepsecureconfig",
+                                LinkToAttributeName = "sdkmessageprocessingstepsecureconfigid",
+                                JoinOperator = JoinOperator.LeftOuter,
+                                Columns = new ColumnSet(true),
+                                EntityAlias = "sdkmessageprocessingstepsecureconfig"
+                            },
+                        }
+                    }
+                }
+            };
+
+
+            /*var qe = QueryExpressionFactory.Create("plugintype",
                 "assemblyname", "pluginassemblyid", "typename", "version"
                );
 
             var step = qe.AddLink("sdkmessageprocessingstep", "plugintypeid", "plugintypeid");
-            /*step.Columns = new ColumnSet("asyncautodelete", "createdon", "configuration", "customizationlevel", "description",
-            "filteringattributes", "invocationsource", "impersonatinguserid", "mode", "modifiedon", "name", pr);*/
+            step.Columns = new ColumnSet("asyncautodelete", "createdon", "configuration", "customizationlevel", "description",
+            "filteringattributes", "invocationsource", "impersonatinguserid", "mode", "modifiedon", "name", pr);
             step.Columns = new ColumnSet(true);
-            /*s => new
+            s => new
             {
                 s.AsyncAutoDelete,
                 s.CreatedOn,
@@ -256,7 +329,7 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments.AppCode
                 s.Stage,
                 s.StateCode,
                 s.SupportedDeployment,
-            });*/
+            });
             var stepFilter = step.AddLink("sdkmessagefilter","sdkmessagefilterid", "sdkmessagefilterid");// primaryobjecttype
             stepFilter.Columns = new ColumnSet("primaryobjecttype");
             var stepMessage = stepFilter.AddLink("sdkmessage","sdkmessageid", "sdkmessageid"); //name
@@ -265,7 +338,7 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments.AppCode
             var stepImage = stepMessage.AddLink("sdkmessageprocessingstepimage", "sdkmessageprocessingstepid", "sdkmessageprocessingstepid",
                 JoinOperator.LeftOuter);
             stepImage.Columns = new ColumnSet(true);
-            /*i => new
+            i => new
             {
                 i.Attributes,
                 i.Description,
@@ -273,12 +346,12 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments.AppCode
                 i.Id,
                 i.Name,
                 i.ImageType
-            });*/
+            });
             var stepSecure = stepImage.AddLink("sdkmessageprocessingstepsecureconfig", "secureconfid", "secureconfid",
                 JoinOperator.LeftOuter);
             stepSecure.Columns = new ColumnSet("secureconfig");
             /*c => new {c.SecureConfig});*/
-            return qe;
+            return query;
         }
 
         private static void AddAssemblyFilter(string assemblyName, QueryExpression qe)

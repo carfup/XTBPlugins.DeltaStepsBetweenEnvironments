@@ -135,6 +135,60 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments.AppCode
             return ((WhoAmIResponse)Connection.SourceService.Execute(new WhoAmIRequest())).UserId;
         }
 
+
+        public static Entity GetAliasedEntityLateBound(Entity entity , string aliasedEntityName, string aliasedEntityIdField)
+        {
+            var entityLogicalName = aliasedEntityName; //EntityHelper.GetEntityLogicalName<T>();
+            var aliasedEntity = new Entity();
+            var idAttribute = aliasedEntityIdField;
+
+            foreach (var entry in entity.Attributes)
+            {
+                AliasedValue aliased = null;
+
+                if (entry.Value is AliasedValue)
+                    aliased = (AliasedValue) entry.Value;
+
+                if (entry.Value is AliasedValue && aliased.EntityLogicalName == entityLogicalName &&
+                    (
+                        (aliasedEntityName == null && // No Entity Attribute Name Specified
+                            (entry.Key.Contains(".") || entry.Key == aliased.AttributeLogicalName || aliased.AttributeLogicalName == idAttribute))
+                    // And the key contains a "." or is an exact match on the aliased attribute logical name.  This keeps groupings that may not be the same type (Date Group by Day) from populating the aliased entity
+                    // The one exception for this is the Id. which we want to include if we can
+                    ||
+                        (aliasedEntityName != null && // Or an Entity Attribute Name is specified, and 
+                            entry.Key.StartsWith(aliasedEntityName + ".")) // it starts with the aliasedEntityName + ".
+                    ))
+                {
+                    aliasedEntity[aliased.AttributeLogicalName] = aliased.Value;
+                    if (entity.FormattedValues.TryGetValue(entry.Key, out string formattedValue))
+                    {
+                        aliasedEntity.FormattedValues[aliased.AttributeLogicalName] = formattedValue;
+                    }
+                }
+            }
+
+            // Remove names for Entity References.  
+            foreach (var entry in aliasedEntity.Attributes.Where(a => a.Key.EndsWith("name")).ToList())
+            {
+                var nonNameAttribute = entry.Key.Substring(0, entry.Key.Length - "name".Length);
+                if (aliasedEntity.Contains(nonNameAttribute))
+                {
+                    if (aliasedEntity[nonNameAttribute] is EntityReference entityRef && entityRef.Name == (string)entry.Value)
+                    {
+                        aliasedEntity.Attributes.Remove(entry.Key);
+                    }
+                }
+            }
+
+
+            if (aliasedEntity.Attributes.Contains(idAttribute))
+            {
+                aliasedEntity.Id = (Guid)aliasedEntity[idAttribute];
+            }
+
+            return aliasedEntity;
+        }
         #endregion Methods
     }
 
