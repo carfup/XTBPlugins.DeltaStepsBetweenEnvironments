@@ -94,6 +94,8 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments.AppCode
         public string ImageName => Image.GetAttributeValue<string>("name");
         public string ImageType => Plugin.GetFormattedAttributeValueOrNull("imagetype");
         public Guid RunAsUserId => Step.GetAttributeValue<EntityReference>("impersonationuserid").GetIdOrDefault();
+
+        public bool IsManaged => Step.GetAttributeValue<bool>("ismanaged");
         public ComparisonState State { get; set; }
 
         //public SdkMessageFilter Filter { get; }

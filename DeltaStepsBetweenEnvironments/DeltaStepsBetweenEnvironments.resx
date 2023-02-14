@@ -127,7 +127,7 @@
   <data name="buttonDeleteStep.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAABoAAAAaCAYAAACpSkzOAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAO
-        wwAADsMBx2+oZAAAAXFJREFUSEtjIASe+tgaPfe2PvfMx+bXcx+b/8j4mY/1h2fe1vNueXiwQ5WTD4AG
+        wgAADsIBFShKgAAAAXFJREFUSEtjIASe+tgaPfe2PvfMx+bXcx+b/8j4mY/1h2fe1vNueXiwQ5WTD4AG
         PkC3ABNbV0CVEwf+1zMwPfS2EYThJ542aiCDnnnbfHrhbaOELAfCQF8Wgi3yttmGLP7az4oXaiQq+M/A
         wPjIzUIIaOBtVJeSj4FBWvvc1ZUbagUEvHNx4cemmFIMdPhSqBUQ8MbDjA8Yzu9ogGdBrUAFoDgCxQWl
         +HmgpRjUSOyAWkGIEWToYMAsAmbI30B8FxjWj8Fi3jY/QXygQU8haqy/g/k+1s9R9JHsI2+bhyDxF552
@@ -142,12 +142,15 @@
   <data name="buttonCopyTargetToSource.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAO
-        wwAADsMBx2+oZAAAALRJREFUOE9jGAVDCGitCmVTX5ewUGNdQiVUiHwAMkxtbfxmoIH/1dcmlECFyQNg
+        wgAADsIBFShKgAAAALRJREFUOE9jGAVDCGitCmVTX5ewUGNdQiVUiHwAMkxtbfxmoIH/1dcmlECFyQNg
         l61NWA8yDGhoG1SYPGA8M40VaMhaiGEJXVBhMkF9PZPauvjVUG/+U18Xf5covDY+D2oCJgAa1I4wMOEg
         UMNufBjogF3qaxNDoNqxA6CibqiX14CCACpMGQDa3gd26bqEVQyrQpmhwpQBYORMgLqUwsiBgf8MjECX
         lqqvjw+GioyCoQkYGADTGGoBJkH12AAAAABJRU5ErkJggg==
 </value>
   </data>
+  <metadata name="toolTipInfo.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>122, 17</value>
+  </metadata>
   <metadata name="saveFileDialog1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>369, 17</value>
   </metadata>

@@ -709,8 +709,9 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
             {
                 string createon = step.CreateOn.ToLocalTime().ToString("dd-MMM-yyyy HH:mm");
                 string modifiedon = step.ModifiedOn.ToLocalTime().ToString("dd-MMM-yyyy HH:mm");
+                string isManaged = step.IsManaged ? "X" : "";
 
-                var item = new ListViewItem(new string[] {step.StepName, step.EntityName, step.StepMessageName, createon, modifiedon}, "imgDetails");
+                var item = new ListViewItem(new string[] {step.StepName, step.EntityName, step.StepMessageName, createon, modifiedon, isManaged }, "imgDetails");
                 //item.ImageKey = "imgDetails";
                 //item.Text = step.StepName;
                 //item.SubItems.Add(step.EntityName);
