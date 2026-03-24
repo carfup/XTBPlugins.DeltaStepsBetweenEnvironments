@@ -11,7 +11,7 @@
     <description>Find out if there is differences about your plugin steps between two of your environments</description>
     <summary>Really sweet plugin that does awesome things</summary>
     <releaseNotes>
-1.2026.3.1
+1.2026.3.13
 Fix the ability to copy a step with multiple images, and the fact that only the first image was copied.
 
 1.2019.11.12
