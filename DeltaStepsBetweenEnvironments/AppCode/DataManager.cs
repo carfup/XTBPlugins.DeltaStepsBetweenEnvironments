@@ -66,6 +66,13 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments.AppCode
                 "sdkmessageprocessingstepid", sdkMessageGuid);
         }
 
+        public List<Entity> GetSdkMessageProcessingStepImages(IOrganizationService service,
+            Guid sdkMessageGuid)
+        {
+            return service.GetEntities("sdkmessageprocessingstepimage", new ColumnSet(true),
+                "sdkmessageprocessingstepid", sdkMessageGuid);
+        }
+
         // return all sdk messages
         public List<Entity> GetSdkMessages(IOrganizationService service)
         {
