@@ -1,7 +1,7 @@
 ﻿<package>
   <metadata>
     <id>Carfup.XTBPlugins.DeltaStepsBetweenEnvironments</id>
-    <version>1.2019.11.12</version>
+    <version>1.2026.3.1</version>
     <title>Delta Plugin Steps between two environments</title>
     <authors>Clement O.</authors>
     <owners>Clement O.</owners>
@@ -11,6 +11,9 @@
     <description>Find out if there is differences about your plugin steps between two of your environments</description>
     <summary>Really sweet plugin that does awesome things</summary>
     <releaseNotes>
+1.2026.3.13
+Fix the ability to copy a step with multiple images, and the fact that only the first image was copied.
+
 1.2019.11.12
 Feature to export the results into an excel sheet ! (thanks to Daryl Labar)
 Ability to compare the entire organization besides the solutions and assembly. (thanks to Daryl Labar)
