@@ -424,8 +424,9 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
                 return null;
             }
 
-
-            var sdkMessageImage = Controller.DataManager.GetSdkMessageProcessingStepImage(serviceFrom, selectedStep.StepId);
+            var sdkMessageImages = 
+                ckCopyAllImages.Checked || ckCopyAllImages.Enabled == false ? Controller.DataManager.GetSdkMessageProcessingStepImages(serviceFrom, selectedStep.StepId) :
+                new List<Entity> { Controller.DataManager.GetSdkMessageProcessingStepImage(serviceFrom, selectedStep.StepId) };
 
             Log.LogData(EventType.Event, pluginTypeRetrievedLogAction);
             Log.LogData(EventType.Event, sdkMessageRetrievedLogAction);
@@ -450,7 +451,7 @@ namespace Carfup.XTBPlugins.DeltaStepsBetweenEnvironments
 
             var  createdStep = service.Create(newStepToCreate);
 
-            if (sdkMessageImage != null)
+            foreach(var sdkMessageImage in sdkMessageImages)
             {
                 Entity newStepImageToCreate = new Entity("sdkmessageprocessingstepimage");
                 newStepImageToCreate["messagepropertyname"] = sdkMessageImage.GetAttributeValue<string>("messagepropertyname");
